@@ -12,5 +12,6 @@ namespace Scheddy.Models
         public string Campus { get; set; }
         public int Capacity { get; set; }
         public int NumComputers { get; set; }
+
     }
 }
