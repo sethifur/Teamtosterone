@@ -7,6 +7,14 @@ namespace Scheddy.Models
 {
     public class Schedule
     {
+        #region Relationships
+
+        public virtual ICollection<Section> sections { get; set; }
+
+        #endregion
+
+        #region Properties
+
         public string Semester { get; set; }
         public string AcademicYear { get; set; }
         public string ScheduleName { get; set; }
@@ -14,5 +22,7 @@ namespace Scheddy.Models
         public DateTime DateModified { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
+
+        #endregion
     }
 }

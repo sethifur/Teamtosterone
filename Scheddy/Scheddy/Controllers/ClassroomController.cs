@@ -9,6 +9,8 @@ namespace Scheddy.Controllers
 {
     public class ClassroomController : Controller
     {
+        ScheddyDb _db = new ScheddyDb();
+
         // GET: Classroom
         public ActionResult Index()
         {
@@ -40,6 +42,15 @@ namespace Scheddy.Controllers
         public void SetClassroom()
         {
 
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (_db != null)
+            {
+                _db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

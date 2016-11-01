@@ -184,6 +184,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Instructor.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ScheddyDb.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
