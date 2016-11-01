@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scheddy.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -26,6 +27,17 @@ namespace Scheddy.Controllers
         }
 
         public void AddCourse()
+        {
+
+        }
+
+        public Course GetCourse()
+        {
+
+            return new Course();
+        }
+
+        public void SetCourse()
         {
 
         }

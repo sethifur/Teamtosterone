@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scheddy.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,5 +14,38 @@ namespace Scheddy.Controllers
         {
             return View();
         }
+
+        public void UpdateSchedule()
+        {
+
+        }
+
+        public void DeleteSchedule()
+        {
+
+        }
+
+        public void AddSchedule()
+        {
+
+        }
+    
+        public Section CheckConflict()
+        {
+
+            return new Section();
+        }
+
+        public Schedule GetSchedule()
+        {
+
+            return new Schedule();
+        }
+
+        public void SetSchedule()
+        {
+
+        }
+
     }
 }
