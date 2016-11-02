@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Scheddy.Models;
 using System.Web.Mvc;
 
 namespace Scheddy.Controllers
@@ -34,7 +33,6 @@ namespace Scheddy.Controllers
 
         }
 
-<<<<<<< HEAD
         public Course GetCourse()
         {
 
@@ -44,7 +42,8 @@ namespace Scheddy.Controllers
         public void SetCourse()
         {
 
-=======
+        }
+
         protected override void Dispose(bool disposing)
         {
             if(_db != null)
@@ -52,8 +51,7 @@ namespace Scheddy.Controllers
                 _db.Dispose();
             }
             base.Dispose(disposing);
->>>>>>> fa75e824be5cc41c9f80c12429d1acd4f1eb90c4
-        }
 
+        }
     }
 }

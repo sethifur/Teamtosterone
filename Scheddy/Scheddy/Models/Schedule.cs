@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -15,6 +16,8 @@ namespace Scheddy.Models
 
         #region Properties
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ScheduleId { get; set; }
         public string Semester { get; set; }
         public string AcademicYear { get; set; }
         public string ScheduleName { get; set; }

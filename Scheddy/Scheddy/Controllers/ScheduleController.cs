@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Scheddy.Models;
+
 
 namespace Scheddy.Controllers
 {
@@ -18,7 +18,6 @@ namespace Scheddy.Controllers
             return View();
         }
 
-<<<<<<< HEAD
         public void UpdateSchedule()
         {
 
@@ -51,7 +50,6 @@ namespace Scheddy.Controllers
 
         }
 
-=======
         protected override void Dispose(bool disposing)
         {
             if (_db != null)
@@ -60,6 +58,5 @@ namespace Scheddy.Controllers
             }
             base.Dispose(disposing);
         }
->>>>>>> fa75e824be5cc41c9f80c12429d1acd4f1eb90c4
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -15,6 +16,8 @@ namespace Scheddy.Models
 
         #region Properties
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int CourseId { get; set; }
         public int CourseNumber { get; set; }
         public string Prefix { get; set; }
         public int CreditHours { get; set; }

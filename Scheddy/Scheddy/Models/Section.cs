@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Web;
@@ -26,6 +27,8 @@ namespace Scheddy.Models
 
         #region Properties
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int SectionId { get; set; }
         public int? CRN { get; set; }
         public DateTime StarTime { get; set; }
         public DateTime EndTime { get; set; }
