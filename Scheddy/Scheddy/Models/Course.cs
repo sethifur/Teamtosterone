@@ -19,6 +19,7 @@ namespace Scheddy.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CourseId { get; set; }
         public int CourseNumber { get; set; }
+        public string Department { get; set; }
         public string Prefix { get; set; }
         public int CreditHours { get; set; }
         public string CourseTitle { get; set; }

@@ -35,6 +35,7 @@ namespace Scheddy.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string DaysTaught { get; set; }
+        public string numSeats { get; set; }
 
         #endregion
     }
