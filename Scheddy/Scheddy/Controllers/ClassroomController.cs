@@ -1,73 +1,125 @@
-﻿using Scheddy.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Scheddy.Models;
 
 namespace Scheddy.Controllers
 {
     public class ClassroomController : Controller
     {
-        ScheddyDb _db = new ScheddyDb();
+        private ScheddyDb db = new ScheddyDb();
 
         // GET: Classroom
         public ActionResult Index()
         {
-            var model = _db.Classrooms.ToList();
-            return View(model);
+            return View(db.Classrooms.ToList());
         }
 
-        public ActionResult Edit(int id)
+        // GET: Classroom/Details/5
+        public ActionResult Details(int? id)
         {
-            var classroom = _db.Classrooms.Single(r => r.ClassroomId == id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Classroom classroom = db.Classrooms.Find(id);
+            if (classroom == null)
+            {
+                return HttpNotFound();
+            }
             return View(classroom);
         }
 
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        // GET: Classroom/Create
+        public ActionResult Create()
         {
-            var classroom = _db.Classrooms.Single(r => r.ClassroomId == id);
-            if (TryUpdateModel(classroom))
+            return View();
+        }
+
+        // POST: Classroom/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "ClassroomId,BldgCode,RoomNumber,Campus,Capacity,NumComputers")] Classroom classroom)
+        {
+            if (ModelState.IsValid)
             {
-                // save to database
+                db.Classrooms.Add(classroom);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(classroom);
+        }
+
+        // GET: Classroom/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Classroom classroom = db.Classrooms.Find(id);
+            if (classroom == null)
+            {
+                return HttpNotFound();
+            }
+            return View(classroom);
+        }
+
+        // POST: Classroom/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ClassroomId,BldgCode,RoomNumber,Campus,Capacity,NumComputers")] Classroom classroom)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(classroom).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(classroom);
         }
 
-        public void UpdateClassroom()
+        // GET: Classroom/Delete/5
+        public ActionResult Delete(int? id)
         {
-
-
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Classroom classroom = db.Classrooms.Find(id);
+            if (classroom == null)
+            {
+                return HttpNotFound();
+            }
+            return View(classroom);
         }
 
-        public void DeleteClassroom()
+        // POST: Classroom/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
-
-        }
-        
-        public void AddClassroom()
-        {
-
-        }
-
-        public Classroom GetClassroom()
-        {
-
-            return new Classroom();
-        }
-
-        public void SetClassroom()
-        {
-
+            Classroom classroom = db.Classrooms.Find(id);
+            db.Classrooms.Remove(classroom);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (_db != null)
+            if (disposing)
             {
-                _db.Dispose();
+                db.Dispose();
             }
             base.Dispose(disposing);
         }
