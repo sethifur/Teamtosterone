@@ -14,7 +14,8 @@ namespace Scheddy.Controllers
         // GET: Classroom
         public ActionResult Index()
         {
-            return View();
+            var model = _db.Classrooms.ToList();
+            return View(model);
         }
 
         public void UpdateClassroom()

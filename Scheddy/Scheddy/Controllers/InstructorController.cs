@@ -15,7 +15,8 @@ namespace Scheddy.Controllers
         // GET: Instructor
         public ActionResult Index()
         {
-            return View();
+            var model = _db.Instructors.ToList();
+            return View(model);
         }
 
         public void UpdateInstructor()

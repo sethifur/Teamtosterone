@@ -245,12 +245,12 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Classroom\Index.cshtml" />
+    <Content Include="Views\Course\Index.cshtml" />
+    <Content Include="Views\Instructor\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Classroom\" />
-    <Folder Include="Views\Course\" />
-    <Folder Include="Views\Instructor\" />
     <Folder Include="Views\Schedule\" />
     <Folder Include="Views\Section\" />
   </ItemGroup>
