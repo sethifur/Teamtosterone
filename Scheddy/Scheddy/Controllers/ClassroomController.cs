@@ -18,6 +18,24 @@ namespace Scheddy.Controllers
             return View(model);
         }
 
+        public ActionResult Edit(int id)
+        {
+            var classroom = _db.Classrooms.Single(r => r.ClassroomId == id);
+            return View(classroom);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, FormCollection collection)
+        {
+            var classroom = _db.Classrooms.Single(r => r.ClassroomId == id);
+            if (TryUpdateModel(classroom))
+            {
+                // save to database
+                return RedirectToAction("Index");
+            }
+            return View(classroom);
+        }
+
         public void UpdateClassroom()
         {
 
