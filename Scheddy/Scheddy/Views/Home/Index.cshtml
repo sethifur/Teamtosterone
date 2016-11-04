@@ -1,15 +1,1 @@
-﻿@model IEnumerable<Scheddy.Models.Course>
-
-@{
-    ViewBag.Title = "Home Page";
-}
-
-@foreach (var course in Model)
-{
-    <div>
-        <h4>@course.Prefix @course.CourseNumber</h4>
-        <div>@course.CourseTitle</div>
-        <div>@course.CreditHours Credits</div>
-    </div>
-
-}
+﻿@model IEnumerable<Scheddy.ViewModels.SectionViewModel>
