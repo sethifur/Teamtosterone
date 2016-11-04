@@ -2,15 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Scheddy.ViewModels;
 
 
 namespace Scheddy.Controllers
 {
     public class SectionController : Controller
     {
-        ScheddyDb _db = new ScheddyDb();
+        ScheddyDb db = new ScheddyDb();
 
         // GET: Section
         public ActionResult Index()
@@ -18,18 +20,33 @@ namespace Scheddy.Controllers
             return View();
         }
 
-        public void UpdateSection()
+        public ActionResult UpdateSection(int id, SectionViewModel sectionVm)
         {
-
-
+            Section section = new Section();
+            
+            //set section object to View Model data        
+            
+            db.Sections.Add(section);
+            return View(section);
         }
-        public void DeleteSection()
-        {
 
+        public ActionResult DeleteSection(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Section section = db.Sections.Find(id);
+            if (section == null)
+            {
+                return HttpNotFound();
+            }
+            return View(section);
         }
-        public void AddSection()
-        {
 
+        public ActionResult AddSection(SectionViewModel sectionVm)
+        {
+            return View();
         }
 
         public Section GetSection()
@@ -45,9 +62,9 @@ namespace Scheddy.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (_db != null)
+            if (db != null)
             {
-                _db.Dispose();
+                db.Dispose();
             }
             base.Dispose(disposing);
         }

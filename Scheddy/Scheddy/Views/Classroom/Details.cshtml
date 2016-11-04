@@ -1,0 +1,58 @@
+﻿@model Scheddy.Models.Classroom
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Classroom</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BldgCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BldgCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RoomNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoomNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Campus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Campus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Capacity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Capacity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumComputers)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumComputers)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ClassroomId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

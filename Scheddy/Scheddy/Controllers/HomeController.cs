@@ -4,19 +4,20 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Scheddy.Models;
+using Scheddy.ViewModels;
 
 namespace Scheddy.Controllers
 {
     public class HomeController : Controller
     {
-        ScheddyDb _db = new ScheddyDb();
+        ScheddyDb db = new ScheddyDb();
 
         //default controller. this is for the home page
         public ActionResult Index()
-        {
-            var model = _db.Courses.ToList();
-            return View(model);
+        {  
+            return View();
         }
+
 
         public ActionResult About()
         {

@@ -1,0 +1,66 @@
+﻿@model Scheddy.Models.Course
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Course</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CourseNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CourseNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Department)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Department)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Prefix)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Prefix)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreditHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreditHours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CourseTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CourseTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CourseDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CourseDescription)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.CourseId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
