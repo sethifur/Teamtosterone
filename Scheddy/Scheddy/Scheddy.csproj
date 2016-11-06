@@ -189,6 +189,7 @@
     <Compile Include="Models\Section.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ScheduleViewModel.cs" />
     <Compile Include="ViewModels\SectionViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -247,16 +248,16 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Classroom\Index.cshtml" />
-    <Content Include="Views\Home\Course\Index.cshtml" />
+    <Content Include="Views\Course\Index.cshtml" />
     <Content Include="Views\Instructor\Index.cshtml" />
     <Content Include="Views\Classroom\Edit.cshtml" />
     <Content Include="Views\Classroom\Create.cshtml" />
     <Content Include="Views\Classroom\Delete.cshtml" />
     <Content Include="Views\Classroom\Details.cshtml" />
-    <Content Include="Views\Home\Course\Create.cshtml" />
-    <Content Include="Views\Home\Course\Delete.cshtml" />
-    <Content Include="Views\Home\Course\Details.cshtml" />
-    <Content Include="Views\Home\Course\Edit.cshtml" />
+    <Content Include="Views\Course\Create.cshtml" />
+    <Content Include="Views\Course\Delete.cshtml" />
+    <Content Include="Views\Course\Details.cshtml" />
+    <Content Include="Views\Course\Edit.cshtml" />
     <Content Include="Views\Instructor\Create.cshtml" />
     <Content Include="Views\Instructor\Delete.cshtml" />
     <Content Include="Views\Instructor\Details.cshtml" />

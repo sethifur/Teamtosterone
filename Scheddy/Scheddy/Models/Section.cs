@@ -9,6 +9,16 @@ namespace Scheddy.Models
 {
     public class Section
     {
+        public Section()
+        {
+            
+        }
+
+        public Section(int id)
+        {
+            SectionId = id;
+        }
+
         #region Relationships
 
         public virtual Course Course { get; set; }
