@@ -262,11 +262,15 @@
     <Content Include="Views\Instructor\Delete.cshtml" />
     <Content Include="Views\Instructor\Details.cshtml" />
     <Content Include="Views\Instructor\Edit.cshtml" />
+    <Content Include="Views\Section\Edit.cshtml" />
+    <Content Include="Views\Section\Details.cshtml" />
+    <Content Include="Views\Section\Delete.cshtml" />
+    <Content Include="Views\Section\Create.cshtml" />
+    <Content Include="Views\Section\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Schedule\" />
-    <Folder Include="Views\Section\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

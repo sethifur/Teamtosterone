@@ -21,7 +21,7 @@ namespace Scheddy.Controllers
             return View();
         }
 
-        public ActionResult AddSection(SectionViewModel sectionVm)
+        public ActionResult Add(SectionViewModel sectionVm)
         {
             //build section object from ViewModel
             Section section = new Section();
@@ -30,7 +30,8 @@ namespace Scheddy.Controllers
             section.ClassroomId = sectionVm.ClassroomId;
             section.StartDate = sectionVm.StartDate;
             section.EndDate = sectionVm.EndDate;
-            section.StarTime = sectionVm.EndTime;
+            section.StartTime = sectionVm.StartTime;
+            section.EndTime = sectionVm.EndTime;
             section.numSeats = sectionVm.numSeats;
             section.DaysTaught = sectionVm.DaysTaught;
 
@@ -40,7 +41,7 @@ namespace Scheddy.Controllers
             return View();
         }
 
-        public ActionResult UpdateSection(int? id, SectionViewModel sectionVm)
+        public ActionResult Update(int? id, SectionViewModel sectionVm)
         {
             //was in id passed in?
             if (id == null)
@@ -63,7 +64,8 @@ namespace Scheddy.Controllers
             section.ClassroomId = sectionVm.ClassroomId;
             section.StartDate = sectionVm.StartDate;
             section.EndDate = sectionVm.EndDate;
-            section.StarTime = sectionVm.EndTime;
+            section.StartTime = sectionVm.StartTime;
+            section.EndTime = sectionVm.EndTime;
             section.numSeats = sectionVm.numSeats;
             section.DaysTaught = sectionVm.DaysTaught;
 
@@ -73,7 +75,7 @@ namespace Scheddy.Controllers
             return View(section);
         }
 
-        public ActionResult DeleteSection(int? id)
+        public ActionResult Delete(int? id)
         {
             //was an id passed in?
             if (id == null)
