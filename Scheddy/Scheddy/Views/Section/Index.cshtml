@@ -12,6 +12,18 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.CourseId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClassroomId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InstructorId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ScheduleId)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.CRN)
         </th>
         <th>
@@ -39,6 +51,18 @@
     foreach (var item in Model)
     {
         <tr>
+            <th>
+                @Html.DisplayFor(model => item.CourseId)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.ClassroomId)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.InstructorId)
+            </th>
+            <th>
+                @Html.DisplayFor(model => item.ScheduleId)
+            </th>
             <th>
                 @Html.DisplayFor(model => item.CRN)
             </th>                         
