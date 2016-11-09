@@ -1,13 +1,7 @@
 ﻿using Scheddy.Models;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity.Migrations;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Scheddy.ViewModels;
-
 
 namespace Scheddy.Controllers
 {
@@ -21,58 +15,16 @@ namespace Scheddy.Controllers
             return View();
         }
 
-        public ActionResult Add(SectionViewModel sectionVm)
+        public ActionResult Create()
         {
-            //build section object from ViewModel
-            Section section = new Section();
-            section.CourseId = sectionVm.CourseId;
-            section.InstructorId = sectionVm.InstructorId;
-            section.ClassroomId = sectionVm.ClassroomId;
-            section.StartDate = sectionVm.StartDate;
-            section.EndDate = sectionVm.EndDate;
-            section.StartTime = sectionVm.StartTime;
-            section.EndTime = sectionVm.EndTime;
-            section.numSeats = sectionVm.numSeats;
-            section.DaysTaught = sectionVm.DaysTaught;
-
-            //save section
-            db.Sections.Add(section);
-            db.SaveChanges();
+            
             return View();
         }
 
-        public ActionResult Update(int? id, SectionViewModel sectionVm)
+        public ActionResult Update()
         {
-            //was in id passed in?
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            //grab section to update
-            Section section = db.Sections.Find(id);
-
-            //does that section exist?
-            if (section == null)
-            {
-                return HttpNotFound();
-            }
-
-            //set section object to View Model data
-            section.CourseId = sectionVm.CourseId;
-            section.InstructorId = sectionVm.InstructorId;
-            section.ClassroomId = sectionVm.ClassroomId;
-            section.StartDate = sectionVm.StartDate;
-            section.EndDate = sectionVm.EndDate;
-            section.StartTime = sectionVm.StartTime;
-            section.EndTime = sectionVm.EndTime;
-            section.numSeats = sectionVm.numSeats;
-            section.DaysTaught = sectionVm.DaysTaught;
-
-            //update section
-            db.Sections.AddOrUpdate(section);
-            db.SaveChanges();
-            return View(section);
+            
+            return View();
         }
 
         public ActionResult Delete(int? id)
