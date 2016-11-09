@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Scheddy.ViewModels;
 using System.Data.Entity;
 
 namespace Scheddy.Controllers
@@ -32,7 +31,13 @@ namespace Scheddy.Controllers
             if (ModelState.IsValid)
             {
                 db.Sections.Add(section);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }catch(System.Data.UpdateException ex)
+                {
+                    Console.WriteLine(ex.InnerExcetion);
+                }
                 return RedirectToAction("Index");
             }
 

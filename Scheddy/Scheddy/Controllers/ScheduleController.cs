@@ -6,8 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Scheddy.ViewModels;
-
 
 namespace Scheddy.Controllers
 {
@@ -15,72 +13,29 @@ namespace Scheddy.Controllers
     {
         ScheddyDb db = new ScheddyDb();
 
-        // GET: Schedule
+        //list of schedules
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult AddSchedule(ScheduleViewModel scheduleVm, List<Section> sections)
+        public ActionResult IndexByClassroom()
         {
-            //build and insert to schedule table
-            Schedule schedule = new Schedule();
-            schedule.AcademicYear = scheduleVm.AcademicYear;
-            schedule.Semester = scheduleVm.Semester;
-            schedule.UpdatedBy = scheduleVm.UpdatedBy;
-            schedule.ScheduleName = scheduleVm.ScheduleName;
-            schedule.sections = sections;
-
-            db.Schedules.Add(schedule);
-            db.SaveChanges();
-
-            int id = schedule.ScheduleId;
-            //go through list of sections and add scheduleId and add them in section table.
-            
-            foreach (var section in sections)
-            {
-                section.ScheduleId = schedule.ScheduleId;
-                db.Sections.Add(section);
-            }
-            
-            return View(schedule);
+            return View();
         }
 
-        public ActionResult UpdateSchedule(int? id, ScheduleViewModel scheduleVm, List<Section> sections)
+        public ActionResult IndexByProfessor()
         {
-            //was an id passed in?
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            //grab schedule to return
-            Schedule schedule = db.Schedules.Find(id);
-
-            //does it exist?
-            if (schedule == null)
-            {
-                return HttpNotFound();
-            }
-
-            foreach (var section in sections)
-            {
-                section.ScheduleId = id;
-                db.Sections.Add(section);
-            }
-
-            schedule.AcademicYear = scheduleVm.AcademicYear;
-            schedule.Semester = scheduleVm.Semester;
-            schedule.UpdatedBy = scheduleVm.UpdatedBy;
-            schedule.ScheduleName = scheduleVm.ScheduleName;
-            schedule.sections = sections;
-
-            db.Schedules.Add(schedule);
-            db.SaveChanges();
-            return View(schedule);
+            return View();
         }
 
-        public ActionResult DeleteSchedule(int? id)
+
+        public ActionResult UpdateSchedule(List<Section> sections)
+        {    
+            return View();
+        }
+
+        public ActionResult Delete(int? id)
         {
             //was there an id passed?
             if (id == null)
@@ -129,16 +84,11 @@ namespace Scheddy.Controllers
         }
 
         //this should probably be a Javascript function on the view when it's made.
-        public Section CheckConflict()
+        public bool CheckConflict()
         {
-            return new Section();
+            return true;
         }
-
-        public void SetSchedule()
-        {
-            //?? I'm not sure what this method is compared to AddSchedule()
-        }
-
+        
         protected override void Dispose(bool disposing)
         {
             if (db != null)
