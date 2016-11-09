@@ -21,26 +21,26 @@ namespace Scheddy.Controllers
             return View();
         }
 
-        public ActionResult Add(SectionViewModel sectionVm)
+        public ActionResult Create()
         {
-            //build section object from ViewModel
-            Section section = new Section();
-            section.CourseId = sectionVm.CourseId;
-            section.InstructorId = sectionVm.InstructorId;
-            section.ClassroomId = sectionVm.ClassroomId;
-            section.StartDate = sectionVm.StartDate;
-            section.EndDate = sectionVm.EndDate;
-            section.StartTime = sectionVm.StartTime;
-            section.EndTime = sectionVm.EndTime;
-            section.numSeats = sectionVm.numSeats;
-            section.DaysTaught = sectionVm.DaysTaught;
-
-            //save section
-            db.Sections.Add(section);
-            db.SaveChanges();
             return View();
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "InstructorId,ClassroomId,StartDate,EndDate,EndTime,numSeats,DaysTaught")] Section section)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Sections.Add(section);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
 
+            return View(section);
+
+        
+        }
+            
         public ActionResult Update(int? id, SectionViewModel sectionVm)
         {
             //was in id passed in?
