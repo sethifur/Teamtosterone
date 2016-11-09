@@ -7,7 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Scheddy.ViewModels;
-
+using System.Data.Entity;
 
 namespace Scheddy.Controllers
 {
@@ -40,38 +40,34 @@ namespace Scheddy.Controllers
 
         
         }
-            
-        public ActionResult Update(int? id, SectionViewModel sectionVm)
+
+        public ActionResult Edit(int? id)
         {
-            //was in id passed in?
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            //grab section to update
             Section section = db.Sections.Find(id);
-
-            //does that section exist?
             if (section == null)
             {
                 return HttpNotFound();
             }
+            return View(section);
+        }
 
-            //set section object to View Model data
-            section.CourseId = sectionVm.CourseId;
-            section.InstructorId = sectionVm.InstructorId;
-            section.ClassroomId = sectionVm.ClassroomId;
-            section.StartDate = sectionVm.StartDate;
-            section.EndDate = sectionVm.EndDate;
-            section.StartTime = sectionVm.StartTime;
-            section.EndTime = sectionVm.EndTime;
-            section.numSeats = sectionVm.numSeats;
-            section.DaysTaught = sectionVm.DaysTaught;
-
-            //update section
-            db.Sections.AddOrUpdate(section);
-            db.SaveChanges();
+        // POST: Instructor/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "InstructorId,ClassroomId,StartDate,EndDate,EndTime,numSeats,DaysTaught")] Section section)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(section).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
             return View(section);
         }
 
