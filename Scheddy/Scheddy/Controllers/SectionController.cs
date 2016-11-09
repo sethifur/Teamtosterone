@@ -19,6 +19,22 @@ namespace Scheddy.Controllers
         {
             
             return View();
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "InstructorId,ClassroomId,StartDate,EndDate,EndTime,numSeats,DaysTaught")] Section section)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Sections.Add(section);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(section);
+
+        
         }
 
         public ActionResult Update()
