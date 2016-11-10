@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace Scheddy.Controllers
 {
@@ -17,7 +18,7 @@ namespace Scheddy.Controllers
         // GET: Section
         public ActionResult Index()
         {
-            return View();
+            return View(db.Sections.ToList());
         }
 
         public ActionResult Create()
@@ -34,9 +35,9 @@ namespace Scheddy.Controllers
                 try
                 {
                     db.SaveChanges();
-                }catch(System.Data.UpdateException ex)
+                }catch(DbUpdateException ex)
                 {
-                    Console.WriteLine(ex.InnerExcetion);
+                    Console.WriteLine(ex.InnerException);
                 }
                 return RedirectToAction("Index");
             }
@@ -60,7 +61,8 @@ namespace Scheddy.Controllers
             return View(section);
         }
 
-        // POST: Instructor/Edit/5
+
+        // POST: Section/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -120,10 +122,18 @@ namespace Scheddy.Controllers
             return View(section);
         }
 
-        public void SetSection()
+        // POST: Instructor/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
-            //?? I'm not sure what this method is compared to AddSection()
+            Section section = db.Sections.Find(id);
+            db.Sections.Remove(section);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
+
+
 
         protected override void Dispose(bool disposing)
         {

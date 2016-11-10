@@ -271,6 +271,5 @@ C:\Users\sethalumps\Documents\Visual Studio 2015\Projects\Teamtosterone\Scheddy\
 C:\Users\sethalumps\Documents\Visual Studio 2015\Projects\Teamtosterone\Scheddy\Scheddy\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\sethalumps\Documents\Visual Studio 2015\Projects\Teamtosterone\Scheddy\Scheddy\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\sethalumps\Documents\Visual Studio 2015\Projects\Teamtosterone\Scheddy\Scheddy\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\Users\sethalumps\Documents\Visual Studio 2015\Projects\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.csprojResolveAssemblyReference.cache
 C:\Users\sethalumps\Documents\Visual Studio 2015\Projects\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.dll
 C:\Users\sethalumps\Documents\Visual Studio 2015\Projects\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.pdb
