@@ -25,26 +25,29 @@ namespace Scheddy.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "InstructorId,ClassroomId,StartDate,EndDate,EndTime,numSeats,DaysTaught")] Section section)
+        public ActionResult Create([Bind(Include = "CourseId,ClassroomId,InstructorId,ScheduleId,CRN,StartTime,EndTime,StartDate,EndDate,DaysTaught,numSeats,")] Section section)
         {
             if (ModelState.IsValid)
             {
-                db.Sections.Add(section);
+                section.Course = db.Courses.Find(section.CourseId);
+                section.Classroom = db.Classrooms.Find(section.ClassroomId);
+                section.Instructor = db.Instructors.Find(section.InstructorId);
+                section.Schedule = db.Schedules.Find(section.InstructorId);
                 try
                 {
+                    db.Sections.Add(section);
                     db.SaveChanges();
-                }catch(DbUpdateException ex)
+                }
+                catch (DbUpdateException ex)
                 {
                     Console.WriteLine(ex.InnerException);
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
             }
-
             return View(section);
-
-        
         }
 
         public ActionResult Edit(int? id)
@@ -132,9 +135,7 @@ namespace Scheddy.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
-
-
+        
         protected override void Dispose(bool disposing)
         {
             if (db != null)

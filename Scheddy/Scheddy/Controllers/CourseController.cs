@@ -96,11 +96,22 @@ namespace Scheddy.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Course course = db.Courses.Find(id);
+
             if (course == null)
             {
                 return HttpNotFound();
             }
+
+            Section sectionsWithCourse = db.Sections.Find(course.CourseId);
+
+            //are there sections with this course?
+            if (sectionsWithCourse != null)
+            {
+                return View();
+            }
+            db.SaveChanges();
             return View(course);
         }
 
@@ -110,6 +121,13 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Course course = db.Courses.Find(id);
+            Section sectionsWithCourse = db.Sections.Find(course.CourseId);
+
+            //are there sections with this course?
+            if (sectionsWithCourse != null)
+            {
+                return RedirectToAction("Index");
+            }
             db.Courses.Remove(course);
             db.SaveChanges();
             return RedirectToAction("Index");
