@@ -23,7 +23,12 @@ namespace Scheddy.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            ViewModels.ClassroomCourseInstructorList list = new ViewModels.ClassroomCourseInstructorList();
+            list.classrooms = db.Classrooms;
+            list.courses = db.Courses;
+            list.instructors = db.Instructors;
+            
+            return View(list);
         }
 
         [HttpPost]
