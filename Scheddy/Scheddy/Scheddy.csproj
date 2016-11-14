@@ -269,6 +269,9 @@
     <Content Include="Views\Schedule\Index.cshtml" />
     <Content Include="Views\Schedule\IndexByClassroom.cshtml" />
     <Content Include="Views\Schedule\IndexByProfessor.cshtml" />
+    <Content Include="Views\Schedule\Create.cshtml" />
+    <Content Include="Views\Schedule\Delete.cshtml" />
+    <Content Include="Views\Schedule\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

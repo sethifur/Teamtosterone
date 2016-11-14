@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace Scheddy.Controllers
 {
@@ -16,7 +18,7 @@ namespace Scheddy.Controllers
         //list of schedules
         public ActionResult Index()
         {
-            return View();
+            return View(db.Schedules.ToList());
         }
 
         public ActionResult IndexByClassroom()
@@ -29,6 +31,28 @@ namespace Scheddy.Controllers
             return View();
         }
 
+        public ActionResult Create()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Semester,AcademicYear,ScheduleName,DateCreated,DateModified,CreatedBy,UpdatedBy")] Schedule schedule)
+        {
+            try
+            {
+                db.Schedules.Add(schedule);
+                db.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine(ex.InnerException);
+                return RedirectToAction("Index");
+            } 
+            return View(schedule);
+        }
 
         public ActionResult UpdateSchedule(List<Section> sections)
         {    
@@ -60,6 +84,20 @@ namespace Scheddy.Controllers
             db.Schedules.Remove(schedule);
             db.SaveChanges();
             return View();
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Schedule schedule = db.Schedules.Find(id);
+
+            
+
+
+            db.Schedules.Remove(schedule);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         public ActionResult GetSchedule(int? id)
