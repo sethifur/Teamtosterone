@@ -39,7 +39,7 @@ namespace Scheddy.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Semester,AcademicYear,ScheduleName")] Schedule schedule)
+        public ActionResult Create([Bind(Include = "Semester,AcademicYear,ScheduleName,DateCreated,DateModified,CreatedBy,UpdatedBy")] Schedule schedule)
         {
             try
             {
