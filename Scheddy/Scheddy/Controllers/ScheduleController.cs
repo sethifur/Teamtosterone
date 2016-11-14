@@ -86,6 +86,20 @@ namespace Scheddy.Controllers
             return View();
         }
 
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Schedule schedule = db.Schedules.Find(id);
+
+            
+
+
+            db.Schedules.Remove(schedule);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         public ActionResult GetSchedule(int? id)
         {
             //was an id passed in?
