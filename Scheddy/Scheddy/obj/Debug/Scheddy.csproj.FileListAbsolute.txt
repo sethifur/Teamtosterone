@@ -342,3 +342,4 @@ C:\Users\mmerr\Desktop\School\CS3750\Teamtosterone\Scheddy\Scheddy\bin\Microsoft
 C:\Users\mmerr\Desktop\School\CS3750\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.csprojResolveAssemblyReference.cache
 C:\Users\mmerr\Desktop\School\CS3750\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.dll
 C:\Users\mmerr\Desktop\School\CS3750\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.pdb
+C:\Users\sethalumps\Documents\Visual Studio 2015\Projects\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.csprojResolveAssemblyReference.cache

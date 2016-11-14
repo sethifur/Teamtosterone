@@ -21,56 +21,52 @@
 
             foreach (Scheddy.Models.Classroom c in Model.classrooms)
             {
-                classroomNames.Add(c.BldgCode + c.RoomNumber);
+                classroomNames.Add(c.BldgCode + " " + c.RoomNumber);
+            }
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @{
+            List<string> instructorNames = new List<string>();
+
+            foreach (Scheddy.Models.Instructor c in Model.instructors)
+            {
+                instructorNames.Add(c.FirstName + " " + c.LastName);
+            }
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @{
+            List<string> courseNames = new List<string>();
+
+            foreach (Scheddy.Models.Course c in Model.courses)
+            {
+                courseNames.Add(c.Prefix + c.CourseNumber);
             }
         }
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.section.Instructor, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Instructor",
+                new SelectList(instructorNames),
+                "Select Instructor")
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.section.Course, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Course",
+                new SelectList(courseNames),
+                "Select Course")
+            </div>
+        </div>
         <div class="form-group">
             @Html.LabelFor(model => model.section.Classroom, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("Classroom",
                 new SelectList(classroomNames),
                 "Select Classroom")
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.section.CourseId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.section.CourseId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.section.CourseId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.section.CourseId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.section.CourseId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.section.CourseId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.section.ClassroomId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.section.ClassroomId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.section.ClassroomId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.section.InstructorId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.section.InstructorId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.section.InstructorId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.section.ScheduleId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.section.ScheduleId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.section.ScheduleId, "", new { @class = "text-danger" })
             </div>
         </div>
 
