@@ -12,5 +12,9 @@ namespace Scheddy.ViewModels
         public IEnumerable<Models.Instructor> instructors;
         public Models.Section section;
 
+        public string selectedClassroom { get; set; }
+        public string selectedCourse { get; set; }
+        public string selectedInstructor { get; set; }
+
     }
 }

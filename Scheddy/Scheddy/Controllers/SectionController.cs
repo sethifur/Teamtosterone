@@ -33,17 +33,45 @@ namespace Scheddy.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CourseId,ClassroomId,InstructorId,ScheduleId,CRN,StartTime,EndTime,StartDate,EndDate,DaysTaught,numSeats,")] Section section)
+        public ActionResult Create(ViewModels.ClassroomCourseInstructorList viewModel)
         {
+            String campus = viewModel.selectedClassroom.Split(' ')[0];
+            String buildingCode = viewModel.selectedClassroom.Split(' ')[1];
+            String roomNumber = viewModel.selectedClassroom.Split(' ')[2];
+
+            String firstName = viewModel.selectedInstructor.Split(' ')[0];
+            String lastName = viewModel.selectedInstructor.Split(' ')[1];
+
+            String prefix = viewModel.selectedCourse.Split(' ')[0];
+            String courseNumber = viewModel.selectedCourse.Split(' ')[1];
+            int courseNumberInt = Int32.Parse(courseNumber);
+
+
+            var chosenClassroom = from classroomFromDb in db.Classrooms
+                      where classroomFromDb.Campus == campus && classroomFromDb.BldgCode == buildingCode && classroomFromDb.RoomNumber == roomNumber
+                      select classroomFromDb;
+            viewModel.section.ClassroomId = chosenClassroom.First().ClassroomId;
+
+            var chosenInstructor = from instructorFromDb in db.Instructors
+                                  where instructorFromDb.FirstName == firstName && instructorFromDb.LastName == lastName
+                                  select instructorFromDb;
+            viewModel.section.InstructorId = chosenInstructor.First().InstructorId;
+
+            var chosenCourse = from courseFromDb in db.Courses
+                                   where courseFromDb.Prefix == prefix && courseFromDb.CourseNumber == courseNumberInt
+                               select courseFromDb;
+            viewModel.section.InstructorId = chosenInstructor.First().InstructorId;
+
+
             if (ModelState.IsValid)
             {
-                section.Course = db.Courses.Find(section.CourseId);
-                section.Classroom = db.Classrooms.Find(section.ClassroomId);
-                section.Instructor = db.Instructors.Find(section.InstructorId);
-                section.Schedule = db.Schedules.Find(section.InstructorId);
+                viewModel.section.Course = db.Courses.Find(viewModel.section.CourseId);
+                viewModel.section.Classroom = db.Classrooms.Find(viewModel.section.ClassroomId);
+                viewModel.section.Instructor = db.Instructors.Find(viewModel.section.InstructorId);
+                viewModel.section.Schedule = db.Schedules.Find(viewModel.section.InstructorId);
                 try
                 {
-                    db.Sections.Add(section);
+                    db.Sections.Add(viewModel.section);
                     db.SaveChanges();
                 }
                 catch (DbUpdateException ex)
@@ -52,7 +80,7 @@ namespace Scheddy.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            return View(section);
+            return View(viewModel.section);
         }
 
         public ActionResult Edit(int? id)

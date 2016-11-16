@@ -21,7 +21,7 @@
 
             foreach (Scheddy.Models.Classroom c in Model.classrooms)
             {
-                classroomNames.Add(c.BldgCode + " " + c.RoomNumber);
+                classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
             }
         }
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -48,8 +48,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.Instructor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("Instructor",
-                new SelectList(instructorNames),
+                @Html.DropDownListFor(model => model.selectedInstructor,
+                Model.instructors,
                 "Select Instructor")
             </div>
         </div>
