@@ -33,8 +33,14 @@ namespace Scheddy.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ViewModels.ClassroomCourseInstructorList viewModel)
+        public ActionResult Create([Bind(Include = "CRN,StartTime,EndTime,StartDate,EndDate,DaysTaught,NumSeats,selectedClassroom,selectedInstructor,selectedCourse")] ViewModels.ClassroomCourseInstructorList viewModel)
         {
+
+
+
+            // ViewModels.ClassroomCourseInstructorList viewModel
+            // [Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor
+
             String campus = viewModel.selectedClassroom.Split(' ')[0];
             String buildingCode = viewModel.selectedClassroom.Split(' ')[1];
             String roomNumber = viewModel.selectedClassroom.Split(' ')[2];
@@ -46,39 +52,71 @@ namespace Scheddy.Controllers
             String courseNumber = viewModel.selectedCourse.Split(' ')[1];
             int courseNumberInt = Int32.Parse(courseNumber);
 
+            System.Diagnostics.Debug.WriteLine("HEY, GET READY");
+            //System.Diagnostics.Debug.WriteLine(viewModel.classrooms.ToList()); this is null
+            System.Diagnostics.Debug.WriteLine(campus + buildingCode + roomNumber + firstName + lastName + prefix + courseNumber);
 
             var chosenClassroom = from classroomFromDb in db.Classrooms
-                      where classroomFromDb.Campus == campus && classroomFromDb.BldgCode == buildingCode && classroomFromDb.RoomNumber == roomNumber
-                      select classroomFromDb;
-            viewModel.section.ClassroomId = chosenClassroom.First().ClassroomId;
+                                  where classroomFromDb.Campus == campus && classroomFromDb.BldgCode == buildingCode && classroomFromDb.RoomNumber == roomNumber
+                                  select classroomFromDb;
+            try
+            {
+                viewModel.section.ClassroomId = chosenClassroom.First().ClassroomId; 
+            }
+            catch (NullReferenceException e)
+            {
+                System.Diagnostics.Debug.WriteLine("EXCEPTION viewModel.section.ClassroomId: " + e.Message);
+            }
 
             var chosenInstructor = from instructorFromDb in db.Instructors
                                   where instructorFromDb.FirstName == firstName && instructorFromDb.LastName == lastName
                                   select instructorFromDb;
-            viewModel.section.InstructorId = chosenInstructor.First().InstructorId;
+            try
+            {
+                viewModel.section.InstructorId = chosenInstructor.First().InstructorId;
+            }
+            catch (NullReferenceException e)
+            {
+                System.Diagnostics.Debug.WriteLine("EXCEPTION viewModel.section.InstructorId: " + e.Message);
+            }
 
             var chosenCourse = from courseFromDb in db.Courses
                                    where courseFromDb.Prefix == prefix && courseFromDb.CourseNumber == courseNumberInt
                                select courseFromDb;
-            viewModel.section.InstructorId = chosenInstructor.First().InstructorId;
+            try
+            {
+                viewModel.section.CourseId = chosenCourse.First().CourseId;
+            }
+            catch (NullReferenceException e)
+            {
+                System.Diagnostics.Debug.WriteLine("EXCEPTION viewModel.section.CourseId: " + e.Message);
+            }
 
 
             if (ModelState.IsValid)
             {
-                viewModel.section.Course = db.Courses.Find(viewModel.section.CourseId);
-                viewModel.section.Classroom = db.Classrooms.Find(viewModel.section.ClassroomId);
-                viewModel.section.Instructor = db.Instructors.Find(viewModel.section.InstructorId);
-                viewModel.section.Schedule = db.Schedules.Find(viewModel.section.ScheduleId);
                 try
                 {
-                    db.Sections.Add(viewModel.section);
-                    db.SaveChanges();
+                    viewModel.section.Course = db.Courses.Find(viewModel.section.CourseId);
+                    viewModel.section.Classroom = db.Classrooms.Find(viewModel.section.ClassroomId);
+                    viewModel.section.Instructor = db.Instructors.Find(viewModel.section.InstructorId);
+                    viewModel.section.Schedule = db.Schedules.Find(viewModel.section.InstructorId);
+                    try
+                    {
+                        db.Sections.Add(viewModel.section);
+                        db.SaveChanges();
+                    }
+                    catch (DbUpdateException ex)
+                    {
+                        Console.WriteLine(ex.InnerException);
+                        return RedirectToAction("Index");
+                    }
                 }
-                catch (DbUpdateException ex)
+                catch (NullReferenceException e)
                 {
-                    Console.WriteLine(ex.InnerException);
-                    return RedirectToAction("Index");
+                    System.Diagnostics.Debug.WriteLine("EXCEPTION assignments: " + e.Message);
                 }
+                
             }
             return View(viewModel.section);
         }
