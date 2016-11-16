@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using Scheddy.ViewModels;
 
 namespace Scheddy.Controllers
 {
@@ -23,7 +24,7 @@ namespace Scheddy.Controllers
 
         public ActionResult Create()
         {
-            ViewModels.ClassroomCourseInstructorList list = new ViewModels.ClassroomCourseInstructorList();
+            ClassroomCourseInstructorList list = new ClassroomCourseInstructorList();
             list.classrooms = db.Classrooms;
             list.courses = db.Courses;
             list.instructors = db.Instructors;
@@ -33,11 +34,8 @@ namespace Scheddy.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CRN,StartTime,EndTime,StartDate,EndDate,DaysTaught,NumSeats,selectedClassroom,selectedInstructor,selectedCourse")] ViewModels.ClassroomCourseInstructorList viewModel)
+        public ActionResult Create(ClassroomCourseInstructorList viewModel)
         {
-
-
-
             // ViewModels.ClassroomCourseInstructorList viewModel
             // [Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor
 
