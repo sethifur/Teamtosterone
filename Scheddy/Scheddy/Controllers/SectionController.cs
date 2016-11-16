@@ -68,7 +68,7 @@ namespace Scheddy.Controllers
                 viewModel.section.Course = db.Courses.Find(viewModel.section.CourseId);
                 viewModel.section.Classroom = db.Classrooms.Find(viewModel.section.ClassroomId);
                 viewModel.section.Instructor = db.Instructors.Find(viewModel.section.InstructorId);
-                viewModel.section.Schedule = db.Schedules.Find(viewModel.section.InstructorId);
+                viewModel.section.Schedule = db.Schedules.Find(viewModel.section.ScheduleId);
                 try
                 {
                     db.Sections.Add(viewModel.section);
