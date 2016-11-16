@@ -45,14 +45,15 @@
             }
         }
 
+        @{
+            Model.selectedInstructor = "selectedInstructor";
+            Model.selectedCourse = "selectedCourse";
+            Model.selectedClassroom = "selectedClassroom";
+        }
         <div class="form-group">
             @Html.LabelFor(model => model.section.Instructor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-<<<<<<< HEAD
-                @Html.DropDownListFor(model => model.selectedInstructor,
-=======
                 @Html.DropDownList(Model.selectedInstructor,
->>>>>>> 0ba1f2865e7338d330b687b00d3a007ba703b342
                 new SelectList(instructorNames),
                 "Select Instructor")
             </div>
