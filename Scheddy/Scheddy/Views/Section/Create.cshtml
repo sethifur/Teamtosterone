@@ -45,6 +45,12 @@
             }
         }
 
+        @{ 
+            Model.selectedInstructor = "selectedInstructor";
+            Model.selectedCourse = "selectedCourse";
+            Model.selectedClassroom = "selectedClassroom";
+        }
+
         <div class="form-group">
             @Html.LabelFor(model => model.section.Instructor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
