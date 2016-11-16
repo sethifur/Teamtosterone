@@ -41,22 +41,22 @@
 
             foreach (Scheddy.Models.Course c in Model.courses)
             {
-                courseNames.Add(c.Prefix + c.CourseNumber);
+                courseNames.Add(c.Prefix + " " + c.CourseNumber);
             }
         }
 
         <div class="form-group">
             @Html.LabelFor(model => model.section.Instructor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.selectedInstructor,
-                Model.instructors,
+                @Html.DropDownList(Model.selectedInstructor,
+                new SelectList(instructorNames),
                 "Select Instructor")
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.section.Course, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("Course",
+                @Html.DropDownList(Model.selectedCourse,
                 new SelectList(courseNames),
                 "Select Course")
             </div>
@@ -64,7 +64,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.Classroom, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("Classroom",
+                @Html.DropDownList(Model.selectedClassroom,
                 new SelectList(classroomNames),
                 "Select Classroom")
             </div>
