@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using Scheddy.ViewModels;
 
 namespace Scheddy.Controllers
 {
@@ -28,7 +29,11 @@ namespace Scheddy.Controllers
 
         public ActionResult IndexByProfessor()
         {
-            return View();
+            ScheduleInstructorSection list = new ScheduleInstructorSection();
+            list.instructor = db.Instructors;
+            list.section = db.Sections;
+
+            return View(list);
         }
 
         public ActionResult Create()
