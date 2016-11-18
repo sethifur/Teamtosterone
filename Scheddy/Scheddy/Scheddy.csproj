@@ -273,6 +273,9 @@
     <Content Include="Views\Schedule\Create.cshtml" />
     <Content Include="Views\Schedule\Delete.cshtml" />
     <Content Include="Views\Schedule\Edit.cshtml" />
+    <Content Include="Views\Course\CannotDelete.cshtml" />
+    <Content Include="Views\Classroom\CannotDelete.cshtml" />
+    <Content Include="Views\Instructor\CannotDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

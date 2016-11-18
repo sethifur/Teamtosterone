@@ -34,14 +34,14 @@ namespace Scheddy.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ClassroomCourseInstructorList viewModel)
+        public ActionResult Create(ClassroomCourseInstructorList viewModel, FormCollection f)
         {
             // ViewModels.ClassroomCourseInstructorList viewModel
             // [Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor
 
-            String campus = viewModel.selectedClassroom.Split(' ')[0];
-            String buildingCode = viewModel.selectedClassroom.Split(' ')[1];
-            String roomNumber = viewModel.selectedClassroom.Split(' ')[2];
+            String campus = viewModel.selectedClassroom.Split(' ')[0] + " " + viewModel.selectedClassroom.Split(' ')[1];
+            String buildingCode = viewModel.selectedClassroom.Split(' ')[2];
+            String roomNumber = viewModel.selectedClassroom.Split(' ')[3];
 
             String firstName = viewModel.selectedInstructor.Split(' ')[0];
             String lastName = viewModel.selectedInstructor.Split(' ')[1];
@@ -50,13 +50,14 @@ namespace Scheddy.Controllers
             String courseNumber = viewModel.selectedCourse.Split(' ')[1];
             int courseNumberInt = Int32.Parse(courseNumber);
 
-            System.Diagnostics.Debug.WriteLine("HEY, GET READY");
+            //System.Diagnostics.Debug.WriteLine("HEY, GET READY");
             //System.Diagnostics.Debug.WriteLine(viewModel.classrooms.ToList()); this is null
-            System.Diagnostics.Debug.WriteLine(campus + buildingCode + roomNumber + firstName + lastName + prefix + courseNumber);
+            //System.Diagnostics.Debug.WriteLine(campus + buildingCode + roomNumber + firstName + lastName + prefix + courseNumber);
 
-            var chosenClassroom = from classroomFromDb in db.Classrooms
-                                  where classroomFromDb.Campus == campus && classroomFromDb.BldgCode == buildingCode && classroomFromDb.RoomNumber == roomNumber
-                                  select classroomFromDb;
+            var chosenClassroom = from classroom in db.Classrooms
+                                  where classroom.Campus == campus && classroom.BldgCode == buildingCode && classroom.RoomNumber == roomNumber
+                                  select classroom;
+
             try
             {
                 viewModel.section.ClassroomId = chosenClassroom.First().ClassroomId; 
@@ -116,7 +117,7 @@ namespace Scheddy.Controllers
                 }
                 
             }
-            return View(viewModel.section);
+            return View(viewModel);
         }
 
         public ActionResult Edit(int? id)
@@ -170,27 +171,6 @@ namespace Scheddy.Controllers
             //remove section
             db.Sections.Remove(section);
             db.SaveChanges();
-            return View(section);
-        }
-
-        public ActionResult GetSection(int? id)
-        {
-            //was an id passed in?
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            //grab section to return
-            Section section = db.Sections.Find(id);
-
-            //does it exist?
-            if (section == null)
-            {
-                return HttpNotFound();
-            }
-
-            //return it
             return View(section);
         }
 

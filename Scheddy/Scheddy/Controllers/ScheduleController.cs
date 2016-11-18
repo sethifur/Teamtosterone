@@ -29,11 +29,12 @@ namespace Scheddy.Controllers
 
         public ActionResult IndexByProfessor()
         {
-            ScheduleInstructorSection list = new ScheduleInstructorSection();
-            list.instructor = db.Instructors;
-            list.section = db.Sections;
+           // ScheduleInstructorSection list = new ScheduleInstructorSection();
+           // list.instructor = db.Instructors;
+           // list.section = db.Sections;
 
-            return View(list);
+            //return View(list);
+            return View();
         }
 
         public ActionResult Create()

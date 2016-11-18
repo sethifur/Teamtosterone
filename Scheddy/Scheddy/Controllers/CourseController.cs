@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using Scheddy.Models;
 
 namespace Scheddy.Controllers
@@ -46,7 +47,9 @@ namespace Scheddy.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CourseId,CourseNumber,Department,Prefix,CreditHours,CourseTitle,CourseDescription")] Course course)
+        public ActionResult Create(
+            [Bind(Include = "CourseId,CourseNumber,Department,Prefix,CreditHours,CourseTitle,CourseDescription")] Course
+                course)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +81,9 @@ namespace Scheddy.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CourseId,CourseNumber,Department,Prefix,CreditHours,CourseTitle,CourseDescription")] Course course)
+        public ActionResult Edit(
+            [Bind(Include = "CourseId,CourseNumber,Department,Prefix,CreditHours,CourseTitle,CourseDescription")] Course
+                course)
         {
             if (ModelState.IsValid)
             {
@@ -121,10 +126,23 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Course course = db.Courses.Find(id);
+
+            try
+            {
+                db.Courses.Remove(course);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("CannotDelete");
+            }
             
-            db.Courses.Remove(course);
-            db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult CannotDelete()
+        {
+            return View();
         }
 
         protected override void Dispose(bool disposing)
