@@ -43,6 +43,11 @@ namespace Scheddy.Controllers
             return View();
         }
 
+        public ActionResult CannotDelete()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Semester,AcademicYear,ScheduleName,DateCreated,DateModified,CreatedBy,UpdatedBy")] Schedule schedule)
@@ -97,8 +102,6 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Schedule schedule = db.Schedules.Find(id);
-
-            
 
 
             db.Schedules.Remove(schedule);

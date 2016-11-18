@@ -20,7 +20,7 @@ namespace Scheddy.Models
 
         public virtual Instructor Instructor { get; set; }
         public int? InstructorId { get; set; }
-
+        
         public virtual Schedule Schedule { get; set; }
         public int? ScheduleId { get; set; }
 
@@ -31,9 +31,11 @@ namespace Scheddy.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SectionId { get; set; }
         public int? CRN { get; set; }
+
         [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{HH:mm:0}", ApplyFormatInEditMode = true)]
         public DateTime? StartTime { get; set; }
+
         [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{HH:mm:0}", ApplyFormatInEditMode = true)]
         public DateTime? EndTime { get; set; }
@@ -41,6 +43,7 @@ namespace Scheddy.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? StartDate { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? EndDate { get; set; }

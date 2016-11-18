@@ -28,7 +28,7 @@ namespace Scheddy.Controllers
             list.classrooms = db.Classrooms;
             list.courses = db.Courses;
             list.instructors = db.Instructors;
-            
+
             return View(list);
         }
 
@@ -55,12 +55,13 @@ namespace Scheddy.Controllers
             //System.Diagnostics.Debug.WriteLine(campus + buildingCode + roomNumber + firstName + lastName + prefix + courseNumber);
 
             var chosenClassroom = from classroom in db.Classrooms
-                                  where classroom.Campus == campus && classroom.BldgCode == buildingCode && classroom.RoomNumber == roomNumber
-                                  select classroom;
+                where
+                classroom.Campus == campus && classroom.BldgCode == buildingCode && classroom.RoomNumber == roomNumber
+                select classroom;
 
             try
             {
-                viewModel.section.ClassroomId = chosenClassroom.First().ClassroomId; 
+                viewModel.section.ClassroomId = chosenClassroom.First().ClassroomId;
             }
             catch (NullReferenceException e)
             {
@@ -68,8 +69,8 @@ namespace Scheddy.Controllers
             }
 
             var chosenInstructor = from instructorFromDb in db.Instructors
-                                  where instructorFromDb.FirstName == firstName && instructorFromDb.LastName == lastName
-                                  select instructorFromDb;
+                where instructorFromDb.FirstName == firstName && instructorFromDb.LastName == lastName
+                select instructorFromDb;
             try
             {
                 viewModel.section.InstructorId = chosenInstructor.First().InstructorId;
@@ -80,8 +81,8 @@ namespace Scheddy.Controllers
             }
 
             var chosenCourse = from courseFromDb in db.Courses
-                                   where courseFromDb.Prefix == prefix && courseFromDb.CourseNumber == courseNumberInt
-                               select courseFromDb;
+                where courseFromDb.Prefix == prefix && courseFromDb.CourseNumber == courseNumberInt
+                select courseFromDb;
             try
             {
                 viewModel.section.CourseId = chosenCourse.First().CourseId;
@@ -115,9 +116,9 @@ namespace Scheddy.Controllers
                 {
                     System.Diagnostics.Debug.WriteLine("EXCEPTION assignments: " + e.Message);
                 }
-                
+
             }
-            return View(viewModel);
+            return RedirectToAction("Index");
         }
 
         public ActionResult Edit(int? id)
@@ -140,7 +141,8 @@ namespace Scheddy.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "InstructorId,ClassroomId,StartDate,EndDate,EndTime,numSeats,DaysTaught")] Section section)
+        public ActionResult Edit(
+            [Bind(Include = "InstructorId,ClassroomId,StartDate,EndDate,EndTime,numSeats,DaysTaught")] Section section)
         {
             if (ModelState.IsValid)
             {
@@ -180,11 +182,24 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Section section = db.Sections.Find(id);
-            db.Sections.Remove(section);
-            db.SaveChanges();
+            try
+            {
+                db.Sections.Remove(section);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("CannotDelete");
+            }
+            
             return RedirectToAction("Index");
         }
-        
+
+        public ActionResult CannotDelete()
+        {
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (db != null)

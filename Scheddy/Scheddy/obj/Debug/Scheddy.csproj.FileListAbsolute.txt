@@ -340,6 +340,5 @@ C:\Users\robbi\Source\Repos\Teamtosterone\Scheddy\Scheddy\bin\Microsoft.Owin.Sec
 C:\Users\robbi\Source\Repos\Teamtosterone\Scheddy\Scheddy\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\robbi\Source\Repos\Teamtosterone\Scheddy\Scheddy\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\robbi\Source\Repos\Teamtosterone\Scheddy\Scheddy\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\Users\robbi\Source\Repos\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.csprojResolveAssemblyReference.cache
 C:\Users\robbi\Source\Repos\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.dll
 C:\Users\robbi\Source\Repos\Teamtosterone\Scheddy\Scheddy\obj\Debug\Scheddy.pdb
