@@ -39,6 +39,39 @@ namespace Scheddy.Controllers
             // ViewModels.ClassroomCourseInstructorList viewModel
             // [Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor
 
+            String daysPerWeek = "";
+            if (viewModel.checkedOnline)
+            {
+                daysPerWeek = "ONL";
+            } else
+            {
+                if (viewModel.checkedMonday)
+                {
+                    daysPerWeek += "M";
+                }
+                if (viewModel.checkedTuesday)
+                {
+                    daysPerWeek += "T";
+                }
+                if (viewModel.checkedWednesday)
+                {
+                    daysPerWeek += "W";
+                }
+                if (viewModel.checkedThursday)
+                {
+                    daysPerWeek += "R";
+                }
+                if (viewModel.checkedFriday)
+                {
+                    daysPerWeek += "F";
+                }
+                if (viewModel.checkedSaturday)
+                {
+                    daysPerWeek += "S";
+                }
+            }
+
+
             String campus = viewModel.selectedClassroom.Split(' ')[0] + " " + viewModel.selectedClassroom.Split(' ')[1];
             String buildingCode = viewModel.selectedClassroom.Split(' ')[2];
             String roomNumber = viewModel.selectedClassroom.Split(' ')[3];
@@ -92,28 +125,46 @@ namespace Scheddy.Controllers
                 System.Diagnostics.Debug.WriteLine("EXCEPTION viewModel.section.CourseId: " + e.Message);
             }
 
+            try
+            {
+                viewModel.section.DaysTaught = daysPerWeek;
+            }
+            catch (NullReferenceException e)
+            {
+                System.Diagnostics.Debug.WriteLine("EXCEPTION viewModel.section.DaysTaught: " + e.Message);
+            }
+
+            System.Diagnostics.Debug.WriteLine("HERE 1");
 
             if (ModelState.IsValid)
             {
+
+                System.Diagnostics.Debug.WriteLine("HERE 2");
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine("HERE 3");
+
                     viewModel.section.Course = db.Courses.Find(viewModel.section.CourseId);
                     viewModel.section.Classroom = db.Classrooms.Find(viewModel.section.ClassroomId);
                     viewModel.section.Instructor = db.Instructors.Find(viewModel.section.InstructorId);
                     viewModel.section.Schedule = db.Schedules.Find(viewModel.section.InstructorId);
                     try
                     {
+                        System.Diagnostics.Debug.WriteLine("HERE 4");
                         db.Sections.Add(viewModel.section);
                         db.SaveChanges();
                     }
                     catch (DbUpdateException ex)
                     {
+                        System.Diagnostics.Debug.WriteLine("HERE OH NO 1");
+                        System.Diagnostics.Debug.WriteLine(ex.InnerException);
                         Console.WriteLine(ex.InnerException);
                         return RedirectToAction("Index");
                     }
                 }
                 catch (NullReferenceException e)
                 {
+                    System.Diagnostics.Debug.WriteLine("HERE OH NO 2");
                     System.Diagnostics.Debug.WriteLine("EXCEPTION assignments: " + e.Message);
                 }
 

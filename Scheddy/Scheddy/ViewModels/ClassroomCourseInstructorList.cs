@@ -18,6 +18,14 @@ namespace Scheddy.ViewModels
         public string selectedCourse { get; set; }
         public string selectedInstructor { get; set; }
 
+        public bool checkedMonday { get; set; }
+        public bool checkedTuesday { get; set; }
+        public bool checkedWednesday { get; set; }
+        public bool checkedThursday { get; set; }
+        public bool checkedFriday { get; set; }
+        public bool checkedSaturday { get; set; }
+        public bool checkedOnline { get; set; }
+        
         public ClassroomCourseInstructorList()
         {
             section = new Section();
