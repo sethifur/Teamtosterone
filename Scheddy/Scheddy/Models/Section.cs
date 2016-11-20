@@ -33,11 +33,11 @@ namespace Scheddy.Models
         public int? CRN { get; set; }
 
         [DataType(DataType.Time)]
-        [DisplayFormat(DataFormatString = "{HH:mm:0}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:t}", ApplyFormatInEditMode = true)]
         public DateTime? StartTime { get; set; }
 
         [DataType(DataType.Time)]
-        [DisplayFormat(DataFormatString = "{HH:mm:0}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:t}", ApplyFormatInEditMode = true)]
         public DateTime? EndTime { get; set; }
 
         [DataType(DataType.Date)]
