@@ -47,7 +47,6 @@ namespace Scheddy.Models
         [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{HH:mm:0}", ApplyFormatInEditMode = true)]
         public DateTime EndTime { get; set; }
-
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
