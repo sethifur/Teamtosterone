@@ -60,9 +60,8 @@ namespace Scheddy.Controllers
             catch (DbUpdateException ex)
             {
                 Console.WriteLine(ex.InnerException);
-                return RedirectToAction("Index");
-            } 
-            return View(schedule);
+            }
+            return RedirectToAction("Index");
         }
 
         public ActionResult UpdateSchedule(List<Section> sections)
@@ -90,11 +89,7 @@ namespace Scheddy.Controllers
             //loop through and delete scheduleId's from section table.
             var sections = db.Sections.Where(section => section.ScheduleId == id).ToList();
 
-            //delete schedule.
-
-            db.Schedules.Remove(schedule);
-            db.SaveChanges();
-            return View();
+            return View(schedule);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -102,10 +97,14 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Schedule schedule = db.Schedules.Find(id);
-
-
-            db.Schedules.Remove(schedule);
-            db.SaveChanges();
+            try
+            {
+                db.Schedules.Remove(schedule);
+                db.SaveChanges();
+            }catch(Exception e)
+            {
+                return RedirectToAction("CannotDelete");
+            }
             return RedirectToAction("Index");
         }
 
