@@ -34,7 +34,6 @@ namespace Scheddy.Controllers
            list.section = db.Sections;
 
            return View(list);
-           
         }
 
         public ActionResult Create()
@@ -102,7 +101,6 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Schedule schedule = db.Schedules.Find(id);
-
 
             db.Schedules.Remove(schedule);
             db.SaveChanges();
