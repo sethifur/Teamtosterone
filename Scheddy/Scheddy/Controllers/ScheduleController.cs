@@ -27,6 +27,12 @@ namespace Scheddy.Controllers
             return View();
         }
 
+        public ActionResult Details(int? id)
+        {
+            Schedule schedule = db.Schedules.Find(id);
+            return View(schedule);
+        }
+
         public ActionResult IndexByProfessor()
         {
            ScheduleInstructorSection list = new ScheduleInstructorSection();
