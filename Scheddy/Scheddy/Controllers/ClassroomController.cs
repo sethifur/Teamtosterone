@@ -46,7 +46,8 @@ namespace Scheddy.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ClassroomId,BldgCode,RoomNumber,Campus,Capacity,NumComputers")] Classroom classroom)
+        public ActionResult Create(
+            [Bind(Include = "ClassroomId,BldgCode,RoomNumber,Campus,Capacity,NumComputers")] Classroom classroom)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +79,8 @@ namespace Scheddy.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ClassroomId,BldgCode,RoomNumber,Campus,Capacity,NumComputers")] Classroom classroom)
+        public ActionResult Edit(
+            [Bind(Include = "ClassroomId,BldgCode,RoomNumber,Campus,Capacity,NumComputers")] Classroom classroom)
         {
             if (ModelState.IsValid)
             {
@@ -121,10 +123,23 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Classroom classroom = db.Classrooms.Find(id);
+
+            try
+            {
+                db.Classrooms.Remove(classroom);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("CannotDelete");
+            }
             
-            db.Classrooms.Remove(classroom);
-            db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult CannotDelete()
+        {
+            return View();
         }
 
         protected override void Dispose(bool disposing)

@@ -191,6 +191,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ClassroomByTime.cs" />
     <Compile Include="ViewModels\ClassroomCourseInstructorList.cs" />
+    <Compile Include="ViewModels\ScheduleInstructorSection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -274,6 +275,12 @@
     <Content Include="Views\Schedule\Create.cshtml" />
     <Content Include="Views\Schedule\Delete.cshtml" />
     <Content Include="Views\Schedule\Edit.cshtml" />
+    <Content Include="Views\Course\CannotDelete.cshtml" />
+    <Content Include="Views\Classroom\CannotDelete.cshtml" />
+    <Content Include="Views\Instructor\CannotDelete.cshtml" />
+    <Content Include="Views\Section\CannotDelete.cshtml" />
+    <Content Include="Views\Schedule\CannotDelete.cshtml" />
+    <Content Include="Views\Schedule\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

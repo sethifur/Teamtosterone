@@ -21,10 +21,9 @@
 
             foreach (Scheddy.Models.Classroom c in Model.classrooms)
             {
-                classroomNames.Add(c.BldgCode + " " + c.RoomNumber);
+                classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
             }
         }
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         @{
             List<string> instructorNames = new List<string>();
@@ -34,46 +33,51 @@
                 instructorNames.Add(c.FirstName + " " + c.LastName);
             }
         }
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         @{
             List<string> courseNames = new List<string>();
 
             foreach (Scheddy.Models.Course c in Model.courses)
             {
-                courseNames.Add(c.Prefix + c.CourseNumber);
+                courseNames.Add(c.Prefix + " " + c.CourseNumber);
             }
+        }
+
+        @{ 
+            Model.selectedInstructor = "selectedInstructor";
+            Model.selectedCourse = "selectedCourse";
+            Model.selectedClassroom = "selectedClassroom";
         }
 
         <div class="form-group">
             @Html.LabelFor(model => model.section.Instructor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("Instructor",
+                @Html.DropDownList(Model.selectedInstructor,
                 new SelectList(instructorNames),
-                "Select Instructor")
+                "Select Instructor", new { required = "required" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.section.Course, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("Course",
+                @Html.DropDownList(Model.selectedCourse,
                 new SelectList(courseNames),
-                "Select Course")
+                "Select Course", new { required = "required" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.section.Classroom, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("Classroom",
+                @Html.DropDownList(Model.selectedClassroom,
                 new SelectList(classroomNames),
-                "Select Classroom")
+                "Select Classroom", new {required = "required"})
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.section.CRN, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.CRN, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.section.CRN, new { htmlAttributes = new { @class = "form-control"} })
                 @Html.ValidationMessageFor(model => model.section.CRN, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -81,7 +85,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control", required = "required" } })
                 @Html.ValidationMessageFor(model => model.section.StartTime, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -89,7 +93,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control", required = "required" } })
                 @Html.ValidationMessageFor(model => model.section.EndTime, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -97,7 +101,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.section.StartDate, new { htmlAttributes = new { @class = "form-control", required = "required" } })
                 @Html.ValidationMessageFor(model => model.section.StartDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -105,7 +109,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.section.EndDate, new { htmlAttributes = new { @class = "form-control", required = "required" } })
                 @Html.ValidationMessageFor(model => model.section.EndDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -113,15 +117,27 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.DaysTaught, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.DaysTaught, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.section.DaysTaught, "", new { @class = "text-danger" })
+                @Html.CheckBoxFor(model => model.checkedMonday)
+                @Html.Label("Monday")<br>
+                @Html.CheckBoxFor(model => model.checkedTuesday)
+                @Html.Label("Tuesday")<br>
+                @Html.CheckBoxFor(model => model.checkedWednesday)
+                @Html.Label("Wednesday")<br>
+                @Html.CheckBoxFor(model => model.checkedThursday)
+                @Html.Label("Thursday")<br>
+                @Html.CheckBoxFor(model => model.checkedFriday)
+                @Html.Label("Friday")<br>
+                @Html.CheckBoxFor(model => model.checkedSaturday)
+                @Html.Label("Saturday")<br>
+                @Html.CheckBoxFor(model => model.checkedOnline)
+                @Html.Label("Online")<br>
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.section.numSeats, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.numSeats, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.section.numSeats, new { htmlAttributes = new { @class = "form-control", required = "required" } })
                 @Html.ValidationMessageFor(model => model.section.numSeats, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -135,7 +151,7 @@
 
 <div>
     @Html.ActionLink("Back to List", "Index")
-</div>
+</div> 
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

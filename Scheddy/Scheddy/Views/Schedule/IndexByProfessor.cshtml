@@ -1,7 +1,46 @@
-﻿
+﻿@model Scheddy.ViewModels.ScheduleInstructorSection
 @{
-    ViewBag.Title = "IndexByProfessor";
+    ViewBag.Title = "Professor By Time";
 }
 
 <h2>IndexByProfessor</h2>
 
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => Model.instructor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => Model.section) 
+        </th>
+    </tr>
+
+    @try
+    {
+        foreach (var item in Model.instructor)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+
+                    @foreach (var stuff in Model.section)
+                    {
+                        <td>
+                            @stuff.StartTime.Value.ToString("hh:mm-")
+                            @stuff.EndTime.Value.ToString("hh:mm")
+
+                            @Html.DisplayFor(modelItem => stuff.StartTime)
+                            @Html.DisplayFor(modelItem => stuff.EndTime)
+                        </td>
+                    }
+                   
+                </tr>
+        }
+
+    }
+
+    catch { }
+
+</table>
