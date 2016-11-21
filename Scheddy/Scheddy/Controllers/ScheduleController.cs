@@ -18,12 +18,25 @@ namespace Scheddy.Controllers
         //list of schedules
         public ActionResult Index()
         {
-            return View(db.Schedules.ToList());
+            var schedules = db.Schedules.ToList();
+            return View(schedules);   
         }
 
         public ActionResult IndexByClassroom()
         {
-            return View();
+            var model =
+                from c in db.Classrooms
+                join s in db.Sections on
+                c.ClassroomId equals s.ClassroomId
+                orderby c.ClassroomId, s.StartTime
+                select new ViewModels.ClassroomByTime
+                {
+                    BldgCode = c.BldgCode,
+                    RoomNumber = c.RoomNumber,
+                    StartTime = s.StartTime,
+                    EndTime = s.EndTime
+                };
+            return View(model);
         }
 
         public ActionResult IndexByProfessor()

@@ -4,7 +4,11 @@
     ViewBag.Title = "Schedule";
 }
 
-<h2>Instructors</h2>
+<h2>Schedule</h2>
+
+<p>
+    @Html.ActionLink("Time by Classroom", "IndexByClassroom", "Schedule")
+</p>
 
 <p>
     @Html.ActionLink("Create New", "Create")
