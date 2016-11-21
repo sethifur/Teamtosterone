@@ -46,7 +46,8 @@ namespace Scheddy.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor)
+        public ActionResult Create(
+            [Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +79,8 @@ namespace Scheddy.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor)
+        public ActionResult Edit(
+            [Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor)
         {
             if (ModelState.IsValid)
             {
@@ -122,9 +124,22 @@ namespace Scheddy.Controllers
         {
             Instructor instructor = db.Instructors.Find(id);
 
-            db.Instructors.Remove(instructor);
-            db.SaveChanges();
+            try
+            {
+                db.Instructors.Remove(instructor);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("CannotDelete");
+            }
+            
             return RedirectToAction("Index");
+        }
+
+        public ActionResult CannotDelete()
+        {
+            return View();
         }
 
         protected override void Dispose(bool disposing)

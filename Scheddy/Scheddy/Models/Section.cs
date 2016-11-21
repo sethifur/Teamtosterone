@@ -10,16 +10,6 @@ namespace Scheddy.Models
 {
     public class Section
     {
-        public Section()
-        {
-            
-        }
-
-        public Section(int id)
-        {
-            SectionId = id;
-        }
-
         #region Relationships
 
         public virtual Course Course { get; set; }
@@ -30,7 +20,7 @@ namespace Scheddy.Models
 
         public virtual Instructor Instructor { get; set; }
         public int? InstructorId { get; set; }
-
+        
         public virtual Schedule Schedule { get; set; }
         public int? ScheduleId { get; set; }
 
@@ -41,18 +31,22 @@ namespace Scheddy.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SectionId { get; set; }
         public int? CRN { get; set; }
+
         [DataType(DataType.Time)]
-        [DisplayFormat(DataFormatString = "{HH:mm:0}", ApplyFormatInEditMode = true)]
-        public DateTime StartTime { get; set; }
+        [DisplayFormat(DataFormatString = "{0:t}", ApplyFormatInEditMode = true)]
+        public DateTime? StartTime { get; set; }
+
         [DataType(DataType.Time)]
-        [DisplayFormat(DataFormatString = "{HH:mm:0}", ApplyFormatInEditMode = true)]
-        public DateTime EndTime { get; set; }
+        [DisplayFormat(DataFormatString = "{0:t}", ApplyFormatInEditMode = true)]
+        public DateTime? EndTime { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public string DaysTaught { get; set; }
         public string numSeats { get; set; }
 
