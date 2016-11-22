@@ -23,27 +23,21 @@
             {
                 classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
             }
-        }
 
-        @{
             List<string> instructorNames = new List<string>();
 
             foreach (Scheddy.Models.Instructor c in Model.instructors)
             {
                 instructorNames.Add(c.FirstName + " " + c.LastName);
             }
-        }
 
-        @{
             List<string> courseNames = new List<string>();
 
             foreach (Scheddy.Models.Course c in Model.courses)
             {
                 courseNames.Add(c.Prefix + " " + c.CourseNumber);
             }
-        }
 
-        @{ 
             Model.selectedInstructor = "selectedInstructor";
             Model.selectedCourse = "selectedCourse";
             Model.selectedClassroom = "selectedClassroom";
