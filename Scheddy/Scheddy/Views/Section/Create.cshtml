@@ -1,5 +1,9 @@
 ﻿@model Scheddy.ViewModels.ClassroomCourseInstructorList
 
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
 @{
     ViewBag.Title = "Create";
 }
@@ -147,11 +151,7 @@
     @Html.ActionLink("Back to List", "Index")
 </div> 
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
 <script>
-
     function checkOnline()
     {
         document.getElementById('cbMonday').checked = false;
@@ -160,7 +160,6 @@
         document.getElementById('cbThursday').checked = false;
         document.getElementById('cbFriday').checked = false;
         document.getElementById('cbSaturday').checked = false;
-
     }
 
     function checkDay()
