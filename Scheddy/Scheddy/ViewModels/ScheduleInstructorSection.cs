@@ -7,16 +7,15 @@ namespace Scheddy.ViewModels
 {
     public class ScheduleInstructorSection
     {
-        public IEnumerable<Models.Instructor> instructor;
-        public IEnumerable<Models.Section> section;
+        public IEnumerable<Models.Instructor> instructor { get; set; }
+        public IEnumerable<Models.Section> section { get; set; }
         public Models.Schedule schedule;
 
         public ScheduleInstructorSection ()
         {
             List<string> instructor = new List<string>();
+
             List<string> section = new List<string>();
         }
-          
-        
     }
 }

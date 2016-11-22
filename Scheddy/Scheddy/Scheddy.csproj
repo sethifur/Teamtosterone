@@ -189,6 +189,7 @@
     <Compile Include="Models\Section.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ClassroomByTime.cs" />
     <Compile Include="ViewModels\ClassroomCourseInstructorList.cs" />
     <Compile Include="ViewModels\ScheduleInstructorSection.cs" />
   </ItemGroup>
@@ -279,6 +280,7 @@
     <Content Include="Views\Instructor\CannotDelete.cshtml" />
     <Content Include="Views\Section\CannotDelete.cshtml" />
     <Content Include="Views\Schedule\CannotDelete.cshtml" />
+    <Content Include="Views\Schedule\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
