@@ -102,11 +102,6 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Schedule schedule = db.Schedules.Find(id);
-<<<<<<< HEAD
-
-            db.Schedules.Remove(schedule);
-            db.SaveChanges();
-=======
             try
             {
                 db.Schedules.Remove(schedule);
@@ -115,7 +110,6 @@ namespace Scheddy.Controllers
             {
                 return RedirectToAction("CannotDelete");
             }
->>>>>>> b791fc1d67c1c0eebdeaae5a03d0b43ef4b17414
             return RedirectToAction("Index");
         }
 

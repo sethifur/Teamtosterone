@@ -20,27 +20,25 @@
         foreach (var item in Model.instructor)
         {
             <tr>
-                <td>
+                <th>
                     @Html.DisplayFor(modelItem => item.FirstName)
                     @Html.DisplayFor(modelItem => item.LastName)
-                </td>
+                </th>
 
                     @foreach (var stuff in Model.section)
                     {
-                        <td>
-                            @stuff.StartTime.Value.ToString("hh:mm-")
+                        <th>
+                            @stuff.StartTime.Value.ToString("hh:mm")
                             @stuff.EndTime.Value.ToString("hh:mm")
 
                             @Html.DisplayFor(modelItem => stuff.StartTime)
                             @Html.DisplayFor(modelItem => stuff.EndTime)
-                        </td>
+                        </th>
                     }
                    
                 </tr>
         }
 
-    }
-
-    catch { }
+    } catch (Exception e) { Console.Write(e); }
 
 </table>
