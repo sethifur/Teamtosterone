@@ -1,7 +1,45 @@
-﻿
+﻿@model IEnumerable<Scheddy.ViewModels.ClassroomByTime>
+
 @{
-    ViewBag.Title = "IndexByClassroom";
+    ViewBag.Title = "Classroom by time Index";
 }
 
-<h2>IndexByClassroom</h2>
+<h2>Classrooms by time</h2>
 
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.BldgCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RoomNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.BldgCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RoomNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndTime)
+        </td>
+    </tr>
+}
+
+</table>

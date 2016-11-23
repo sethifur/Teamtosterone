@@ -7,6 +7,10 @@
 <h2>Schedule</h2>
 
 <p>
+    @Html.ActionLink("Time by Classroom", "IndexByClassroom", "Schedule")
+</p>
+
+<p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
@@ -36,7 +40,7 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.ScheduleId }) |
-                @Html.ActionLink("Professor By Time", "IndexByProfessor", new { id = item.ScheduleId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ScheduleId }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.ScheduleId })
             </td>
         </tr>

@@ -1,4 +1,8 @@
-﻿@model Scheddy.Models.Section
+﻿@model Scheddy.ViewModels.ClassroomCourseInstructorList
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
 
 @{
     ViewBag.Title = "Edit";
@@ -12,96 +16,169 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Instructor</h4>
+        <h4>Section</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.SectionId)
+
+
+        @{
+            List<string> classroomNames = new List<string>();
+
+            foreach (Scheddy.Models.Classroom c in Model.classrooms)
+            {
+                classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
+            }
+
+            List<string> instructorNames = new List<string>();
+
+            foreach (Scheddy.Models.Instructor c in Model.instructors)
+            {
+                instructorNames.Add(c.FirstName + " " + c.LastName);
+            }
+
+            List<string> courseNames = new List<string>();
+
+            foreach (Scheddy.Models.Course c in Model.courses)
+            {
+                courseNames.Add(c.Prefix + " " + c.CourseNumber);
+            }
+            
+            if (Model.section.DaysTaught.Contains("ONL"))
+            {
+                Model.checkedOnline = true;
+            }
+            if (Model.section.DaysTaught.Contains("M"))
+            {
+                Model.checkedMonday = true;
+            }
+            if (Model.section.DaysTaught.Contains("T"))
+            {
+                Model.checkedTuesday = true;
+            }
+            if (Model.section.DaysTaught.Contains("W"))
+            {
+                Model.checkedWednesday = true;
+            }
+            if (Model.section.DaysTaught.Contains("T"))
+            {
+                Model.checkedThursday = true;
+            }
+            if (Model.section.DaysTaught.Contains("F"))
+            {
+                Model.checkedFriday = true;
+            }
+            if (Model.section.DaysTaught.Contains("S"))
+            {
+                Model.checkedSaturday = true;
+            }
+            
+
+        }
+
+
+        @Html.HiddenFor(model => model.section.SectionId)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CourseId, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.section.Instructor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CourseId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(Model => Model.selectedInstructor,
+                new SelectList(instructorNames),
+                "Select Instructor",
+                new { required = "required" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.section.Course, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(Model => Model.selectedCourse,
+                new SelectList(courseNames),
+                "Select Course",
+                new { required = "required" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.section.Classroom, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(Model => Model.selectedClassroom,
+                new SelectList(classroomNames),
+                "Select Classroom",
+                new { required = "required" }).
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ClassroomId, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.section.ScheduleId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ClassroomId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ClassroomId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.InstructorId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.InstructorId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InstructorId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ScheduleId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ScheduleId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ScheduleId, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.section.ScheduleId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.section.ScheduleId, "", new { @class = "text-danger" })
             </div>
         </div>
         
         <div class="form-group">
-            @Html.LabelFor(model => model.CRN, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.section.CRN, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CRN, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CRN, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.section.CRN, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.section.CRN, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.section.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.section.StartTime, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.section.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.section.EndTime, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.section.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.section.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.section.StartDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.section.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.section.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.section.EndDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.DaysTaught, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.section.DaysTaught, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DaysTaught, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DaysTaught, "", new { @class = "text-danger" })
+                @Html.CheckBoxFor(model => model.checkedMonday, new Dictionary<string, object> { { "id", "cbMonday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.Label("Monday")<br>
+                @Html.CheckBoxFor(model => model.checkedTuesday, new Dictionary<string, object> { { "id", "cbTuesday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.Label("Tuesday")<br>
+                @Html.CheckBoxFor(model => model.checkedWednesday, new Dictionary<string, object> { { "id", "cbWednesday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.Label("Wednesday")<br>
+                @Html.CheckBoxFor(model => model.checkedThursday, new Dictionary<string, object> { { "id", "cbThursday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.Label("Thursday")<br>
+                @Html.CheckBoxFor(model => model.checkedFriday, new Dictionary<string, object> { { "id", "cbFriday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.Label("Friday")<br>
+                @Html.CheckBoxFor(model => model.checkedSaturday, new Dictionary<string, object> { { "id", "cbSaturday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.Label("Saturday")<br>
+                @Html.CheckBoxFor(model => model.checkedOnline, new Dictionary<string, object> { { "id", "cbOnline" }, { "onclick", "checkOnline.call(this)" } })
+                @Html.Label("Online")<br>
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.numSeats, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.section.numSeats, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.numSeats, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.numSeats, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.section.numSeats, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.section.numSeats, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -117,6 +194,41 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script>
+    function checkOnline()
+    {
+        document.getElementById('cbMonday').checked = false;
+        document.getElementById('cbTuesday').checked = false;
+        document.getElementById('cbWednesday').checked = false;
+        document.getElementById('cbThursday').checked = false;
+        document.getElementById('cbFriday').checked = false;
+        document.getElementById('cbSaturday').checked = false;
+    }
+
+    function checkDay()
+    {
+        if (document.getElementById('cbMonday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbTuesday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbWednesday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbThursday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbFriday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbSaturday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+    }
+</script>

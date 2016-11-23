@@ -1,5 +1,9 @@
 ﻿@model Scheddy.ViewModels.ClassroomCourseInstructorList
 
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
 @{
     ViewBag.Title = "Create";
 }
@@ -23,27 +27,21 @@
             {
                 classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
             }
-        }
 
-        @{
             List<string> instructorNames = new List<string>();
 
             foreach (Scheddy.Models.Instructor c in Model.instructors)
             {
                 instructorNames.Add(c.FirstName + " " + c.LastName);
             }
-        }
 
-        @{
             List<string> courseNames = new List<string>();
 
             foreach (Scheddy.Models.Course c in Model.courses)
             {
                 courseNames.Add(c.Prefix + " " + c.CourseNumber);
             }
-        }
 
-        @{ 
             Model.selectedInstructor = "selectedInstructor";
             Model.selectedCourse = "selectedCourse";
             Model.selectedClassroom = "selectedClassroom";
@@ -117,19 +115,19 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.DaysTaught, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.checkedMonday)
+                @Html.CheckBoxFor(model => model.checkedMonday, new Dictionary<string, object> { { "id", "cbMonday" }, { "onclick", "checkDay.call(this)" } })
                 @Html.Label("Monday")<br>
-                @Html.CheckBoxFor(model => model.checkedTuesday)
+                @Html.CheckBoxFor(model => model.checkedTuesday, new Dictionary<string, object> { { "id", "cbTuesday" }, { "onclick", "checkDay.call(this)" } })
                 @Html.Label("Tuesday")<br>
-                @Html.CheckBoxFor(model => model.checkedWednesday)
+                @Html.CheckBoxFor(model => model.checkedWednesday, new Dictionary<string, object> { { "id", "cbWednesday" }, { "onclick", "checkDay.call(this)" } })
                 @Html.Label("Wednesday")<br>
-                @Html.CheckBoxFor(model => model.checkedThursday)
+                @Html.CheckBoxFor(model => model.checkedThursday, new Dictionary<string, object> { { "id", "cbThursday" }, { "onclick", "checkDay.call(this)" } })
                 @Html.Label("Thursday")<br>
-                @Html.CheckBoxFor(model => model.checkedFriday)
+                @Html.CheckBoxFor(model => model.checkedFriday, new Dictionary<string, object> { { "id", "cbFriday" }, { "onclick", "checkDay.call(this)" } })
                 @Html.Label("Friday")<br>
-                @Html.CheckBoxFor(model => model.checkedSaturday)
+                @Html.CheckBoxFor(model => model.checkedSaturday, new Dictionary<string, object> { { "id", "cbSaturday" }, { "onclick", "checkDay.call(this)" } })
                 @Html.Label("Saturday")<br>
-                @Html.CheckBoxFor(model => model.checkedOnline)
+                @Html.CheckBoxFor(model => model.checkedOnline, new Dictionary<string, object> { { "id", "cbOnline" }, { "onclick", "checkOnline.call(this)" } })
                 @Html.Label("Online")<br>
             </div>
         </div>
@@ -153,6 +151,41 @@
     @Html.ActionLink("Back to List", "Index")
 </div> 
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script>
+    function checkOnline()
+    {
+        document.getElementById('cbMonday').checked = false;
+        document.getElementById('cbTuesday').checked = false;
+        document.getElementById('cbWednesday').checked = false;
+        document.getElementById('cbThursday').checked = false;
+        document.getElementById('cbFriday').checked = false;
+        document.getElementById('cbSaturday').checked = false;
+    }
+
+    function checkDay()
+    {
+        if (document.getElementById('cbMonday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbTuesday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbWednesday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbThursday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbFriday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+
+        if (document.getElementById('cbSaturday').checked) {
+            document.getElementById('cbOnline').checked = false;
+        }
+    }
+</script>

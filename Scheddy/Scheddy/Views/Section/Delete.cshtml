@@ -11,38 +11,59 @@
     <h4>Section</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CourseId)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CourseId)
-        </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ClassroomId)
+            @Html.DisplayNameFor(model => model.Course.Prefix)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.ClassroomId)
+            @Html.DisplayFor(model => model.Course.Prefix)
         </dd>
+
         <dt>
-            @Html.DisplayNameFor(model => model.InstructorId)
+            @Html.DisplayNameFor(model => model.Course.CourseNumber)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.InstructorId)
+            @Html.DisplayFor(model => model.Course.CourseNumber)
         </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Classroom.BldgCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Classroom.BldgCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Classroom.RoomNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Classroom.RoomNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Instructor.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Instructor.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Instructor.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Instructor.LastName)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.ScheduleId)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.ScheduleId)
         </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.CRN)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.CRN)
         </dd>

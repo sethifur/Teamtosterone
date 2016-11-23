@@ -19,12 +19,25 @@ namespace Scheddy.Controllers
         //list of schedules
         public ActionResult Index()
         {
-            return View(db.Schedules.ToList());
+            var schedules = db.Schedules.ToList();
+            return View(schedules);   
         }
 
         public ActionResult IndexByClassroom()
         {
-            return View();
+            var model =
+                from c in db.Classrooms
+                join s in db.Sections on
+                c.ClassroomId equals s.ClassroomId
+                orderby c.ClassroomId, s.StartTime
+                select new ViewModels.ClassroomByTime
+                {
+                    BldgCode = c.BldgCode,
+                    RoomNumber = c.RoomNumber,
+                    //StartTime = s.StartTime,
+                    //EndTime = s.EndTime
+                };
+            return View(model);
         }
 
         public ActionResult Details(int? id)
@@ -102,12 +115,14 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Schedule schedule = db.Schedules.Find(id);
+
             try
             {
                 db.Schedules.Remove(schedule);
                 db.SaveChanges();
             }catch(Exception e)
             {
+                System.Diagnostics.Debug.WriteLine("EXCEPTION scheduleController: " + e.Message);
                 return RedirectToAction("CannotDelete");
             }
             return RedirectToAction("Index");
