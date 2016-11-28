@@ -41,8 +41,8 @@ namespace Scheddy.Controllers
                 {
                     BldgCode = c.BldgCode,
                     RoomNumber = c.RoomNumber,
-                    //StartTime = s.StartTime,
-                    //EndTime = s.EndTime
+                    StartTime = s.StartTime,
+                    EndTime = s.EndTime
                 };
             return View(model);
         }
@@ -153,7 +153,7 @@ namespace Scheddy.Controllers
                 db.Schedules.Remove(schedule);
                 db.SaveChanges();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return RedirectToAction("CannotDelete");
             }
