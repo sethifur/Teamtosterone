@@ -59,11 +59,16 @@ namespace Scheddy.Controllers
             var model =     from i in db.Instructors
                             join s in db.Sections on
                             i.InstructorId equals s.InstructorId
+                            join c in db.Classrooms on 
+                            s.ClassroomId equals c.ClassroomId
                             orderby i.LastName, i.FirstName
                             select new ViewModels.ScheduleInstructorSection
                             {
                                 FirstName = i.FirstName,
                                 LastName = i.LastName,
+                                BldgCode = c.BldgCode,
+                                RoomNumber = c.RoomNumber,
+                                DaysTaught = s.DaysTaught,
                                 StartTime = s.StartTime,
                                 EndTime = s.EndTime
                             };

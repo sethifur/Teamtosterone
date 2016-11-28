@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scheddy.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,11 +12,12 @@ namespace Scheddy.ViewModels
     {
         public string BldgCode { get; set; }
         public string RoomNumber { get; set; }
-        [DataType(DataType.Time)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
+        [DataType(DataType.Time)]
         public DateTime? StartTime { get; set; }
-        [DataType(DataType.Time)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
+        [DataType(DataType.Time)]
         public DateTime? EndTime { get; set; }
+        public IEnumerable<Section> sections { get; set; }
     }
 }
