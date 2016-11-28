@@ -1,4 +1,5 @@
-﻿@model Scheddy.ViewModels.ScheduleInstructorSection
+﻿@model IEnumerable<Scheddy.ViewModels.ScheduleInstructorSection>
+
 @{
     ViewBag.Title = "Professor By Time";
 }
@@ -8,37 +9,39 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => Model.instructor)
+            Professor
         </th>
-        <th>
-            @Html.DisplayNameFor(model => Model.section) 
-        </th>
+
     </tr>
 
     @try
     {
-        foreach (var item in Model.instructor)
+        foreach (var item in Model)
         {
             <tr>
-                <th>
+                <td>
                     @Html.DisplayFor(modelItem => item.FirstName)
                     @Html.DisplayFor(modelItem => item.LastName)
-                </th>
+                </td>
+                <td>
+                @item.StartTime.Value.ToString("hh:mm -")
+                @item.EndTime.Value.ToString("hh:mm")
+                </td>
 
-                    @foreach (var stuff in Model.section)
-                    {
-                        <th>
-                            @stuff.StartTime.Value.ToString("hh:mm")
-                            @stuff.EndTime.Value.ToString("hh:mm")
+                @foreach (var stuff in item.sections)
+                {
+                    <td>
+                        
 
-                            @Html.DisplayFor(modelItem => stuff.StartTime)
-                            @Html.DisplayFor(modelItem => stuff.EndTime)
-                        </th>
-                    }
-                   
-                </tr>
+                        @Html.DisplayFor(modelItem => stuff.StartTime)
+                        @Html.DisplayFor(modelItem => stuff.EndTime)
+                    </td>
+                }
+
+            </tr>
         }
 
-    } catch (Exception e) { Console.Write(e); }
+    }
+    catch (Exception e) { Console.Write(e); }
 
 </table>

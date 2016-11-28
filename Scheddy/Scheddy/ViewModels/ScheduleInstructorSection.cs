@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using Scheddy.Models;
 namespace Scheddy.ViewModels
 {
     public class ScheduleInstructorSection
     {
-        public IEnumerable<Models.Instructor> instructor { get; set; }
-        public IEnumerable<Models.Section> section { get; set; }
-        public Models.Schedule schedule;
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
-        public ScheduleInstructorSection ()
-        {
-            List<string> instructor = new List<string>();
+        public IEnumerable<Section> sections { get; set; }
 
-            List<string> section = new List<string>();
-        }
+        //public ScheduleInstructorSection()
+        //{
+        //    List<Section> sections  = new List<Section>();
+        //}
+
     }
 }

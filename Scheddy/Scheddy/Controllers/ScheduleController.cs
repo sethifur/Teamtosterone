@@ -48,11 +48,38 @@ namespace Scheddy.Controllers
 
         public ActionResult IndexByProfessor()
         {
-           ScheduleInstructorSection list = new ScheduleInstructorSection();
-           list.instructor = db.Instructors;
-           list.section = db.Sections;
 
-           return View(list);
+            var model =
+                            from i in db.Instructors
+                            join s in db.Sections on
+                            i.InstructorId equals s.InstructorId
+                            orderby i.LastName, i.FirstName
+                            select new ViewModels.ScheduleInstructorSection
+                            {
+                                FirstName = i.FirstName,
+                                LastName = i.LastName,
+                                StartTime = s.StartTime,
+                                EndTime = s.EndTime
+                            };
+
+            List<Section> sections = new List<Section>();
+
+        
+               /* var section =
+                            from i in db.Instructors
+                            join s in db.Sections on
+                            i.InstructorId equals s.InstructorId
+                            orderby i.LastName, i.FirstName
+                            select new List<Section> 
+                            {
+                                
+                            };
+                */
+
+
+           
+
+            return View(model);
         }
 
         public ActionResult Create()
