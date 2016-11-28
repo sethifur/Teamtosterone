@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scheddy.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace Scheddy.ViewModels
         [DataType(DataType.Time)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm tt}")]
         public DateTime? EndTime { get; set; }
+        public IEnumerable<Section> sections { get; set; }
     }
 }
