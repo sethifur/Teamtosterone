@@ -13,9 +13,9 @@ namespace Scheddy.ViewModels
         public string RoomNumber { get; set; }
         [DataType(DataType.Time)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
         [DataType(DataType.Time)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
     }
 }

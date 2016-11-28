@@ -18,9 +18,16 @@ namespace Scheddy.Controllers
 
         //list of schedules
         public ActionResult Index()
-        {
-            var schedules = db.Schedules.ToList();
-            return View(schedules);   
+        { 
+            var schedules = new List<Schedule>();
+            try
+            {
+                schedules = db.Schedules.ToList();
+            }
+            catch(Exception)
+            {   
+            }
+            return View(schedules);
         }
 
         public ActionResult IndexByClassroom()
@@ -57,7 +64,6 @@ namespace Scheddy.Controllers
 
         public ActionResult Create()
         {
-
             return View();
         }
 
@@ -120,9 +126,9 @@ namespace Scheddy.Controllers
             {
                 db.Schedules.Remove(schedule);
                 db.SaveChanges();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine("EXCEPTION scheduleController: " + e.Message);
                 return RedirectToAction("CannotDelete");
             }
             return RedirectToAction("Index");
