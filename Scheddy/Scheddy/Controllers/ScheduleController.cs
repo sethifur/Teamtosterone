@@ -9,6 +9,9 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Scheddy.ViewModels;
+using System.IO;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace Scheddy.Controllers
 {
@@ -194,6 +197,47 @@ namespace Scheddy.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult ExportToExcel()
+        {
+            var products = new System.Data.DataTable("teste");
+            products.Columns.Add("Credits", typeof(int));
+            products.Columns.Add("OVRL", typeof(string));
+            products.Columns.Add("Name", typeof(string));
+            products.Columns.Add("Hrs Rg", typeof(string));
+            products.Columns.Add("Day", typeof(string));
+                //products.Rows.Add("MW", typeof(string));
+                //products.Rows.Add("TR", typeof(string));
+            products.Columns.Add("7:30 AM", typeof(string));
+            products.Columns.Add("9:30 AM", typeof(string));
+            products.Columns.Add("11:30 AM", typeof(string));
+            products.Columns.Add("1:30 PM", typeof(string));
+            products.Columns.Add("Online", typeof(string));
+            products.Columns.Add("5:30 PM", typeof(string));
+            products.Columns.Add("7:30 PM", typeof(string));
+
+
+            var grid = new GridView();
+            grid.DataSource = products;
+            grid.DataBind();
+
+            Response.ClearContent();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment; filename=MyExcelFile.xls");
+            Response.ContentType = "application/ms-excel";
+
+            Response.Charset = "";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+            grid.RenderControl(htw);
+
+            Response.Output.Write(sw.ToString());
+            Response.Flush();
+            Response.End();
+
+            return View("MyView");
         }
     }
 }

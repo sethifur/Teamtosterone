@@ -14,10 +14,10 @@ namespace Scheddy.ViewModels
         public string RoomNumber { get; set; }
         public string DaysTaught { get; set; }
         [DataType(DataType.Time)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm tt}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public DateTime? StartTime { get; set; }
         [DataType(DataType.Time)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm tt}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public DateTime? EndTime { get; set; }
         public IEnumerable<Section> sections { get; set; }
     }
