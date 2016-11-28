@@ -202,16 +202,20 @@ namespace Scheddy.Controllers
         public ActionResult ExportToExcel()
         {
             var products = new System.Data.DataTable("teste");
-            products.Columns.Add("col1", typeof(int));
-            products.Columns.Add("col2", typeof(string));
-
-            products.Rows.Add(1, "product 1");
-            products.Rows.Add(2, "product 2");
-            products.Rows.Add(3, "product 3");
-            products.Rows.Add(4, "product 4");
-            products.Rows.Add(5, "product 5");
-            products.Rows.Add(6, "product 6");
-            products.Rows.Add(7, "product 7");
+            products.Columns.Add("Credits", typeof(int));
+            products.Columns.Add("OVRL", typeof(string));
+            products.Columns.Add("Name", typeof(string));
+            products.Columns.Add("Hrs Rg", typeof(string));
+            products.Columns.Add("Day", typeof(string));
+                //products.Rows.Add("MW", typeof(string));
+                //products.Rows.Add("TR", typeof(string));
+            products.Columns.Add("7:30 AM", typeof(string));
+            products.Columns.Add("9:30 AM", typeof(string));
+            products.Columns.Add("11:30 AM", typeof(string));
+            products.Columns.Add("1:30 PM", typeof(string));
+            products.Columns.Add("Online", typeof(string));
+            products.Columns.Add("5:30 PM", typeof(string));
+            products.Columns.Add("7:30 PM", typeof(string));
 
 
             var grid = new GridView();
