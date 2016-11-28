@@ -23,6 +23,9 @@
         <th>
             @Html.DisplayNameFor(model => model.EndTime)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DaysTaught)
+        </th>
     </tr>
 
 @foreach (var item in Model) {
@@ -38,6 +41,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.EndTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DaysTaught)
         </td>
     </tr>
 }

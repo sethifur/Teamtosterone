@@ -36,13 +36,14 @@ namespace Scheddy.Controllers
                 from c in db.Classrooms
                 join s in db.Sections on
                 c.ClassroomId equals s.ClassroomId
-                orderby c.ClassroomId, s.StartTime
+                orderby c.ClassroomId, s.DaysTaught, s.StartTime
                 select new ViewModels.ClassroomByTime
                 {
                     BldgCode = c.BldgCode,
                     RoomNumber = c.RoomNumber,
-                    //StartTime = s.StartTime,
-                    //EndTime = s.EndTime
+                    DaysTaught = s.DaysTaught,
+                    StartTime = s.StartTime,
+                    EndTime = s.EndTime
                 };
             return View(model);
         }
