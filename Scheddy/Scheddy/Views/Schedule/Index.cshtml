@@ -13,6 +13,7 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
 <table class="table">
     <tr>
         <th>
@@ -47,3 +48,14 @@
     }
 
 </table>
+
+<div class="col-md-offset-2 col-md-10">
+    <input type="button" value="Add Section" class="btn btn-default" onclick="AddSectionFromNewWindow()" />
+</div>
+
+<script>
+    function AddSectionFromNewWindow()
+    {
+        window.open("http://localhost:53568/Section/Create");
+    }
+</script>
