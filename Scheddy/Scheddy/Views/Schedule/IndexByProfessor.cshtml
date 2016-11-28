@@ -24,8 +24,15 @@
                     @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
-                @item.StartTime.Value.ToString("hh:mm -")
-                @item.EndTime.Value.ToString("hh:mm")
+                    @Html.DisplayFor(modelItem => item.BldgCode)
+                    @Html.DisplayFor(modelItem => item.RoomNumber)
+                </td>
+                <td>
+                    @item.StartTime.Value.ToString("HH:mm -")
+                    @item.EndTime.Value.ToString("HH:mm")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DaysTaught)
                 </td>
 
                 @foreach (var stuff in item.sections)
