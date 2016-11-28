@@ -28,7 +28,61 @@
         </th>
     </tr>
 
-@foreach (var item in Model) {
+    @{ 
+        //var oldEndTime = new DateTime();
+        //string oldDaysTaught = "";
+        string space = "There is space here";
+
+        Scheddy.ViewModels.ClassroomByTime oldItem = new Scheddy.ViewModels.ClassroomByTime();
+
+    }
+
+@foreach (var item in Model)
+{
+
+    System.Diagnostics.Debug.WriteLine("1");
+
+    /*
+
+    if (oldEndTime != null && oldDaysTaught != "" && oldDaysTaught == item.DaysTaught && )
+    {
+        System.Diagnostics.Debug.WriteLine("2");
+        TimeSpan duration = oldEndTime.TimeOfDay - item.StartTime.Value.TimeOfDay;
+
+        if (duration.Minutes > 30)
+        {
+            System.Diagnostics.Debug.WriteLine("3");
+            <tr>
+                <td>
+                    @space.ToString()
+                </td>
+            </tr>
+        }
+    }*/
+
+    if (oldItem != null && oldItem.DaysTaught == item.DaysTaught && oldItem.BldgCode == item.BldgCode && oldItem.RoomNumber == item.RoomNumber)
+    {
+        System.Diagnostics.Debug.WriteLine("2");
+        TimeSpan differenceDuration = item.StartTime.Value.TimeOfDay - oldItem.EndTime.Value.TimeOfDay;
+
+
+        System.Diagnostics.Debug.WriteLine("item.StartTime.Value.TimeOfDay: " + item.StartTime.Value.TimeOfDay);
+        System.Diagnostics.Debug.WriteLine("oldItem.EndTime.Value.TimeOfDay: " + oldItem.EndTime.Value.TimeOfDay);
+        System.Diagnostics.Debug.WriteLine("Difference in minutes: " + differenceDuration.TotalMinutes);
+
+
+
+        if (differenceDuration.TotalMinutes > 30)
+        {
+            System.Diagnostics.Debug.WriteLine("3");
+            <tr>
+                <td>
+                    @space.ToString()
+                </td>
+            </tr>
+        }
+    }
+
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.BldgCode)
@@ -46,6 +100,11 @@
             @Html.DisplayFor(modelItem => item.DaysTaught)
         </td>
     </tr>
+
+    //oldEndTime = (DateTime) item.EndTime;
+    //oldDaysTaught = item.DaysTaught;
+    oldItem = item;
+
 }
 
 </table>
