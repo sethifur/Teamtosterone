@@ -451,8 +451,8 @@ namespace Scheddy.Controllers
                 if (section.SectionId != newSection.SectionId)
                 {
                     
-                var justStartTime = section.StartTime.Value.TimeOfDay;
-                var justEndTime = section.EndTime.Value.TimeOfDay;
+                    var justStartTime = section.StartTime.Value.TimeOfDay;
+                    var justEndTime = section.EndTime.Value.TimeOfDay;
 
                     if (commonDay(section.DaysTaught, newSection.DaysTaught)) // two sections share a common day
                     {
@@ -488,10 +488,8 @@ namespace Scheddy.Controllers
                                     + newConflictMessage;
 
                                 conflictMessage += newConflictMessage;
-
                             }
                         }
-
                     }
                 }
             }

@@ -12,14 +12,14 @@ using Scheddy.ViewModels;
 using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Runtime.InteropServices;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Scheddy.Controllers
 {
     public class ScheduleController : Controller
     {
         ScheddyDb db = new ScheddyDb();
-
-        //list of schedules
         public ActionResult Index()
         { 
             var schedules = new List<Schedule>();
@@ -199,27 +199,40 @@ namespace Scheddy.Controllers
             base.Dispose(disposing);
         }
 
-        public ActionResult ExportToExcel()
+        public ActionResult ExportToExcel(int? id)
         {
-            var products = new System.Data.DataTable("teste");
-            products.Columns.Add("Credits", typeof(int));
-            products.Columns.Add("OVRL", typeof(string));
-            products.Columns.Add("Name", typeof(string));
-            products.Columns.Add("Hrs Rg", typeof(string));
-            products.Columns.Add("Day", typeof(string));
-                //products.Rows.Add("MW", typeof(string));
-                //products.Rows.Add("TR", typeof(string));
-            products.Columns.Add("7:30 AM", typeof(string));
-            products.Columns.Add("9:30 AM", typeof(string));
-            products.Columns.Add("11:30 AM", typeof(string));
-            products.Columns.Add("1:30 PM", typeof(string));
-            products.Columns.Add("Online", typeof(string));
-            products.Columns.Add("5:30 PM", typeof(string));
-            products.Columns.Add("7:30 PM", typeof(string));
+            Schedule schedule = db.Schedules.Find(id);
+            var sections = db.Sections.Where(section => section.ScheduleId == id);
+            
+            System.Data.DataTable table = new System.Data.DataTable();
+            table.Columns.Add("Credits", typeof(string));
+            table.Columns.Add("OVRL", typeof(string));
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Hrs Rg", typeof(string));
+            table.Columns.Add("Day", typeof(string));
+            table.Columns.Add("Course", typeof(string));
+            table.Columns.Add("Start Time", typeof(string));
+            table.Columns.Add("End Time", typeof(string));
 
-
+            foreach (var i in schedule.sections)
+            {
+                int hoursWorking = 0;
+                foreach (Section section in schedule.sections)
+                {
+                    hoursWorking += section.Course.CreditHours;
+                }
+                hoursWorking += i.Instructor.HoursReleased;
+                table.Rows.Add(hoursWorking.ToString(), "", i.Instructor.FirstName + " " + i.Instructor.LastName,
+                    i.Instructor.HoursRequired.ToString(), "", "", "", "");
+                foreach (var row in schedule.sections)
+                {
+                    table.Rows.Add("", "", "", row.Course.CreditHours, row.DaysTaught, row.Course.Prefix + row.Course.CourseNumber,
+                        row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString());
+                }
+            }
+            
             var grid = new GridView();
-            grid.DataSource = products;
+            grid.DataSource = table;
             grid.DataBind();
 
             Response.ClearContent();
