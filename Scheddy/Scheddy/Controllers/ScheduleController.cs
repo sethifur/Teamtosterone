@@ -60,40 +60,22 @@ namespace Scheddy.Controllers
         public ActionResult IndexByProfessor()
         {
 
-            var model =     from i in db.Instructors
-                            join s in db.Sections on
-                            i.InstructorId equals s.InstructorId
-                            join c in db.Classrooms on 
-                            s.ClassroomId equals c.ClassroomId
-                            orderby i.LastName, i.FirstName
-                            select new ViewModels.ScheduleInstructorSection
-                            {
-                                FirstName = i.FirstName,
-                                LastName = i.LastName,
-                                BldgCode = c.BldgCode,
-                                RoomNumber = c.RoomNumber,
-                                DaysTaught = s.DaysTaught,
-                                StartTime = s.StartTime,
-                                EndTime = s.EndTime
-                            };
-
-            List<Section> sections = new List<Section>();
-
-        
-               /* var section =
-                            from i in db.Instructors
-                            join s in db.Sections on
-                            i.InstructorId equals s.InstructorId
-                            orderby i.LastName, i.FirstName
-                            select new List<Section> 
-                            {
-                                
-                            };
-                */
-
-
-           
-
+            var model = from i in db.Instructors
+                        join s in db.Sections on
+                        i.InstructorId equals s.InstructorId
+                        join c in db.Classrooms on 
+                        s.ClassroomId equals c.ClassroomId
+                        orderby i.LastName, i.FirstName
+                        select new ViewModels.ScheduleInstructorSection
+                        {
+                            FirstName = i.FirstName,
+                            LastName = i.LastName,
+                            BldgCode = c.BldgCode,
+                            RoomNumber = c.RoomNumber,
+                            DaysTaught = s.DaysTaught,
+                            StartTime = s.StartTime,
+                            EndTime = s.EndTime
+                        };
             return View(model);
         }
 
@@ -237,7 +219,7 @@ namespace Scheddy.Controllers
 
             Response.ClearContent();
             Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=MyExcelFile.xls");
+            Response.AddHeader("content-disposition", "attachment; filename=" + schedule.ScheduleName + ".xls");
             Response.ContentType = "application/ms-excel";
 
             Response.Charset = "";
