@@ -28,7 +28,33 @@
         </th>
     </tr>
 
-@foreach (var item in Model) {
+    @{ 
+        Scheddy.ViewModels.ClassroomByTime oldItem = new Scheddy.ViewModels.ClassroomByTime();
+
+        string space = "There is space here";
+    }
+
+@foreach (var item in Model)
+{
+    // Insert a row when there's space between 2 classes in the same room on the same set of days
+    if (oldItem != null && oldItem.DaysTaught == item.DaysTaught && oldItem.BldgCode == item.BldgCode && oldItem.RoomNumber == item.RoomNumber)
+    {
+        TimeSpan differenceDuration = item.StartTime.Value.TimeOfDay - oldItem.EndTime.Value.TimeOfDay;
+
+        //System.Diagnostics.Debug.WriteLine("item.StartTime.Value.TimeOfDay: " + item.StartTime.Value.TimeOfDay);
+        //System.Diagnostics.Debug.WriteLine("oldItem.EndTime.Value.TimeOfDay: " + oldItem.EndTime.Value.TimeOfDay);
+        //System.Diagnostics.Debug.WriteLine("Difference in minutes: " + differenceDuration.TotalMinutes);
+
+        if (differenceDuration.TotalMinutes > 30)
+        {
+            <tr>
+                <td>
+                    @space.ToString()
+                </td>
+            </tr>
+        }
+    }
+
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.BldgCode)
@@ -46,6 +72,9 @@
             @Html.DisplayFor(modelItem => item.DaysTaught)
         </td>
     </tr>
+    
+    oldItem = item;
+
 }
 
 </table>
