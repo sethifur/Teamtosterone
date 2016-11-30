@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Scheddy.ViewModels.ScheduleInstructorSection>
+﻿@model Scheddy.ViewModels.ScheduleInstructorSection
 
 @{
     ViewBag.Title = "Professor By Time";
@@ -16,33 +16,29 @@
 
     @try
     {
-        foreach (var item in Model)
+        foreach (var item in Model.instructor)
         {
             <tr>
-                <td>
+                <td>                    
                     @Html.DisplayFor(modelItem => item.FirstName)
                     @Html.DisplayFor(modelItem => item.LastName)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BldgCode)
-                    @Html.DisplayFor(modelItem => item.RoomNumber)
-                </td>
-                <td>
-                    @item.StartTime.Value.ToString("HH:mm -")
-                    @item.EndTime.Value.ToString("HH:mm")
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DaysTaught)
-                </td>
+               
 
-                @foreach (var stuff in item.sections)
+                @foreach (var stuff in Model.indexByProfessor)
                 {
-                    <td>
-                        
-
-                        @Html.DisplayFor(modelItem => stuff.StartTime)
-                        @Html.DisplayFor(modelItem => stuff.EndTime)
-                    </td>
+                    if (item.FirstName == stuff.FirstName && item.LastName == stuff.LastName)
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => stuff.BldgCode)
+                            @Html.DisplayFor(modelItem => stuff.RoomNumber)
+                            @Html.Raw("</br>")
+                            @stuff.StartTime.Value.ToString("HH:mm - ")
+                            @stuff.EndTime.Value.ToString("HH:mm\n")
+                            @Html.Raw("</br>")
+                            @Html.DisplayFor(modelItem => stuff.DaysTaught)
+                        </td>
+                    }
                 }
 
             </tr>

@@ -5,27 +5,24 @@ using System.Web;
 using Scheddy.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Scheddy.ViewModels
+namespace Scheddy.ViewModels 
 {
     public class ScheduleInstructorSection
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string BldgCode { get; set; }
-        public string RoomNumber { get; set; }
-        public string DaysTaught { get; set; }
-        [DataType(DataType.Time)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
-        public DateTime? StartTime { get; set; }
-        [DataType(DataType.Time)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
-        public DateTime? EndTime { get; set; }
+        //List of indexByProfessor objects
+        public List<indexByProfessor> indexByProfessor { get; set; }
 
-        public IEnumerable<Section> sections { get; set; }
-        //public ScheduleInstructorSection()
-        //{
-        //    List<Section> sections  = new List<Section>();
-        //}
+        //List of instructors
+        public IEnumerable<Instructor> instructor { get; set; }
 
+        public indexByProfessor index { get; set; }
+
+        public ScheduleInstructorSection ()
+        {
+            instructor = new List<Instructor>();
+            indexByProfessor = new List<indexByProfessor>();
+        }
+
+       
     }
 }
