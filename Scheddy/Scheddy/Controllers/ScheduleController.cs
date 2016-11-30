@@ -186,14 +186,21 @@ namespace Scheddy.Controllers
             var sections = db.Sections.Where(section => section.ScheduleId == id);
             
             System.Data.DataTable table = new System.Data.DataTable();
-            table.Columns.Add("Credits", typeof(string));
-            table.Columns.Add("OVRL", typeof(string));
-            table.Columns.Add("Name", typeof(string));
-            table.Columns.Add("Hrs Rg", typeof(string));
-            table.Columns.Add("Day", typeof(string));
+            table.Columns.Add("Instructor", typeof(string));
             table.Columns.Add("Course", typeof(string));
+            table.Columns.Add("CRN", typeof(string));
             table.Columns.Add("Start Time", typeof(string));
             table.Columns.Add("End Time", typeof(string));
+            table.Columns.Add("Day", typeof(string));
+            table.Columns.Add("Room", typeof(string));
+            table.Columns.Add("MAX", typeof(string));
+            table.Columns.Add("HRS", typeof(string));
+            table.Columns.Add("Camp", typeof(string));
+            table.Columns.Add("Pay", typeof(string));
+            table.Columns.Add("Load/OVRL", typeof(string));
+            table.Columns.Add("Hrs Reg", typeof(string));
+
+
             Instructor prevProf = null;
             foreach (var i in schedule.sections)
             {
@@ -205,12 +212,14 @@ namespace Scheddy.Controllers
                         hoursWorking += section.Course.CreditHours;
                     }
                     hoursWorking += i.Instructor.HoursReleased;
-                    table.Rows.Add(hoursWorking.ToString(), "", i.Instructor.FirstName + " " + i.Instructor.LastName,
-                        i.Instructor.HoursRequired.ToString(), "", "", "", "");
-                    foreach (var row in schedule.sections)
+                    table.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName,"", "", "", "", "","", "",
+                        "", "","", "", i.Instructor.HoursRequired);
+                    foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
                     {
-                        table.Rows.Add("", "", "", row.Course.CreditHours, row.DaysTaught, row.Course.Prefix + row.Course.CourseNumber,
-                            row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString());
+                        table.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber,"",
+                            row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString(), row.DaysTaught,
+                            row.Classroom.BldgCode + " " + row.Classroom.RoomNumber, row.numSeats, row.Course.CreditHours,
+                            row.Classroom.Campus,"", "", "");
                     }
                 }
                 prevProf = i.Instructor;
