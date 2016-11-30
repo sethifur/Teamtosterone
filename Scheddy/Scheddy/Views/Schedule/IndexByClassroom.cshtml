@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Scheddy.ViewModels.ClassroomByTime>
+﻿@using Scheddy.Models
+@model IEnumerable<Scheddy.ViewModels.ClassroomByTime>
 
 @{
     ViewBag.Title = "Classroom by time Index";
@@ -79,12 +80,6 @@
 
 </table>
 <div class="col-md-offset-2 col-md-10">
-    <input type="button" value="Add Section" class="btn btn-default" onclick="AddSectionFromNewWindow()" />
+    <input id="btnAddSection" type="button" value="Add Section" class="btn btn-default" onclick="location.href='@Url.Action("Create", "Section")'"/>
 </div>
 
-<script>
-    function AddSectionFromNewWindow()
-    {
-        window.open("http://localhost:53568/Section/Create");
-    }
-</script>

@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Web.Routing;
 using Scheddy.ViewModels;
 
 namespace Scheddy.Controllers
@@ -185,6 +186,12 @@ namespace Scheddy.Controllers
 
             }
             return RedirectToAction("Index");
+            /*return new RedirectToRouteResult(new RouteValueDictionary
+                {
+                    {"action", "ControllerMethod"},
+                    {"controller", "ControllerName"}
+                }
+            );*/
         }
 
         public ActionResult Edit(int? id)
@@ -222,8 +229,6 @@ namespace Scheddy.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ClassroomCourseInstructorList viewModel)
         {
-
-
             String daysPerWeek = "";
             if (viewModel.checkedOnline)
             {
@@ -320,11 +325,6 @@ namespace Scheddy.Controllers
                 System.Diagnostics.Debug.WriteLine("EXCEPTION viewModel.section.DaysTaught: " + e.Message);
             }
 
-
-
-
-
-
             if (ModelState.IsValid)
             {
 
@@ -368,8 +368,6 @@ namespace Scheddy.Controllers
                             return RedirectToAction("Index");
                         }
                     }
-
-
                 }
                 catch (NullReferenceException e)
                 {
@@ -533,7 +531,6 @@ namespace Scheddy.Controllers
             {
                 return false;
             }
-
         }
 
         protected override void Dispose(bool disposing)
