@@ -222,7 +222,8 @@ namespace Scheddy.Controllers
 
             Response.ClearContent();
             Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=" + schedule.ScheduleName + ".xls");
+            Response.AddHeader("content-disposition", "attachment; filename=" + schedule.ScheduleName +
+                "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls");
             Response.ContentType = "application/ms-excel";
 
             Response.Charset = "";
