@@ -58,23 +58,46 @@ namespace Scheddy.Controllers
 
         public ActionResult IndexByProfessor()
         {
+            ScheduleInstructorSection model = new ScheduleInstructorSection();
 
-            var model = from i in db.Instructors
-                        join s in db.Sections on
-                        i.InstructorId equals s.InstructorId
-                        join c in db.Classrooms on 
-                        s.ClassroomId equals c.ClassroomId
-                        orderby i.LastName, i.FirstName
-                        select new ViewModels.ScheduleInstructorSection
-                        {
-                            FirstName = i.FirstName,
-                            LastName = i.LastName,
-                            BldgCode = c.BldgCode,
-                            RoomNumber = c.RoomNumber,
-                            DaysTaught = s.DaysTaught,
-                            StartTime = s.StartTime,
-                            EndTime = s.EndTime
-                        };
+           //for (int i = 0; i < db.Sections.Count(); i++)
+            //{
+                var query = from ii in db.Instructors
+                            join s in db.Sections on
+                            ii.InstructorId equals s.InstructorId
+                            join c in db.Classrooms on
+                            s.ClassroomId equals c.ClassroomId
+                            orderby s.StartTime ascending
+                            select new
+                            { ii, s, c };
+                            /*   FirstName = ii.FirstName,
+                               LastName = ii.LastName,
+                               BldgCode = c.BldgCode,
+                               RoomNumber = c.RoomNumber,
+                               DaysTaught = s.DaysTaught,
+                               StartTime = s.StartTime,
+                               EndTime = s.EndTime
+                           };
+                           */
+                foreach (var item in query)
+                {
+                    model.indexByProfessor.Add(new indexByProfessor()
+                    {
+                        FirstName = item.ii.FirstName,
+                        LastName = item.ii.LastName,
+                        BldgCode = item.c.BldgCode,
+                        RoomNumber = item.c.RoomNumber,
+                        DaysTaught = item.s.DaysTaught,
+                        StartTime = item.s.StartTime,
+                        EndTime = item.s.EndTime
+                    });
+                //}
+
+                //model.indexByProfessor.Add(item);
+            }
+            model.instructor = db.Instructors;                       
+
+
             return View(model);
         }
 

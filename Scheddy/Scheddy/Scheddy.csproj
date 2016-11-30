@@ -191,6 +191,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ClassroomByTime.cs" />
     <Compile Include="ViewModels\ClassroomCourseInstructorList.cs" />
+    <Compile Include="ViewModels\indexByProfessor.cs" />
     <Compile Include="ViewModels\ScheduleInstructorSection.cs" />
   </ItemGroup>
   <ItemGroup>
