@@ -13,7 +13,6 @@ using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Runtime.InteropServices;
-//using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Scheddy.Controllers
 {
@@ -195,22 +194,26 @@ namespace Scheddy.Controllers
             table.Columns.Add("Course", typeof(string));
             table.Columns.Add("Start Time", typeof(string));
             table.Columns.Add("End Time", typeof(string));
-
+            Instructor prevProf = null;
             foreach (var i in schedule.sections)
             {
                 int hoursWorking = 0;
-                foreach (Section section in schedule.sections)
+                if (prevProf != i.Instructor)
                 {
-                    hoursWorking += section.Course.CreditHours;
+                    foreach (Section section in schedule.sections)
+                    {
+                        hoursWorking += section.Course.CreditHours;
+                    }
+                    hoursWorking += i.Instructor.HoursReleased;
+                    table.Rows.Add(hoursWorking.ToString(), "", i.Instructor.FirstName + " " + i.Instructor.LastName,
+                        i.Instructor.HoursRequired.ToString(), "", "", "", "");
+                    foreach (var row in schedule.sections)
+                    {
+                        table.Rows.Add("", "", "", row.Course.CreditHours, row.DaysTaught, row.Course.Prefix + row.Course.CourseNumber,
+                            row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString());
+                    }
                 }
-                hoursWorking += i.Instructor.HoursReleased;
-                table.Rows.Add(hoursWorking.ToString(), "", i.Instructor.FirstName + " " + i.Instructor.LastName,
-                    i.Instructor.HoursRequired.ToString(), "", "", "", "");
-                foreach (var row in schedule.sections)
-                {
-                    table.Rows.Add("", "", "", row.Course.CreditHours, row.DaysTaught, row.Course.Prefix + row.Course.CourseNumber,
-                        row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString());
-                }
+                prevProf = i.Instructor;
             }
             
             var grid = new GridView();
