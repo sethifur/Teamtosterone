@@ -8,31 +8,23 @@
 <h2>Classrooms by time</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New Section", "Create", "Section")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.BldgCode)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RoomNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndTime)
+            @Html.Raw("Room")
         </th>
         <th>
             @Html.DisplayNameFor(model => model.DaysTaught)
+        </th>
+        <th>
+            @Html.Raw("Time")
         </th>
     </tr>
 
     @{ 
         Scheddy.ViewModels.ClassroomByTime oldItem = new Scheddy.ViewModels.ClassroomByTime();
-
-        string space = "There is space here";
     }
 
 @foreach (var item in Model)
@@ -50,7 +42,11 @@
         {
             <tr>
                 <td>
-                    @space.ToString()
+                    @Html.ActionLink("Create New Section Here", "Create", "Section")
+                </td>
+                <td>
+                </td>
+                <td>
                 </td>
             </tr>
         }
@@ -58,19 +54,16 @@
 
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.BldgCode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RoomNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndTime)
+            @item.BldgCode.ToString()
+            @Html.Raw(" ")
+            @item.RoomNumber.ToString()
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DaysTaught)
+        </td>
+        <td>
+            @item.StartTime.Value.ToString("HH:mm -")
+            @item.EndTime.Value.ToString("HH:mm")
         </td>
     </tr>
     
