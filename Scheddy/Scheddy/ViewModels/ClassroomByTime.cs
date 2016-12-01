@@ -13,6 +13,7 @@ namespace Scheddy.ViewModels
         public string BldgCode { get; set; }
         public string RoomNumber { get; set; }
         public string DaysTaught { get; set; }
+        public string Campus { get; set; }
         [DataType(DataType.Time)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public DateTime? StartTime { get; set; }

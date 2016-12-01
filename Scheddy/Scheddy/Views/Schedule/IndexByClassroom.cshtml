@@ -11,18 +11,7 @@
     @Html.ActionLink("Create New Section", "Create", "Section")
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.Raw("Room")
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DaysTaught)
-        </th>
-        <th>
-            @Html.Raw("Time")
-        </th>
-    </tr>
-
+   
     @{ 
         Scheddy.ViewModels.ClassroomByTime oldItem = new Scheddy.ViewModels.ClassroomByTime();
     }
@@ -52,12 +41,45 @@
         }
     }
 
+    if (oldItem.Campus != item.Campus)
+    {
+        <tr>
+            <th>
+                <font size="8">
+                    @item.Campus.ToString()
+                </font>
+            </th>
+            <th>
+            </th>
+        </tr>
+    }
+
+    // the big header for the classroom name
+    if (oldItem.RoomNumber != item.RoomNumber || oldItem.BldgCode != item.BldgCode)
+    {
+        <tr>
+            <th>
+                <font size="6">
+                @item.BldgCode.ToString()
+                @Html.Raw(" ")
+                @item.RoomNumber.ToString()
+                </font>
+            </th>
+            <th>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DaysTaught)
+            </th>
+            <th>
+                @Html.Raw("Time")
+            </th>
+        </tr>
+    }
+
+    // diplay the actual data
     <tr>
-        <td>
-            @item.BldgCode.ToString()
-            @Html.Raw(" ")
-            @item.RoomNumber.ToString()
-        </td>
         <td>
             @Html.DisplayFor(modelItem => item.DaysTaught)
         </td>

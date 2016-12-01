@@ -45,7 +45,9 @@ namespace Scheddy.Controllers
                     RoomNumber = c.RoomNumber,
                     DaysTaught = s.DaysTaught,
                     StartTime = s.StartTime,
-                    EndTime = s.EndTime
+                    EndTime = s.EndTime,
+                    Campus = c.Campus
+                    
                 };
             return View(model);
         }
