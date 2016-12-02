@@ -7,7 +7,7 @@
 <h2>Section</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", new { scheduleType = 0, startTime = (DateTime?)null, endTime = (DateTime?)null, classroom = "", instructor = "", daysTaught = "" })
 </p>
 <table class="table">
     <tr>
@@ -59,9 +59,9 @@
                 @Html.DisplayFor(model => item.DaysTaught)
             </th>                         
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.SectionId }) |
+                @Html.ActionLink("Edit", "Edit", new { id = item.SectionId, scheduleType = 0 }) |
                 
-                @Html.ActionLink("Delete", "Delete", new { id = item.SectionId })
+                @Html.ActionLink("Delete", "Delete", new { id = item.SectionId, scheduleType = 0 })
             </td>
         </tr>
     }

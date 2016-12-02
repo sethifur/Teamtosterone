@@ -99,7 +99,8 @@ namespace Scheddy.Controllers
                         EndTime = item.s.EndTime,
                         Campus = item.c.Campus,
                         Prefix = item.co.Prefix,
-                        CourseNumber = item.co.CourseNumber
+                        CourseNumber = item.co.CourseNumber,
+                        SectionId = item.s.SectionId
 
                     });
                 //}

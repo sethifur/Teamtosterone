@@ -5,12 +5,16 @@
     DateTime firstClassTime = DateTime.Parse("12/12/2016 07:30:00 AM");
 }
 
-<h2>IndexByProfessor</h2>
+<h2>Instructors by Time</h2>
+
+<p>
+    @Html.ActionLink("Create New Section", "Create", "Section", new { scheduleType = 2, startTime = (DateTime?) null, endTime = (DateTime?)null, classroom = "", instructor = "", daysTaught = "" }, null)
+</p>
 
 <table class="table">
     <tr>
         <th>
-            Professor
+            @Html.Raw("Instructor")
         </th>
         <th>
             @Html.Raw("7:30")
@@ -95,11 +99,11 @@
                                 DateTime oneHourAhead = newTime.AddHours(1);
                                 if (oneHourAhead.TimeOfDay > lastEndTime.TimeOfDay)
                                 {
-                                    @Html.Raw("-----|")
+                                    @Html.Raw("----->|")
                                 }
                                 else
                                 {
-                                    @Html.Raw("------")
+                                    @Html.Raw("-------")
                                 }
 
                             }
@@ -119,10 +123,11 @@
                                     //@Html.Raw("</br>")
                                     //@stuff.StartTime.Value.ToString("HH:mm - ")
                                     //@stuff.EndTime.Value.ToString("HH:mm\n")
+
                                     @Html.Raw("</br>")
-                                    @Html.Raw("Edit")
-                                    @Html.Raw("</br>")
-                                    @Html.Raw("Delete")
+                                    @Html.ActionLink("Edit", "Edit", "Section", new { id = stuff.SectionId, scheduleType = 2 }, null)
+                                    @Html.Raw(" | ")
+                                    @Html.ActionLink("Delete", "Delete", "Section", new { id = stuff.SectionId }, null)
 
                                     break;
                                 }
@@ -130,10 +135,8 @@
 
                             @if (!spotTaken)
                             {
-                                //DateTime potentialEndTime = newTime.AddMinutes(50);
-                                //@Html.Raw("Make Section for " + newTime.TimeOfDay.ToString() + " - " + potentialEndTime.TimeOfDay.ToString())
-                                //@Html.Raw("Make Section for " + item.FirstName.ToString() + " " + days)
-                                @Html.Raw("Empty Here")
+                                DateTime potentialEndTime = newTime.AddMinutes(50);
+                                @Html.ActionLink("Create Section", "Create", "Section", new { scheduleType = 2, startTime = newTime, endTime = potentialEndTime, classroom = "", instructor = item.FirstName + " " + item.LastName, daysTaught = days}, null)
                             }
 
                         </td>
@@ -150,6 +153,3 @@
     catch (Exception e) { Console.Write(e); }
 
 </table>
-<div class="col-md-offset-2 col-md-10">
-    <input id="btnAddSection" type="button" value="Add Section" class="btn btn-default" onclick="location.href='@Url.Action("Create", "Section")'" />
-</div>

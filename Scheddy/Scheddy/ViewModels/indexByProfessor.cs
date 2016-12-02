@@ -17,6 +17,7 @@ namespace Scheddy.ViewModels
         public string LastName { get; set; }
         public string Prefix { get; set; }
         public int CourseNumber { get; set; }
+        public int SectionId { get; set; }
 
         [DataType(DataType.Time)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]

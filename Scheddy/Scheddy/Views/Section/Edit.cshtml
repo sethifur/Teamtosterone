@@ -102,7 +102,7 @@
                 @Html.DropDownListFor(Model => Model.selectedClassroom,
                 new SelectList(classroomNames),
                 "Select Classroom",
-                new { required = "required" }).
+                new { required = "required" })
             </div>
         </div>
 
@@ -191,6 +191,8 @@
 }
 
 <div>
+    @Html.ActionLink("Back to Classroom Schedule View", "IndexByClassroom", "Schedule")<br>
+    @Html.ActionLink("Back to Instructor Schedule View", "IndexByProfessor", "Schedule")<br>
     @Html.ActionLink("Back to List", "Index")
 </div>
 

@@ -22,8 +22,8 @@ namespace Scheddy.Controllers
         {
             return View(db.Sections.ToList());
         }
-
-        //public ActionResult Create(int scheduleType)
+        
+        /*
         public ActionResult Create()
         {
             ClassroomCourseInstructorList list = new ClassroomCourseInstructorList();
@@ -31,7 +31,40 @@ namespace Scheddy.Controllers
             list.courses = db.Courses;
             list.instructors = db.Instructors;
 
-            //list.scheduleType = scheduleType;
+            return View(list);
+        }
+        */
+
+        public ActionResult Create(int scheduleType, DateTime? startTime, DateTime? endTime, string classroom = "", string instructor = "", string daysTaught = "")
+        {
+            ClassroomCourseInstructorList list = new ClassroomCourseInstructorList();
+            list.classrooms = db.Classrooms;
+            list.courses = db.Courses;
+            list.instructors = db.Instructors;
+            if (scheduleType > 0)
+            {
+                list.scheduleType = scheduleType;
+            }
+            if (startTime != null)
+            {
+                list.section.StartTime = startTime;
+            }
+            if (endTime != null)
+            {
+                list.section.EndTime = endTime;
+            }
+            if (!classroom.Equals(""))
+            {
+                list.selectedClassroom = classroom;
+            }
+            if (!instructor.Equals(""))
+            {
+                list.selectedInstructor = instructor;
+            }
+            if (!daysTaught.Equals(""))
+            {
+                list.section.DaysTaught = daysTaught;
+            }
 
             return View(list);
         }
@@ -188,40 +221,34 @@ namespace Scheddy.Controllers
                 }
 
             }
-            return RedirectToAction("Index");
-            /*
+
             if (viewModel.scheduleType == 1)
             {
                 return new RedirectToRouteResult(new RouteValueDictionary
-                    {
-                        {"action", "IndexByClassroom"},
-                        {"controller", "Schedule"}
-                    }
+                {
+                    {"action", "IndexByClassroom"},
+                    {"controller", "Schedule"}
+                }
                 );
             }
-            else if(viewModel.scheduleType == 2)
+            else if (viewModel.scheduleType == 2)
             {
                 return new RedirectToRouteResult(new RouteValueDictionary
-                    {
-                        {"action", "IndexByClassroom"},
-                        {"controller", "Schedule"}
-                    }
+                {
+                    {"action", "IndexByProfessor"},
+                    {"controller", "Schedule"}
+                }
                 );
-            } else
-            {
-                return new RedirectToRouteResult(new RouteValueDictionary
-                    {
-                        {"action", "Index"},
-                        {"controller", "Section"}
-                    }
-               );
             }
-            */
+            else
+            {
+                return RedirectToAction("Index");
+            }
 
 
         }
 
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id, int scheduleType)
         {
             if (id == null)
             {
@@ -243,6 +270,8 @@ namespace Scheddy.Controllers
             list.selectedClassroom = section.Classroom.Campus + " " + section.Classroom.BldgCode + " " + section.Classroom.RoomNumber;
 
             list.section = section;
+
+            list.scheduleType = scheduleType;
 
             return View(list);
             
@@ -384,9 +413,30 @@ namespace Scheddy.Controllers
                             db.SaveChanges();
                             db.Sections.Add(viewModel.section);
                             db.SaveChanges();
+                            
+                            if (viewModel.scheduleType == 1)
+                            {
+                                return new RedirectToRouteResult(new RouteValueDictionary
+                                {
+                                    {"action", "IndexByClassroom"},
+                                    {"controller", "Schedule"}
+                                }
+                                );
+                            }
+                            else if (viewModel.scheduleType == 2)
+                            {
+                                return new RedirectToRouteResult(new RouteValueDictionary
+                                {
+                                    {"action", "IndexByProfessor"},
+                                    {"controller", "Schedule"}
+                                }
+                                );
+                            }
+                            else
+                            {
+                                return RedirectToAction("Index");
+                            }
 
-                          
-                            return RedirectToAction("Index");
                         }
                         catch (DbUpdateException ex)
                         {
