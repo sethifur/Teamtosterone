@@ -23,14 +23,15 @@ namespace Scheddy.Controllers
             return View(db.Sections.ToList());
         }
 
-        public ActionResult Create(int scheduleType)
+        //public ActionResult Create(int scheduleType)
+        public ActionResult Create()
         {
             ClassroomCourseInstructorList list = new ClassroomCourseInstructorList();
             list.classrooms = db.Classrooms;
             list.courses = db.Courses;
             list.instructors = db.Instructors;
 
-            list.scheduleType = scheduleType;
+            //list.scheduleType = scheduleType;
 
             return View(list);
         }
@@ -187,7 +188,8 @@ namespace Scheddy.Controllers
                 }
 
             }
-            //return RedirectToAction("Index");
+            return RedirectToAction("Index");
+            /*
             if (viewModel.scheduleType == 1)
             {
                 return new RedirectToRouteResult(new RouteValueDictionary
@@ -214,6 +216,7 @@ namespace Scheddy.Controllers
                     }
                );
             }
+            */
 
 
         }
