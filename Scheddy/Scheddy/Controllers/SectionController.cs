@@ -462,7 +462,7 @@ namespace Scheddy.Controllers
             
         }
 
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, int scheduleType)
         {
             //was an id passed in?
             if (id == null)
@@ -478,8 +478,12 @@ namespace Scheddy.Controllers
             {
                 return HttpNotFound();
             }
-            
-            return View(section);
+
+            SectionScheduleType viewModel = new SectionScheduleType();
+            viewModel.section = section;
+            viewModel.scheduleType = scheduleType;
+
+            return View(viewModel);
         }
 
         // POST: Instructor/Delete/5
@@ -493,12 +497,58 @@ namespace Scheddy.Controllers
                 db.Sections.Remove(section);
                 db.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : ");
+                System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : " + e.Message);
                 return RedirectToAction("CannotDelete");
             }
 
             return RedirectToAction("Index");
+
+
+            /*
+             
+            Section section = db.Sections.Find(viewModel.section.SectionId);
+            try
+            {
+                db.Sections.Remove(section);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : ");
+                System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : " + e.Message);
+                return RedirectToAction("CannotDelete");
+            }
+
+
+
+            if (viewModel.scheduleType == 1)
+            {
+                return new RedirectToRouteResult(new RouteValueDictionary
+                    {
+                        {"action", "IndexByClassroom"},
+                        {"controller", "Schedule"}
+                    }
+                );
+            }
+            else if (viewModel.scheduleType == 2)
+            {
+                return new RedirectToRouteResult(new RouteValueDictionary
+                    {
+                        {"action", "IndexByProfessor"},
+                        {"controller", "Schedule"}
+                    }
+                );
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+             
+             */
+
         }
 
         public ActionResult CannotDelete()
