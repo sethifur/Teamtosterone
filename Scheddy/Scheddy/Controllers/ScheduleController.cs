@@ -46,8 +46,11 @@ namespace Scheddy.Controllers
                     DaysTaught = s.DaysTaught,
                     StartTime = s.StartTime,
                     EndTime = s.EndTime,
-                    Campus = c.Campus
-                    
+                    Campus = c.Campus,
+                    FirstName = s.Instructor.FirstName,
+                    LastName = s.Instructor.LastName,
+                    Prefix = s.Course.Prefix,
+                    CourseNumber = s.Course.CourseNumber
                 };
             return View(model);
         }
@@ -60,23 +63,52 @@ namespace Scheddy.Controllers
 
         public ActionResult IndexByProfessor()
         {
+            ScheduleInstructorSection model = new ScheduleInstructorSection();
 
-            var model = from i in db.Instructors
-                        join s in db.Sections on
-                        i.InstructorId equals s.InstructorId
-                        join c in db.Classrooms on 
-                        s.ClassroomId equals c.ClassroomId
-                        orderby i.LastName, i.FirstName
-                        select new ViewModels.ScheduleInstructorSection
-                        {
-                            FirstName = i.FirstName,
-                            LastName = i.LastName,
-                            BldgCode = c.BldgCode,
-                            RoomNumber = c.RoomNumber,
-                            DaysTaught = s.DaysTaught,
-                            StartTime = s.StartTime,
-                            EndTime = s.EndTime
-                        };
+           //for (int i = 0; i < db.Sections.Count(); i++)
+            //{
+                var query = from ii in db.Instructors
+                            join s in db.Sections on
+                            ii.InstructorId equals s.InstructorId
+                            join c in db.Classrooms on
+                            s.ClassroomId equals c.ClassroomId
+                            join co in db.Courses on
+                            s.CourseId equals co.CourseId
+                            orderby s.StartTime ascending
+                            select new
+                            { ii, s, c, co};
+                            /*   FirstName = ii.FirstName,
+                               LastName = ii.LastName,
+                               BldgCode = c.BldgCode,
+                               RoomNumber = c.RoomNumber,
+                               DaysTaught = s.DaysTaught,
+                               StartTime = s.StartTime,
+                               EndTime = s.EndTime
+                           };
+                           */
+                foreach (var item in query)
+                {
+                    model.indexByProfessor.Add(new indexByProfessor()
+                    {
+                        FirstName = item.ii.FirstName,
+                        LastName = item.ii.LastName,
+                        BldgCode = item.c.BldgCode,
+                        RoomNumber = item.c.RoomNumber,
+                        DaysTaught = item.s.DaysTaught,
+                        StartTime = item.s.StartTime,
+                        EndTime = item.s.EndTime,
+                        Campus = item.c.Campus,
+                        Prefix = item.co.Prefix,
+                        CourseNumber = item.co.CourseNumber
+
+                    });
+                //}
+
+                //model.indexByProfessor.Add(item);
+            }
+            model.instructor = db.Instructors;                       
+
+
             return View(model);
         }
 
@@ -188,14 +220,21 @@ namespace Scheddy.Controllers
             var sections = db.Sections.Where(section => section.ScheduleId == id);
             
             System.Data.DataTable table = new System.Data.DataTable();
-            table.Columns.Add("Credits", typeof(string));
-            table.Columns.Add("OVRL", typeof(string));
-            table.Columns.Add("Name", typeof(string));
-            table.Columns.Add("Hrs Rg", typeof(string));
-            table.Columns.Add("Day", typeof(string));
+            table.Columns.Add("Instructor", typeof(string));
             table.Columns.Add("Course", typeof(string));
+            table.Columns.Add("CRN", typeof(string));
             table.Columns.Add("Start Time", typeof(string));
             table.Columns.Add("End Time", typeof(string));
+            table.Columns.Add("Day", typeof(string));
+            table.Columns.Add("Room", typeof(string));
+            table.Columns.Add("MAX", typeof(string));
+            table.Columns.Add("HRS", typeof(string));
+            table.Columns.Add("Camp", typeof(string));
+            table.Columns.Add("Pay", typeof(string));
+            table.Columns.Add("Load/OVRL", typeof(string));
+            table.Columns.Add("Hrs Reg", typeof(string));
+
+
             Instructor prevProf = null;
             foreach (var i in schedule.sections)
             {
@@ -207,12 +246,14 @@ namespace Scheddy.Controllers
                         hoursWorking += section.Course.CreditHours;
                     }
                     hoursWorking += i.Instructor.HoursReleased;
-                    table.Rows.Add(hoursWorking.ToString(), "", i.Instructor.FirstName + " " + i.Instructor.LastName,
-                        i.Instructor.HoursRequired.ToString(), "", "", "", "");
-                    foreach (var row in schedule.sections)
+                    table.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName,"", "", "", "", "","", "",
+                        "", "","", "", i.Instructor.HoursRequired);
+                    foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
                     {
-                        table.Rows.Add("", "", "", row.Course.CreditHours, row.DaysTaught, row.Course.Prefix + row.Course.CourseNumber,
-                            row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString());
+                        table.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber,"",
+                            row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString(), row.DaysTaught,
+                            row.Classroom.BldgCode + " " + row.Classroom.RoomNumber, row.numSeats, row.Course.CreditHours,
+                            row.Classroom.Campus,"", "", "");
                     }
                 }
                 prevProf = i.Instructor;
@@ -224,7 +265,8 @@ namespace Scheddy.Controllers
 
             Response.ClearContent();
             Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=" + schedule.ScheduleName + ".xls");
+            Response.AddHeader("content-disposition", "attachment; filename=" + schedule.ScheduleName +
+                "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls");
             Response.ContentType = "application/ms-excel";
 
             Response.Charset = "";

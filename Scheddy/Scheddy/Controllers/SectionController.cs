@@ -30,7 +30,7 @@ namespace Scheddy.Controllers
             list.courses = db.Courses;
             list.instructors = db.Instructors;
 
-            //list.scheduleType = scheduleType;
+            list.scheduleType = scheduleType;
 
             return View(list);
         }

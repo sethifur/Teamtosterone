@@ -8,7 +8,7 @@
 <h2>Classrooms by time</h2>
 
 <p>
-    @Html.ActionLink("Create New Section", "Create", "Section")
+    @Html.ActionLink("Create New Section", "Create", "Section", new { scheduleType = 1 }, null)
 </p>
 <table class="table">
    
@@ -49,8 +49,6 @@
                     @item.Campus.ToString()
                 </font>
             </th>
-            <th>
-            </th>
         </tr>
     }
 
@@ -65,12 +63,16 @@
                 @item.RoomNumber.ToString()
                 </font>
             </th>
-            <th>
-            </th>
         </tr>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DaysTaught)
+                @Html.Raw("Course")
+            </th>
+            <th>
+                @Html.Raw("Instructor")
+            </th>
+            <th>
+                @Html.Raw("Days Taught")
             </th>
             <th>
                 @Html.Raw("Time")
@@ -80,6 +82,14 @@
 
     // diplay the actual data
     <tr>
+        <td>
+            @item.Prefix.ToString()
+            @Html.Raw(" ")
+            @item.CourseNumber.ToString()
+        </td>
+        <td>
+            @Html.Raw(@item.LastName.ToString() + ", " + @item.FirstName.ToString())
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.DaysTaught)
         </td>
@@ -95,6 +105,6 @@
 
 </table>
 <div class="col-md-offset-2 col-md-10">
-    <input id="btnAddSection" type="button" value="Add Section" class="btn btn-default" onclick="location.href='@Url.Action("Create", "Section")'"/>
+    <input id="btnAddSection" type="button" value="Add Section" class="btn btn-default" onclick="location.href='@Url.Action("Create", "Section",  new { scheduleType = 1 })'"/>
 </div>
 
