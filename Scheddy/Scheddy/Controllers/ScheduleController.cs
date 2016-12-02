@@ -234,34 +234,74 @@ namespace Scheddy.Controllers
             table.Columns.Add("Load/OVRL", typeof(string));
             table.Columns.Add("Hrs Reg", typeof(string));
 
+            System.Data.DataTable onlineTable = new System.Data.DataTable();
+            onlineTable.Columns.Add("Instructor", typeof(string));
+            onlineTable.Columns.Add("Course", typeof(string));
+            onlineTable.Columns.Add("CRN", typeof(string));
+            onlineTable.Columns.Add("ENRL", typeof(string));
+            onlineTable.Columns.Add("AVAIL", typeof(string));
+            onlineTable.Columns.Add("WLIST", typeof(string));
+            onlineTable.Columns.Add("Pay", typeof(string));
+            onlineTable.Columns.Add("Load/OVRL", typeof(string));
+            onlineTable.Columns.Add("", typeof(string));
 
+            //Table that puts info into Regular table
             Instructor prevProf = null;
             foreach (var i in schedule.sections)
             {
                 int hoursWorking = 0;
-                if (prevProf != i.Instructor)
+                foreach (Section section in schedule.sections)
                 {
-                    foreach (Section section in schedule.sections)
-                    {
                         hoursWorking += section.Course.CreditHours;
-                    }
-                    hoursWorking += i.Instructor.HoursReleased;
-                    table.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName,"", "", "", "", "","", "",
-                        "", "","", "", i.Instructor.HoursRequired);
-                    foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
+                }
+                if (i.DaysTaught == "ONL")
+                {
+                    prevProf = null;
+                    foreach (var j in schedule.sections)
                     {
-                        table.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber,"",
-                            row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString(), row.DaysTaught,
-                            row.Classroom.BldgCode + " " + row.Classroom.RoomNumber, row.numSeats, row.Course.CreditHours,
-                            row.Classroom.Campus,"", "", "");
+                        if (prevProf != j.Instructor)
+                        {
+                            hoursWorking += j.Instructor.HoursReleased;
+                            onlineTable.Rows.Add(i.Instructor.LastName + ", " + j.Instructor.FirstName, "", "", "", "", "", "", "",
+                                "", "", "", "", "");
+                            foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == j.Instructor.InstructorId))
+                            {
+                                onlineTable.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, row.CRN,
+                                    "", row.Classroom.Capacity, "", "", "", "");
+                            }
+                        }
+                        prevProf = j.Instructor;
                     }
                 }
-                prevProf = i.Instructor;
+                else
+                {
+                    if (prevProf != i.Instructor)
+                    {
+
+                        hoursWorking += i.Instructor.HoursReleased;
+                        table.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "",
+                            "", "", "", "", i.Instructor.HoursRequired);
+                        foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
+                        {
+                            table.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, "",
+                                row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString(), row.DaysTaught,
+                                row.Classroom.BldgCode + " " + row.Classroom.RoomNumber, row.numSeats, row.Course.CreditHours,
+                                row.Classroom.Campus, "", "", "");
+                        }
+                    }
+                    prevProf = i.Instructor;
+                }
             }
             
-            var grid = new GridView();
-            grid.DataSource = table;
-            grid.DataBind();
+           
+
+            var grid1 = new GridView();
+            grid1.DataSource = table;
+            grid1.DataBind();
+
+            var grid2 = new GridView();
+            grid2.DataSource = onlineTable;
+            grid2.DataBind();
 
             Response.ClearContent();
             Response.Buffer = true;
@@ -273,7 +313,8 @@ namespace Scheddy.Controllers
             StringWriter sw = new StringWriter();
             HtmlTextWriter htw = new HtmlTextWriter(sw);
 
-            grid.RenderControl(htw);
+            grid1.RenderControl(htw);
+            grid2.RenderControl(htw);
 
             Response.Output.Write(sw.ToString());
             Response.Flush();
