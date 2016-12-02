@@ -107,7 +107,7 @@
                             @foreach (var stuff in Model.indexByProfessor)
                             {
                                 if (item.FirstName == stuff.FirstName && item.LastName == stuff.LastName
-                                    && newTime.TimeOfDay == stuff.StartTime.Value.TimeOfDay)
+                                    && newTime.TimeOfDay == stuff.StartTime.Value.TimeOfDay && stuff.DaysTaught == days)
                                 {
                                     spotTaken = true;
                                     lastEndTime = (DateTime)stuff.EndTime;
