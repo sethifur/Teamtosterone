@@ -1,110 +1,154 @@
-﻿@using Scheddy.Models
-@model IEnumerable<Scheddy.ViewModels.ClassroomByTime>
+﻿@model Scheddy.ViewModels.ScheduleClassroomSection
 
 @{
-    ViewBag.Title = "Classroom by time Index";
+    ViewBag.Title = "Classroom By Time";
+    DateTime firstClassTime = DateTime.Parse("12/12/2016 07:30:00 AM");
 }
 
 <h2>Classrooms by Time</h2>
 
 <p>
-    @Html.ActionLink("Create New Section", "Create", "Section", new { scheduleType = 1 }, null)
+    @Html.ActionLink("Create New Section", "Create", "Section", new { scheduleType = 1, startTime = (DateTime?)null, endTime = (DateTime?)null, classroom = "", instructor = "", daysTaught = "" }, null)
 </p>
+
 <table class="table">
-   
-    @{ 
-        Scheddy.ViewModels.ClassroomByTime oldItem = new Scheddy.ViewModels.ClassroomByTime();
-    }
-
-@foreach (var item in Model)
-{
-    // Insert a row when there's space between 2 classes in the same room on the same set of days
-    if (oldItem != null && oldItem.DaysTaught == item.DaysTaught && oldItem.BldgCode == item.BldgCode && oldItem.RoomNumber == item.RoomNumber)
-    {
-        TimeSpan differenceDuration = item.StartTime.Value.TimeOfDay - oldItem.EndTime.Value.TimeOfDay;
-
-        //System.Diagnostics.Debug.WriteLine("item.StartTime.Value.TimeOfDay: " + item.StartTime.Value.TimeOfDay);
-        //System.Diagnostics.Debug.WriteLine("oldItem.EndTime.Value.TimeOfDay: " + oldItem.EndTime.Value.TimeOfDay);
-        //System.Diagnostics.Debug.WriteLine("Difference in minutes: " + differenceDuration.TotalMinutes);
-
-        if (differenceDuration.TotalMinutes > 30)
-        {
-            <tr>
-                <td>
-                    @Html.ActionLink("Create New Section Here", "Create", "Section")
-                </td>
-                <td>
-                </td>
-                <td>
-                </td>
-            </tr>
-        }
-    }
-
-    if (oldItem.Campus != item.Campus)
-    {
-        <tr>
-            <th>
-                <font size="8">
-                    @item.Campus.ToString()
-                </font>
-            </th>
-        </tr>
-    }
-
-    // the big header for the classroom name
-    if (oldItem.RoomNumber != item.RoomNumber || oldItem.BldgCode != item.BldgCode)
-    {
-        <tr>
-            <th>
-                <font size="6">
-                @item.BldgCode.ToString()
-                @Html.Raw(" ")
-                @item.RoomNumber.ToString()
-                </font>
-            </th>
-        </tr>
-        <tr>
-            <th>
-                @Html.Raw("Course")
-            </th>
-            <th>
-                @Html.Raw("Instructor")
-            </th>
-            <th>
-                @Html.Raw("Days Taught")
-            </th>
-            <th>
-                @Html.Raw("Time")
-            </th>
-        </tr>
-    }
-
-    // diplay the actual data
     <tr>
-        <td>
-            @item.Prefix.ToString()
-            @Html.Raw(" ")
-            @item.CourseNumber.ToString()
-        </td>
-        <td>
-            @Html.Raw(@item.LastName.ToString() + ", " + @item.FirstName.ToString())
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DaysTaught)
-        </td>
-        <td>
-            @item.StartTime.Value.ToString("HH:mm -")
-            @item.EndTime.Value.ToString("HH:mm")
-        </td>
-    </tr>
-    
-    oldItem = item;
+        <th>
+            @Html.Raw("Classroom")
+        </th>
+        <th>
+            @Html.Raw("7:30")
+        </th>
+        <th>
+            @Html.Raw("8:30")
+        </th>
+        <th>
+            @Html.Raw("9:30")
+        </th>
+        <th>
+            @Html.Raw("10:30")
+        </th>
+        <th>
+            @Html.Raw("11:30")
+        </th>
+        <th>
+            @Html.Raw("12:30")
+        </th>
+        <th>
+            @Html.Raw("1:30")
+        </th>
+        <th>
+            @Html.Raw("2:30")
+        </th>
+        <th>
+            @Html.Raw("3:30")
+        </th>
+        <th>
+            @Html.Raw("4:30")
+        </th>
+        <th>
+            @Html.Raw("5:30")
+        </th>
+        <th>
+            @Html.Raw("6:30")
+        </th>
+        <th>
+            @Html.Raw("7:30")
+        </th>
 
-}
+    </tr>
+
+    @try
+    {
+        foreach (var item in Model.classroom)
+        {
+            // find out how many different sets of days this classroom is holding
+            List<string> uniqueDaysTaught = new List<string>();
+            foreach (var stuff in Model.indexByClassroom)
+            {
+                if (item.Campus == stuff.Campus && item.BldgCode == stuff.BldgCode && item.RoomNumber == stuff.RoomNumber && !uniqueDaysTaught.Contains(stuff.DaysTaught))
+                {
+                    uniqueDaysTaught.Add(stuff.DaysTaught);
+                }
+            }
+
+            // make a row for each day
+            foreach (var days in uniqueDaysTaught)
+            {
+
+                <tr>
+                    <td>
+                        @Html.Raw(@item.Campus + " " + @item.BldgCode.ToString() + " " + @item.RoomNumber.ToString() + " - " + days)
+                    </td>
+
+                    @{
+                        DateTime lastEndTime = firstClassTime;
+                    }
+
+                    @for (int i = 0; i < 13; i++)
+                    {
+                        DateTime newTime = firstClassTime.AddHours(i);
+                        bool spotTaken = false;
+
+                        <td>
+
+
+                            @if (lastEndTime.TimeOfDay > newTime.TimeOfDay)
+                            {
+                                spotTaken = true;
+                                DateTime oneHourAhead = newTime.AddHours(1);
+                                if (oneHourAhead.TimeOfDay > lastEndTime.TimeOfDay)
+                                {
+                                    @Html.Raw("----->|")
+                                }
+                                else
+                                {
+                                    @Html.Raw("-------")
+                                }
+
+                            }
+
+                            @foreach (var stuff in Model.indexByClassroom)
+                            {
+                                if (item.Campus == stuff.Campus && item.BldgCode == stuff.BldgCode && item.RoomNumber == stuff.RoomNumber
+                                    && newTime.TimeOfDay == stuff.StartTime.Value.TimeOfDay && stuff.DaysTaught == days)
+                                {
+                                    spotTaken = true;
+                                    lastEndTime = (DateTime)stuff.EndTime;
+                                    @Html.Raw(stuff.Prefix.ToString() + " " + stuff.CourseNumber.ToString())
+                                    @Html.Raw("</br>")
+                                    @Html.Raw(stuff.FirstName.ToString() + " " + stuff.LastName.ToString())
+                                    //@Html.Raw("</br>")
+                                    //@stuff.StartTime.Value.ToString("HH:mm - ")
+                                    //@stuff.EndTime.Value.ToString("HH:mm\n")
+
+                                    @Html.Raw("</br>")
+                                    @Html.ActionLink("Edit", "Edit", "Section", new { id = stuff.SectionId, scheduleType = 1 }, null)
+                                    @Html.Raw(" | ")
+                                    @Html.ActionLink("Delete", "Delete", "Section", new { id = stuff.SectionId, scheduleType = 1 }, null)
+
+                                    break;
+                                }
+                            }
+
+                            @if (!spotTaken)
+                            {
+                                DateTime potentialEndTime = newTime.AddMinutes(50);
+                                @Html.ActionLink("Create Section", "Create", "Section", new { scheduleType = 1, startTime = newTime, endTime = potentialEndTime, classroom = item.Campus + " " + item.BldgCode + " " + item.RoomNumber, instructor = "", daysTaught = days }, null)
+                            }
+
+                        </td>
+                    }
+
+                </tr>
+
+
+            }
+
+        }
+
+    }
+    catch (Exception e) { Console.Write(e); }
 
 </table>
-<div class="col-md-offset-2 col-md-10">
-    <input id="btnAddSection" type="button" value="Add Section" class="btn btn-default" onclick="location.href='@Url.Action("Create", "Section",  new { scheduleType = 1 })'"/>
-</div>
 

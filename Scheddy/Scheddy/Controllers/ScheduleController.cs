@@ -34,6 +34,7 @@ namespace Scheddy.Controllers
 
         public ActionResult IndexByClassroom()
         {
+            /*
             var model =
                 from c in db.Classrooms
                 join s in db.Sections on
@@ -53,6 +54,72 @@ namespace Scheddy.Controllers
                     CourseNumber = s.Course.CourseNumber
                 };
             return View(model);
+            */
+
+
+            /*
+            var query = from ii in db.Instructors
+                        join s in db.Sections on
+                        ii.InstructorId equals s.InstructorId
+                        join c in db.Classrooms on
+                        s.ClassroomId equals c.ClassroomId
+                        join co in db.Courses on
+                        s.CourseId equals co.CourseId
+                        orderby s.StartTime ascending
+                        select new
+                        { ii, s, c, co };
+                        */
+
+
+            ScheduleClassroomSection model = new ScheduleClassroomSection();
+
+            //for (int i = 0; i < db.Sections.Count(); i++)
+            //{
+            var query = from ii in db.Instructors
+                        join s in db.Sections on
+                        ii.InstructorId equals s.InstructorId
+                        join c in db.Classrooms on
+                        s.ClassroomId equals c.ClassroomId
+                        join co in db.Courses on
+                        s.CourseId equals co.CourseId
+                        orderby s.StartTime ascending
+                        select new
+                        { ii, s, c, co };
+            /*   FirstName = ii.FirstName,
+               LastName = ii.LastName,
+               BldgCode = c.BldgCode,
+               RoomNumber = c.RoomNumber,
+               DaysTaught = s.DaysTaught,
+               StartTime = s.StartTime,
+               EndTime = s.EndTime
+           };
+           */
+            foreach (var item in query)
+            {
+                model.indexByClassroom.Add(new indexByClassroom()
+                {
+                    FirstName = item.ii.FirstName,
+                    LastName = item.ii.LastName,
+                    BldgCode = item.c.BldgCode,
+                    RoomNumber = item.c.RoomNumber,
+                    DaysTaught = item.s.DaysTaught,
+                    StartTime = item.s.StartTime,
+                    EndTime = item.s.EndTime,
+                    Campus = item.c.Campus,
+                    Prefix = item.co.Prefix,
+                    CourseNumber = item.co.CourseNumber,
+                    SectionId = item.s.SectionId
+
+                });
+                //}
+
+                //model.indexByProfessor.Add(item);
+            }
+            model.classroom = db.Classrooms;
+
+
+            return View(model);
+
         }
 
         public ActionResult Details(int? id)
