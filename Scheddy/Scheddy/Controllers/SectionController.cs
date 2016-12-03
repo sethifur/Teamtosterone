@@ -80,9 +80,25 @@ namespace Scheddy.Controllers
             viewModel.section.ScheduleId = 1;
 
             String daysPerWeek = "";
+            String campus = "";
+            String buildingCode = "";
+            String roomNumber = "";
+
+
             if (viewModel.checkedOnline)
             {
                 daysPerWeek = "ONL";
+
+                DateTime onlineBeginTime = DateTime.Parse("12/12/2016 12:00:00 AM");
+                DateTime onlineEndTime = DateTime.Parse("12/12/2016 11:59:59 PM");
+
+                viewModel.section.StartTime = onlineBeginTime;
+                viewModel.section.EndTime = onlineEndTime;
+
+                campus = "ONLINE";
+                buildingCode = "OL";
+                roomNumber = "ONLINE";
+
             } else
             {
                 if (viewModel.checkedMonday)
@@ -109,12 +125,13 @@ namespace Scheddy.Controllers
                 {
                     daysPerWeek += "S";
                 }
+
+                campus = viewModel.selectedClassroom.Split(' ')[0] + " " + viewModel.selectedClassroom.Split(' ')[1];
+                buildingCode = viewModel.selectedClassroom.Split(' ')[2];
+                roomNumber = viewModel.selectedClassroom.Split(' ')[3];
             }
 
-
-            String campus = viewModel.selectedClassroom.Split(' ')[0] + " " + viewModel.selectedClassroom.Split(' ')[1];
-            String buildingCode = viewModel.selectedClassroom.Split(' ')[2];
-            String roomNumber = viewModel.selectedClassroom.Split(' ')[3];
+            
 
             String firstName = viewModel.selectedInstructor.Split(' ')[0];
             String lastName = viewModel.selectedInstructor.Split(' ')[1];
@@ -285,10 +302,25 @@ namespace Scheddy.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ClassroomCourseInstructorList viewModel)
         {
+
             String daysPerWeek = "";
+            String campus = "";
+            String buildingCode = "";
+            String roomNumber = "";
+
             if (viewModel.checkedOnline)
             {
                 daysPerWeek = "ONL";
+
+                DateTime onlineBeginTime = DateTime.Parse("12/12/2016 12:00:00 AM");
+                DateTime onlineEndTime = DateTime.Parse("12/12/2016 11:59:59 PM");
+
+                viewModel.section.StartTime = onlineBeginTime;
+                viewModel.section.EndTime = onlineEndTime;
+
+                campus = "ONLINE";
+                buildingCode = "OL";
+                roomNumber = "ONLINE";
             }
             else
             {
@@ -316,12 +348,11 @@ namespace Scheddy.Controllers
                 {
                     daysPerWeek += "S";
                 }
+
+                campus = viewModel.selectedClassroom.Split(' ')[0] + " " + viewModel.selectedClassroom.Split(' ')[1];
+                buildingCode = viewModel.selectedClassroom.Split(' ')[2];
+                roomNumber = viewModel.selectedClassroom.Split(' ')[3];
             }
-
-
-            String campus = viewModel.selectedClassroom.Split(' ')[0] + " " + viewModel.selectedClassroom.Split(' ')[1];
-            String buildingCode = viewModel.selectedClassroom.Split(' ')[2];
-            String roomNumber = viewModel.selectedClassroom.Split(' ')[3];
 
             String firstName = viewModel.selectedInstructor.Split(' ')[0];
             String lastName = viewModel.selectedInstructor.Split(' ')[1];

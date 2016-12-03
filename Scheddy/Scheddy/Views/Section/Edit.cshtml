@@ -102,7 +102,7 @@
                 @Html.DropDownListFor(Model => Model.selectedClassroom,
                 new SelectList(classroomNames),
                 "Select Classroom",
-                new { @class = "form-control", required = "required", @id = "lClassroom" })
+                new { @class = "form-control", required = "required", @id = "lClassrooms", @onchange = "classrooomSelected.call(this)" })
             </div>
         </div>
 
@@ -197,8 +197,27 @@
 </div>
 
 <script>
-    function checkOnline()
-    {
+    function classrooomSelected() {
+
+        if (document.getElementById('lClassrooms').value == "ONLINE") {
+            document.getElementById('eStartTime').disabled = true;
+            document.getElementById('eEndTime').disabled = true;
+            document.getElementById('cbMonday').checked = false;
+            document.getElementById('cbTuesday').checked = false;
+            document.getElementById('cbWednesday').checked = false;
+            document.getElementById('cbThursday').checked = false;
+            document.getElementById('cbFriday').checked = false;
+            document.getElementById('cbSaturday').checked = false;
+            document.getElementById('cbOnline').checked = true;
+        } else {
+            document.getElementById('eStartTime').disabled = false;
+            document.getElementById('eEndTime').disabled = false;
+            document.getElementById('cbOnline').checked = false;
+        }
+
+    }
+
+    function checkOnline() {
         document.getElementById('cbMonday').checked = false;
         document.getElementById('cbTuesday').checked = false;
         document.getElementById('cbWednesday').checked = false;
@@ -206,19 +225,25 @@
         document.getElementById('cbFriday').checked = false;
         document.getElementById('cbSaturday').checked = false;
 
-        if (!document.getElementById('cbOnline').checked) {
+        if (document.getElementById('cbOnline').checked) {
+            document.getElementById('eStartTime').disabled = true;
+            document.getElementById('eEndTime').disabled = true;
+            document.getElementById('lClassrooms').value = "ONLINE";
+
+        } else {
             document.getElementById('eStartTime').disabled = false;
             document.getElementById('eEndTime').disabled = false;
+            document.getElementById('lClassrooms').value = "";
             document.getElementById('lClassrooms').disabled = false;
         }
 
-        document.getElementById('eStartTime').disabled = true;
-        document.getElementById('eEndTime').disabled = true;
-        document.getElementById('lClassrooms').disabled = true;
     }
 
-    function checkDay()
-    {
+    function checkDay() {
+        if (document.getElementById('cbOnline').checked) {
+            document.getElementById('lClassrooms').value = "";
+        }
+
         if (document.getElementById('cbMonday').checked) {
             document.getElementById('cbOnline').checked = false;
         }
@@ -245,6 +270,6 @@
 
         document.getElementById('eStartTime').disabled = false;
         document.getElementById('eEndTime').disabled = false;
-        document.getElementById('lClassrooms').disabled = false;
+
     }
 </script>
