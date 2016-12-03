@@ -26,7 +26,14 @@
 
             foreach (Scheddy.Models.Classroom c in Model.classrooms)
             {
-                classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
+                if (c.RoomNumber == "ONLINE")
+                {
+                    classroomNames.Add("ONLINE");
+                }
+                else
+                {
+                    classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
+                }
             }
 
             List<string> instructorNames = new List<string>();
@@ -42,7 +49,7 @@
             {
                 courseNames.Add(c.Prefix + " " + c.CourseNumber);
             }
-            
+
             if (Model.section.DaysTaught.Contains("ONL"))
             {
                 Model.checkedOnline = true;
@@ -71,7 +78,7 @@
             {
                 Model.checkedSaturday = true;
             }
-            
+
 
         }
 
@@ -122,21 +129,42 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.section.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.section.StartTime, "", new { @class = "text-danger" })
+        @if (Model.checkedOnline)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.section.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eStartTime", disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.section.StartTime, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.section.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.section.EndTime, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.section.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eEndTime", disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.section.EndTime, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.section.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eStartTime" } })
+                    @Html.ValidationMessageFor(model => model.section.StartTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.section.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eEndTime" } })
+                    @Html.ValidationMessageFor(model => model.section.EndTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
 
         <div class="form-group">
             @Html.LabelFor(model => model.section.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -197,11 +225,18 @@
 </div>
 
 <script>
+
+    function onlineUponLoad() {
+
+    }
+
     function classrooomSelected() {
 
         if (document.getElementById('lClassrooms').value == "ONLINE") {
             document.getElementById('eStartTime').disabled = true;
             document.getElementById('eEndTime').disabled = true;
+            document.getElementById('eStartTime').value = "";
+            document.getElementById('eEndTime').value = "";
             document.getElementById('cbMonday').checked = false;
             document.getElementById('cbTuesday').checked = false;
             document.getElementById('cbWednesday').checked = false;
@@ -229,14 +264,14 @@
             document.getElementById('eStartTime').disabled = true;
             document.getElementById('eEndTime').disabled = true;
             document.getElementById('lClassrooms').value = "ONLINE";
-
+            document.getElementById('eStartTime').value = "";
+            document.getElementById('eEndTime').value = "";
         } else {
             document.getElementById('eStartTime').disabled = false;
             document.getElementById('eEndTime').disabled = false;
             document.getElementById('lClassrooms').value = "";
             document.getElementById('lClassrooms').disabled = false;
         }
-
     }
 
     function checkDay() {
@@ -272,4 +307,5 @@
         document.getElementById('eEndTime').disabled = false;
 
     }
+
 </script>

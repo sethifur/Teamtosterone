@@ -290,6 +290,11 @@ namespace Scheddy.Controllers
 
             list.scheduleType = scheduleType;
 
+            if (list.section.DaysTaught == "ONL")
+            {
+                list.selectedClassroom = "ONLINE";
+            }
+
             return View(list);
             
         }

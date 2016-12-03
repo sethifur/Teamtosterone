@@ -81,69 +81,100 @@
                         @Html.Raw(@item.LastName.ToString() + ", " + @item.FirstName.ToString() + " - " + days)
                     </td>
 
-                    @{ 
-                        DateTime lastEndTime = firstClassTime;
-                    }
-
-                    @for (int i = 0; i < 13; i++)
+                    @if (days == "ONL")
                     {
-                        DateTime newTime = firstClassTime.AddHours(i);
-                        bool spotTaken = false;
-                        
+
+
                         <td>
 
-
-                            @if (lastEndTime.TimeOfDay > newTime.TimeOfDay)
-                            {
-                                spotTaken = true;
-                                DateTime oneHourAhead = newTime.AddHours(1);
-                                if (oneHourAhead.TimeOfDay > lastEndTime.TimeOfDay)
-                                {
-                                    @Html.Raw("----->|")
-                                }
-                                else
-                                {
-                                    @Html.Raw("-------")
-                                }
-
-                            }
-                            
                             @foreach (var stuff in Model.indexByProfessor)
                             {
-                                if (item.FirstName == stuff.FirstName && item.LastName == stuff.LastName
-                                    && newTime.TimeOfDay == stuff.StartTime.Value.TimeOfDay && stuff.DaysTaught == days)
+                                if (stuff.DaysTaught == "ONL")
                                 {
-                                    spotTaken = true;
-                                    lastEndTime = (DateTime)stuff.EndTime;
+                                    
                                     @Html.Raw(stuff.Prefix.ToString() + " " + stuff.CourseNumber.ToString())
                                     @Html.Raw("</br>")
-                                    @Html.Raw(stuff.BldgCode.ToString() + " " + stuff.RoomNumber.ToString())
-                                    @Html.Raw("</br>")
-                                    @stuff.Campus.ToString()
-                                    //@Html.Raw("</br>")
-                                    //@stuff.StartTime.Value.ToString("HH:mm - ")
-                                    //@stuff.EndTime.Value.ToString("HH:mm\n")
+                                    @Html.Raw(stuff.RoomNumber.ToString())
 
                                     @Html.Raw("</br>")
                                     @Html.ActionLink("Edit", "Edit", "Section", new { id = stuff.SectionId, scheduleType = 2 }, null)
                                     @Html.Raw(" | ")
                                     @Html.ActionLink("Delete", "Delete", "Section", new { id = stuff.SectionId, scheduleType = 2 }, null)
-
-                                    break;
+                                    
                                 }
                             }
 
-                            @if (!spotTaken)
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Create Online Section", "Create", "Section", new { scheduleType = 2, startTime = (DateTime?)null, endTime = (DateTime?)null, classroom = "ONLINE", instructor = item.FirstName + " " + item.LastName, daysTaught = days }, null)
+                        </td>
+
+                    }
+                    else
+                    {
+
+                            DateTime lastEndTime = firstClassTime;
+                            for (int i = 0; i < 13; i++)
                             {
-                                DateTime potentialEndTime = newTime.AddMinutes(50);
-                                @Html.ActionLink("Create Section", "Create", "Section", new { scheduleType = 2, startTime = newTime, endTime = potentialEndTime, classroom = "", instructor = item.FirstName + " " + item.LastName, daysTaught = days}, null)
+                                DateTime newTime = firstClassTime.AddHours(i);
+                                bool spotTaken = false;
+
+                                <td>
+
+
+                                    @if (lastEndTime.TimeOfDay > newTime.TimeOfDay)
+                                    {
+                                        spotTaken = true;
+                                        DateTime oneHourAhead = newTime.AddHours(1);
+                                        if (oneHourAhead.TimeOfDay > lastEndTime.TimeOfDay)
+                                        {
+                                            @Html.Raw("----->|")
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("-------")
+                                        }
+
+                                    }
+
+                                    @foreach (var stuff in Model.indexByProfessor)
+                                    {
+                                        if (item.FirstName == stuff.FirstName && item.LastName == stuff.LastName
+                                            && newTime.TimeOfDay == stuff.StartTime.Value.TimeOfDay && stuff.DaysTaught == days)
+                                        {
+                                            spotTaken = true;
+                                            lastEndTime = (DateTime)stuff.EndTime;
+                                            @Html.Raw(stuff.Prefix.ToString() + " " + stuff.CourseNumber.ToString())
+                                            @Html.Raw("</br>")
+                                            @Html.Raw(stuff.BldgCode.ToString() + " " + stuff.RoomNumber.ToString())
+                                            @Html.Raw("</br>")
+                                            @stuff.Campus.ToString()
+                                            //@Html.Raw("</br>")
+                                            //@stuff.StartTime.Value.ToString("HH:mm - ")
+                                            //@stuff.EndTime.Value.ToString("HH:mm\n")
+
+                                            @Html.Raw("</br>")
+                                            @Html.ActionLink("Edit", "Edit", "Section", new { id = stuff.SectionId, scheduleType = 2 }, null)
+                                            @Html.Raw(" | ")
+                                            @Html.ActionLink("Delete", "Delete", "Section", new { id = stuff.SectionId, scheduleType = 2 }, null)
+
+                                            break;
+                                        }
+                                    }
+
+                                    @if (!spotTaken)
+                                    {
+                                        DateTime potentialEndTime = newTime.AddMinutes(50);
+                                        @Html.ActionLink("Create Section", "Create", "Section", new { scheduleType = 2, startTime = newTime, endTime = potentialEndTime, classroom = "", instructor = item.FirstName + " " + item.LastName, daysTaught = days }, null)
+                                    }
+
+                                </td>
                             }
 
-                        </td>
-                    }
+                        }
 
                 </tr>
-
 
             }
 
