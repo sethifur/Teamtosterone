@@ -82,7 +82,7 @@
                 @Html.DropDownListFor(Model => Model.selectedInstructor,
                 new SelectList(instructorNames),
                 "Select Instructor",
-                new { required = "required" })
+                new { @class = "form-control", required = "required", @id = "lInstructors" })
             </div>
         </div>
         <div class="form-group">
@@ -91,7 +91,7 @@
                 @Html.DropDownListFor(Model => Model.selectedCourse,
                 new SelectList(courseNames),
                 "Select Course",
-                new { required = "required" })
+                new { @class = "form-control", required = "required", @id = "lCourses" })
             </div>
         </div>
         <div class="form-group">
@@ -100,7 +100,7 @@
                 @Html.DropDownListFor(Model => Model.selectedClassroom,
                 new SelectList(classroomNames),
                 "Select Classroom",
-                new { required = "required" })
+                new { @class = "form-control", required = "required", @id = "lClassrooms" })
             </div>
         </div>
 
@@ -115,7 +115,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eStartTime" } })
                 @Html.ValidationMessageFor(model => model.section.StartTime, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -123,7 +123,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eEndTime" } })
                 @Html.ValidationMessageFor(model => model.section.EndTime, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -147,19 +147,19 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.DaysTaught, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.checkedMonday, new Dictionary<string, object> { { "id", "cbMonday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedMonday, new { @id = "cbMonday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Monday")<br>
-                @Html.CheckBoxFor(model => model.checkedTuesday, new Dictionary<string, object> { { "id", "cbTuesday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedTuesday, new { @id = "cbTuesday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Tuesday")<br>
-                @Html.CheckBoxFor(model => model.checkedWednesday, new Dictionary<string, object> { { "id", "cbWednesday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedWednesday, new { @id = "cbWednesday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Wednesday")<br>
-                @Html.CheckBoxFor(model => model.checkedThursday, new Dictionary<string, object> { { "id", "cbThursday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedThursday, new { @id = "cbThursday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Thursday")<br>
-                @Html.CheckBoxFor(model => model.checkedFriday, new Dictionary<string, object> { { "id", "cbFriday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedFriday, new { @id = "cbFriday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Friday")<br>
-                @Html.CheckBoxFor(model => model.checkedSaturday, new Dictionary<string, object> { { "id", "cbSaturday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedSaturday, new { @id = "cbSaturday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Saturday")<br>
-                @Html.CheckBoxFor(model => model.checkedOnline, new Dictionary<string, object> { { "id", "cbOnline" }, { "onclick", "checkOnline.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedOnline, new { @id = "cbOnline", @onclick = "checkOnline.call(this)" })
                 @Html.Label("Online")<br>
             </div>
         </div>
@@ -194,6 +194,18 @@
         document.getElementById('cbThursday').checked = false;
         document.getElementById('cbFriday').checked = false;
         document.getElementById('cbSaturday').checked = false;
+
+        if (document.getElementById('cbOnline').checked) {
+            document.getElementById('eStartTime').disabled = true;
+            document.getElementById('eEndTime').disabled = true;
+            document.getElementById('lClassrooms').disabled = true;
+        } else {
+            document.getElementById('eStartTime').disabled = false;
+            document.getElementById('eEndTime').disabled = false;
+            document.getElementById('lClassrooms').disabled = false;
+        }
+
+        
     }
 
     function checkDay()
@@ -221,5 +233,10 @@
         if (document.getElementById('cbSaturday').checked) {
             document.getElementById('cbOnline').checked = false;
         }
+
+        document.getElementById('eStartTime').disabled = false;
+        document.getElementById('eEndTime').disabled = false;
+        document.getElementById('lClassrooms').disabled = false;
+
     }
 </script>
