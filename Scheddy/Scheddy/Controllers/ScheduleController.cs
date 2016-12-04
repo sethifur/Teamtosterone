@@ -18,7 +18,16 @@ namespace Scheddy.Controllers
 {
     public class ScheduleController : Controller
     {
+        /// <summary>
+        /// database connection
+        /// </summary>
         ScheddyDb db = new ScheddyDb();
+
+
+        /// <summary>
+        /// default view of all schedules in the system
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         { 
             var schedules = new List<Schedule>();
@@ -32,6 +41,12 @@ namespace Scheddy.Controllers
             return View(schedules);
         }
 
+
+        /// <summary>
+        /// view for Index By Classroom
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult IndexByClassroom(int? id)
         {
             /*
@@ -125,12 +140,12 @@ namespace Scheddy.Controllers
             return View(model);
         }
 
-        public ActionResult Details(int? id)
-        {
-            Schedule schedule = db.Schedules.Find(id);
-            return View(schedule);
-        }
 
+        /// <summary>
+        /// view for Index by Professor.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult IndexByProfessor(int? id)
         {
             ScheduleInstructorSection model = new ScheduleInstructorSection();
@@ -182,22 +197,28 @@ namespace Scheddy.Controllers
 
                 //model.indexByProfessor.Add(item);
             }
+
             model.instructor = db.Instructors;                       
-
-
             return View(model);
         }
 
+
+        /// <summary>
+        /// returns the create view.
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             return View();
         }
 
-        public ActionResult CannotDelete()
-        {
-            return View();
-        }
 
+        //HTTP POST - Create new schedule
+        /// <summary>
+        /// Create method. This recieves the POST information and creates the new schedule
+        /// </summary>
+        /// <param name="schedule"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Semester,AcademicYear,ScheduleName,DateCreated,DateModified,CreatedBy,UpdatedBy")] Schedule schedule)
@@ -214,11 +235,75 @@ namespace Scheddy.Controllers
             return RedirectToAction("Index");
         }
 
+
+        /// <summary>
+        /// Returns and view when unable to delete schedule
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CannotDelete()
+        {
+            return View();
+        }
+
+
+        //TODO: is this even needed anywhere?
+        /// <summary>
+        /// Get Scdedule.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult GetSchedule(int? id)
+        {
+            //was an id passed in?
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            //grab schedule to return
+            Schedule schedule = db.Schedules.Find(id);
+
+            //does it exist?
+            if (schedule == null)
+            {
+                return HttpNotFound();
+            }
+
+            //return it
+            return View(schedule);
+        }
+
+
+        //TODO: This needs to matter someday or be dead
+        /// <summary>
+        /// Will return details of the schedule information. Useless currently
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Details(int? id)
+        {
+            Schedule schedule = db.Schedules.Find(id);
+            return View(schedule);
+        }
+
+
+        //TODO: This needs to most likely die. 
+        /// <summary>
+        /// returns a view for updating scedule information. Useless currently
+        /// </summary>
+        /// <param name="sections"></param>
+        /// <returns></returns>
         public ActionResult UpdateSchedule(List<Section> sections)
         {    
             return View();
         }
 
+
+        /// <summary>
+        /// returns view for deleting
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Delete(int? id)
         {
             //was there an id passed?
@@ -242,6 +327,12 @@ namespace Scheddy.Controllers
             return View(schedule);
         }
 
+
+        /// <summary>
+        /// POST method for deleting the schedule
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -259,28 +350,12 @@ namespace Scheddy.Controllers
             }
             return RedirectToAction("Index");
         }
-
-        public ActionResult GetSchedule(int? id)
-        {
-            //was an id passed in?
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            //grab schedule to return
-            Schedule schedule = db.Schedules.Find(id);
-
-            //does it exist?
-            if (schedule == null)
-            {
-                return HttpNotFound();
-            }
-
-            //return it
-            return View(schedule);
-        }
         
+
+        /// <summary>
+        /// disposes the database connection when the class dies. proper cleanup
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (db != null)
@@ -290,6 +365,12 @@ namespace Scheddy.Controllers
             base.Dispose(disposing);
         }
 
+
+        /// <summary>
+        /// Exports schedule to Excel file
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult ExportToExcel(int? id)
         {
             Schedule schedule = db.Schedules.Find(id);
@@ -326,10 +407,12 @@ namespace Scheddy.Controllers
             foreach (var i in schedule.sections)
             {
                 int hoursWorking = 0;
+
                 foreach (Section section in schedule.sections)
                 {
-                        hoursWorking += section.Course.CreditHours;
+                    hoursWorking += section.Course.CreditHours;
                 }
+
                 if (i.DaysTaught == "ONL")
                 {
                     prevProf = null;
@@ -368,8 +451,6 @@ namespace Scheddy.Controllers
                     prevProf = i.Instructor;
                 }
             }
-            
-           
 
             var grid1 = new GridView();
             grid1.DataSource = table;

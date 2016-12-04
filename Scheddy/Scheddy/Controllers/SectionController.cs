@@ -15,26 +15,32 @@ namespace Scheddy.Controllers
 {
     public class SectionController : Controller
     {
+        /// <summary>
+        /// database connection
+        /// </summary>
         ScheddyDb db = new ScheddyDb();
 
-        // GET: Section
+
+        /// <summary>
+        /// default view for Sections. Don't know if we need this anymore.
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View(db.Sections.ToList());
         }
         
-        /*
-        public ActionResult Create()
-        {
-            ClassroomCourseInstructorList list = new ClassroomCourseInstructorList();
-            list.classrooms = db.Classrooms;
-            list.courses = db.Courses;
-            list.instructors = db.Instructors;
 
-            return View(list);
-        }
-        */
-
+        /// <summary>
+        /// returns Create view for adding a new section
+        /// </summary>
+        /// <param name="scheduleType"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="classroom"></param>
+        /// <param name="instructor"></param>
+        /// <param name="daysTaught"></param>
+        /// <returns></returns>
         public ActionResult Create(int scheduleType, DateTime? startTime, DateTime? endTime, string classroom = "", string instructor = "", string daysTaught = "")
         {
             ClassroomCourseInstructorList list = new ClassroomCourseInstructorList();
@@ -69,20 +75,23 @@ namespace Scheddy.Controllers
             return View(list);
         }
 
+
+        /// <summary>
+        /// POST method for adding a new section
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(ClassroomCourseInstructorList viewModel, FormCollection f)
-        {
-            // ViewModels.ClassroomCourseInstructorList viewModel
-            // [Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor
-           
+        {  
             viewModel.section.ScheduleId = viewModel.scheduleId;
 
             String daysPerWeek = "";
             String campus = "";
             String buildingCode = "";
             String roomNumber = "";
-
 
             if (viewModel.checkedOnline)
             {
@@ -98,7 +107,8 @@ namespace Scheddy.Controllers
                 buildingCode = "OL";
                 roomNumber = "ONLINE";
 
-            } else
+            }
+            else
             {
                 if (viewModel.checkedMonday)
                 {
@@ -125,12 +135,10 @@ namespace Scheddy.Controllers
                     daysPerWeek += "S";
                 }
 
-                campus = viewModel.selectedClassroom.Split(' ')[0] + " " + viewModel.selectedClassroom.Split(' ')[1];
+                campus = viewModel.selectedClassroom.Split(' ')[0] + " " + viewModel.selectedClassroom.Split(' ')[1];   //wonder if this works with ONLINE as campus
                 buildingCode = viewModel.selectedClassroom.Split(' ')[2];
                 roomNumber = viewModel.selectedClassroom.Split(' ')[3];
             }
-
-            
 
             String firstName = viewModel.selectedInstructor.Split(' ')[0];
             String lastName = viewModel.selectedInstructor.Split(' ')[1];
@@ -138,10 +146,6 @@ namespace Scheddy.Controllers
             String prefix = viewModel.selectedCourse.Split(' ')[0];
             String courseNumber = viewModel.selectedCourse.Split(' ')[1];
             int courseNumberInt = Int32.Parse(courseNumber);
-
-            //System.Diagnostics.Debug.WriteLine("HEY, GET READY");
-            //System.Diagnostics.Debug.WriteLine(viewModel.classrooms.ToList()); this is null
-            //System.Diagnostics.Debug.WriteLine(campus + buildingCode + roomNumber + firstName + lastName + prefix + courseNumber);
 
             var chosenClassroom = from classroom in db.Classrooms
                                   where
@@ -160,6 +164,7 @@ namespace Scheddy.Controllers
             var chosenInstructor = from instructorFromDb in db.Instructors
                                    where instructorFromDb.FirstName == firstName && instructorFromDb.LastName == lastName
                                    select instructorFromDb;
+
             try
             {
                 viewModel.section.InstructorId = chosenInstructor.First().InstructorId;
@@ -212,7 +217,6 @@ namespace Scheddy.Controllers
                         viewModel.instructors = db.Instructors;
 
                         return View(viewModel); 
-
                     }
                     else
                     {   // we're golden. Attempt to add.
@@ -228,14 +232,11 @@ namespace Scheddy.Controllers
                             return RedirectToAction("Index");
                         }
                     }
-
-
                 }
                 catch (NullReferenceException e)
                 {
                     System.Diagnostics.Debug.WriteLine("EXCEPTION assignments: " + e.Message);
                 }
-
             }
 
             if (viewModel.scheduleType == 1)
@@ -260,10 +261,15 @@ namespace Scheddy.Controllers
             {
                 return RedirectToAction("Index");
             }
-
-
         }
 
+
+        /// <summary>
+        /// Edit Section. This most likely needs work
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="scheduleType"></param>
+        /// <returns></returns>
         public ActionResult Edit(int? id, int scheduleType)
         {
             if (id == null)
@@ -295,18 +301,18 @@ namespace Scheddy.Controllers
             }
 
             return View(list);
-            
         }
 
 
-        // POST: Section/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// POST: Section/Edit/5
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ClassroomCourseInstructorList viewModel)
         {
-
             String daysPerWeek = "";
             String campus = "";
             String buildingCode = "";
@@ -363,11 +369,7 @@ namespace Scheddy.Controllers
 
             String prefix = viewModel.selectedCourse.Split(' ')[0];
             String courseNumber = viewModel.selectedCourse.Split(' ')[1];
-            int courseNumberInt = Int32.Parse(courseNumber);
-
-            //System.Diagnostics.Debug.WriteLine("HEY, GET READY");
-            //System.Diagnostics.Debug.WriteLine(viewModel.classrooms.ToList()); this is null
-            //System.Diagnostics.Debug.WriteLine(campus + buildingCode + roomNumber + firstName + lastName + prefix + courseNumber);
+            int courseNumberInt = Int32.Parse(courseNumber);        
 
             var chosenClassroom = from classroom in db.Classrooms
                                   where
@@ -418,7 +420,6 @@ namespace Scheddy.Controllers
 
             if (ModelState.IsValid)
             {
-
                 try
                 {
                     viewModel.section.Course = db.Courses.Find(viewModel.section.CourseId);
@@ -485,18 +486,22 @@ namespace Scheddy.Controllers
                 {
                     System.Diagnostics.Debug.WriteLine("EXCEPTION assignments: " + e.Message);
                 }
-
             }
-
 
             viewModel.classrooms = db.Classrooms;
             viewModel.courses = db.Courses;
             viewModel.instructors = db.Instructors;
 
-            return View(viewModel);
-            
+            return View(viewModel);      
         }
 
+
+        /// <summary>
+        /// Returns view to delete a section
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="scheduleType"></param>
+        /// <returns></returns>
         public ActionResult Delete(int? id, int scheduleType)
         {
             //was an id passed in?
@@ -521,7 +526,12 @@ namespace Scheddy.Controllers
             return View(viewModel);
         }
 
-        // POST: Instructor/Delete/5
+
+        /// <summary>
+        /// POST: Instructor/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -586,12 +596,24 @@ namespace Scheddy.Controllers
 
         }
 
+
+        /// <summary>
+        /// returns view when section cannot be deleted
+        /// </summary>
+        /// <returns></returns>
         public ActionResult CannotDelete()
         {
             return View();
         }
 
+
         //this should probably be a Javascript function on the view when it's made.
+        /// <summary>
+        /// checks for conflicts in the existing schedule
+        /// </summary>
+        /// <param name="scheduleId"></param>
+        /// <param name="newSection"></param>
+        /// <returns></returns>
         public string CheckConflict(int? scheduleId, Section newSection)
         {
             Schedule schedule = db.Schedules.Find(scheduleId);
@@ -670,6 +692,13 @@ namespace Scheddy.Controllers
             return conflictMessage;
         }
 
+
+        /// <summary>
+        /// common day method. used in checking for conflicts
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
         public bool commonDay(string first, string second)
         {
             if (first.Contains("ONL") || second.Contains("ONL")) // TODO: Change "ONL" to const
@@ -695,6 +724,11 @@ namespace Scheddy.Controllers
             }
         }
 
+
+        /// <summary>
+        /// deletes database connection
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (db != null)
