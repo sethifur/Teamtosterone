@@ -536,6 +536,7 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id, SectionScheduleType viewModel)
         {
             Section section = db.Sections.Find(id);
+            
             try
             {
                 db.Sections.Remove(section);
@@ -545,7 +546,7 @@ namespace Scheddy.Controllers
             {
                 System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : ");
                 System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : " + e.Message);
-                return RedirectToAction("CannotDelete");
+                return RedirectToAction("CannotDelete", viewModel);
             }
 
             if (viewModel.scheduleType == 1)
@@ -575,9 +576,9 @@ namespace Scheddy.Controllers
         /// returns view when section cannot be deleted
         /// </summary>
         /// <returns></returns>
-        public ActionResult CannotDelete()
+        public ActionResult CannotDelete(SectionScheduleType viewModel)
         {
-            return View();
+            return View(viewModel);
         }
 
 
