@@ -32,7 +32,7 @@ namespace Scheddy.Controllers
             return View(schedules);
         }
 
-        public ActionResult IndexByClassroom()
+        public ActionResult IndexByClassroom(int? id)
         {
             /*
             var model =
@@ -117,9 +117,12 @@ namespace Scheddy.Controllers
             }
             model.classroom = db.Classrooms;
 
+            if (id != null)
+            {
+                model.scheduleId = id;
+            }
 
             return View(model);
-
         }
 
         public ActionResult Details(int? id)
@@ -128,10 +131,15 @@ namespace Scheddy.Controllers
             return View(schedule);
         }
 
-        public ActionResult IndexByProfessor()
+        public ActionResult IndexByProfessor(int? id)
         {
             ScheduleInstructorSection model = new ScheduleInstructorSection();
 
+            if (id != null)
+            {
+                model.scheduleId = id;
+            }
+            
            //for (int i = 0; i < db.Sections.Count(); i++)
             //{
                 var query = from ii in db.Instructors

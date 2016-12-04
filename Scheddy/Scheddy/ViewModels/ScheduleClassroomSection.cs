@@ -17,12 +17,13 @@ namespace Scheddy.ViewModels
 
         public indexByClassroom index { get; set; }
 
+        public int? scheduleId { get; set; }
+
         public ScheduleClassroomSection()
         {
             classroom = new List<Classroom>();
             indexByClassroom = new List<indexByClassroom>();
+            scheduleId = 0;
         }
-
-       
     }
 }

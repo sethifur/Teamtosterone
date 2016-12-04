@@ -26,6 +26,5 @@ namespace Scheddy.ViewModels
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public DateTime? EndTime { get; set; }
 
-        
     }
 }

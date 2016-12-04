@@ -75,9 +75,8 @@ namespace Scheddy.Controllers
         {
             // ViewModels.ClassroomCourseInstructorList viewModel
             // [Bind(Include = "InstructorId,FirstName,LastName,HoursRequired,HoursReleased")] Instructor instructor
-
-            // TODO: Not have this assigned this way.
-            viewModel.section.ScheduleId = 1;
+           
+            viewModel.section.ScheduleId = viewModel.scheduleId;
 
             String daysPerWeek = "";
             String campus = "";
@@ -202,7 +201,7 @@ namespace Scheddy.Controllers
                     viewModel.section.Instructor = db.Instructors.Find(viewModel.section.InstructorId);
                     viewModel.section.Schedule = db.Schedules.Find(viewModel.section.ScheduleId);
 
-                    string conflict = CheckConflict(1, viewModel.section); // forcing 1 as schedule id for now. Need to update this in the future.
+                    string conflict = CheckConflict(viewModel.scheduleId, viewModel.section); 
 
                     if (!conflict.Equals("")) //  There was a conflict. Return to the view and present a validation error.
                     {

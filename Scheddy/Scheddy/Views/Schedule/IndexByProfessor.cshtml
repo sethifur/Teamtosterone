@@ -8,7 +8,7 @@
 <h2>Instructors by Time</h2>
 
 <p>
-    @Html.ActionLink("Create New Section", "Create", "Section", new { scheduleType = 2, startTime = (DateTime?) null, endTime = (DateTime?)null, classroom = "", instructor = "", daysTaught = "" }, null)
+    @Html.ActionLink("Create New Section", "Create", "Section", new { scheduleType = 2, scheduleId = @Model.scheduleId, startTime = (DateTime?) null, endTime = (DateTime?)null, classroom = "", instructor = "", daysTaught = "" }, null)
 </p>
 
 <table class="table">
@@ -107,7 +107,7 @@
                         </td>
 
                         <td>
-                            @Html.ActionLink("Create Online Section", "Create", "Section", new { scheduleType = 2, startTime = (DateTime?)null, endTime = (DateTime?)null, classroom = "ONLINE", instructor = item.FirstName + " " + item.LastName, daysTaught = days }, null)
+                            @Html.ActionLink("Create Online Section", "Create", "Section", new { scheduleType = 2, scheduleId = @Model.scheduleId, startTime = (DateTime?)null, endTime = (DateTime?)null, classroom = "ONLINE", instructor = item.FirstName + " " + item.LastName, daysTaught = days }, null)
                         </td>
 
                     }
@@ -166,7 +166,7 @@
                                     @if (!spotTaken)
                                     {
                                         DateTime potentialEndTime = newTime.AddMinutes(50);
-                                        @Html.ActionLink("Create Section", "Create", "Section", new { scheduleType = 2, startTime = newTime, endTime = potentialEndTime, classroom = "", instructor = item.FirstName + " " + item.LastName, daysTaught = days }, null)
+                                        @Html.ActionLink("Create Section", "Create", "Section", new { scheduleType = 2, scheduleId = @Model.scheduleId, startTime = newTime, endTime = potentialEndTime, classroom = "", instructor = item.FirstName + " " + item.LastName, daysTaught = days }, null)
                                     }
 
                                 </td>

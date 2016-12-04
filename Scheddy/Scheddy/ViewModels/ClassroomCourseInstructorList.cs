@@ -27,6 +27,7 @@ namespace Scheddy.ViewModels
         public bool checkedOnline { get; set; }
 
         public int scheduleType { get; set; }
+        public int scheduleId { get; set; }
 
         public ClassroomCourseInstructorList()
         {
