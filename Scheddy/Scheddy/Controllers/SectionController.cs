@@ -29,7 +29,7 @@ namespace Scheddy.Controllers
         {
             return View(db.Sections.ToList());
         }
-        
+
 
         /// <summary>
         /// returns Create view for adding a new section
@@ -85,7 +85,7 @@ namespace Scheddy.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(ClassroomCourseInstructorList viewModel, FormCollection f)
-        {  
+        {
             viewModel.section.ScheduleId = viewModel.scheduleId;
 
             String daysPerWeek = "";
@@ -206,7 +206,7 @@ namespace Scheddy.Controllers
                     viewModel.section.Instructor = db.Instructors.Find(viewModel.section.InstructorId);
                     viewModel.section.Schedule = db.Schedules.Find(viewModel.section.ScheduleId);
 
-                    string conflict = CheckConflict(viewModel.scheduleId, viewModel.section); 
+                    string conflict = CheckConflict(viewModel.scheduleId, viewModel.section);
 
                     if (!conflict.Equals("")) //  There was a conflict. Return to the view and present a validation error.
                     {
@@ -216,7 +216,7 @@ namespace Scheddy.Controllers
                         viewModel.courses = db.Courses;
                         viewModel.instructors = db.Instructors;
 
-                        return View(viewModel); 
+                        return View(viewModel);
                     }
                     else
                     {   // we're golden. Attempt to add.
@@ -283,10 +283,11 @@ namespace Scheddy.Controllers
             }
 
             ClassroomCourseInstructorList list = new ClassroomCourseInstructorList();
+
             list.classrooms = db.Classrooms;
             list.courses = db.Courses;
             list.instructors = db.Instructors;
-            
+
             list.selectedInstructor = section.Instructor.FirstName + " " + section.Instructor.LastName;
             list.selectedCourse = section.Course.Prefix + " " + section.Course.CourseNumber;
             list.selectedClassroom = section.Classroom.Campus + " " + section.Classroom.BldgCode + " " + section.Classroom.RoomNumber;
@@ -369,7 +370,7 @@ namespace Scheddy.Controllers
 
             String prefix = viewModel.selectedCourse.Split(' ')[0];
             String courseNumber = viewModel.selectedCourse.Split(' ')[1];
-            int courseNumberInt = Int32.Parse(courseNumber);        
+            int courseNumberInt = Int32.Parse(courseNumber);
 
             var chosenClassroom = from classroom in db.Classrooms
                                   where
@@ -427,7 +428,7 @@ namespace Scheddy.Controllers
                     viewModel.section.Instructor = db.Instructors.Find(viewModel.section.InstructorId);
                     viewModel.section.Schedule = db.Schedules.Find(viewModel.section.ScheduleId);
 
-                    string conflict = CheckConflict(1, viewModel.section); // forcing 1 as schedule id for now. Need to update this in the future.
+                    string conflict = CheckConflict(viewModel.section.ScheduleId, viewModel.section); // forcing 1 as schedule id for now. Need to update this in the future.
 
                     if (!conflict.Equals("")) //  There was a conflict. Return to the view and present a validation error.
                     {
@@ -449,15 +450,14 @@ namespace Scheddy.Controllers
                             db.SaveChanges();
                             db.Sections.Add(viewModel.section);
                             db.SaveChanges();
-                            
+
                             if (viewModel.scheduleType == 1)
                             {
                                 return new RedirectToRouteResult(new RouteValueDictionary
                                 {
                                     {"action", "IndexByClassroom"},
                                     {"controller", "Schedule"}
-                                }
-                                );
+                                });
                             }
                             else if (viewModel.scheduleType == 2)
                             {
@@ -465,14 +465,12 @@ namespace Scheddy.Controllers
                                 {
                                     {"action", "IndexByProfessor"},
                                     {"controller", "Schedule"}
-                                }
-                                );
+                                });
                             }
                             else
                             {
                                 return RedirectToAction("Index");
                             }
-
                         }
                         catch (DbUpdateException ex)
                         {
@@ -492,7 +490,7 @@ namespace Scheddy.Controllers
             viewModel.courses = db.Courses;
             viewModel.instructors = db.Instructors;
 
-            return View(viewModel);      
+            return View(viewModel);
         }
 
 
@@ -531,10 +529,11 @@ namespace Scheddy.Controllers
         /// POST: Instructor/Delete/5
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, SectionScheduleType viewModel)
         {
             Section section = db.Sections.Find(id);
             try
@@ -549,51 +548,26 @@ namespace Scheddy.Controllers
                 return RedirectToAction("CannotDelete");
             }
 
-            return RedirectToAction("Index");
-
-
-            /*
-             
-            Section section = db.Sections.Find(viewModel.section.SectionId);
-            try
-            {
-                db.Sections.Remove(section);
-                db.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : ");
-                System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : " + e.Message);
-                return RedirectToAction("CannotDelete");
-            }
-
-
-
             if (viewModel.scheduleType == 1)
             {
                 return new RedirectToRouteResult(new RouteValueDictionary
-                    {
-                        {"action", "IndexByClassroom"},
-                        {"controller", "Schedule"}
-                    }
-                );
+                {
+                    {"action", "IndexByClassroom"},
+                    {"controller", "Schedule"}
+                });
             }
             else if (viewModel.scheduleType == 2)
             {
                 return new RedirectToRouteResult(new RouteValueDictionary
-                    {
-                        {"action", "IndexByProfessor"},
-                        {"controller", "Schedule"}
-                    }
-                );
+                {
+                    {"action", "IndexByProfessor"},
+                    {"controller", "Schedule"}
+                });
             }
             else
             {
                 return RedirectToAction("Index");
             }
-             
-             */
-
         }
 
 
@@ -632,7 +606,7 @@ namespace Scheddy.Controllers
             {
                 if (section.SectionId != newSection.SectionId)
                 {
-                    
+
                     var justStartTime = section.StartTime.Value.TimeOfDay;
                     var justEndTime = section.EndTime.Value.TimeOfDay;
 

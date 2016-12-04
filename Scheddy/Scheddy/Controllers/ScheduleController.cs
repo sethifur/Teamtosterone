@@ -293,7 +293,7 @@ namespace Scheddy.Controllers
         /// </summary>
         /// <param name="sections"></param>
         /// <returns></returns>
-        public ActionResult UpdateSchedule(List<Section> sections)
+        public ActionResult Edit(List<Section> sections)
         {    
             return View();
         }

@@ -20,15 +20,16 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        @{ 
+        @{
             List<string> classroomNames = new List<string>();
 
             foreach (Scheddy.Models.Classroom c in Model.classrooms)
             {
-                if(c.RoomNumber == "ONLINE")
+                if (c.RoomNumber == "ONLINE")
                 {
                     classroomNames.Add("ONLINE");
-                } else
+                }
+                else
                 {
                     classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
                 }
@@ -80,9 +81,9 @@
                 }
             }
         }
-        
+
         <div class="form-group">
-            <input type="hidden" id="scheduleId "value="@Request.QueryString["scheduleId"]" />
+            <input type="hidden" id="scheduleId " value="@Request.QueryString["scheduleId"]" />
         </div>
 
         <div class="form-group">
@@ -193,21 +194,21 @@
                 @Html.Label("Online")<br>
             </div>
         </div>
-     
+
         <div class="form-group">
-            @Html.LabelFor(model => model.section.numSeats, htmlAttributes: new {@class = "control-label col-md-2"})
+            @Html.LabelFor(model => model.section.numSeats, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.numSeats, new {htmlAttributes = new {@class = "form-control", required = "required"}})
-                @Html.ValidationMessageFor(model => model.section.numSeats, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.section.numSeats, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.section.numSeats, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default"/>
+                <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
-}
+            }
 
 <div>
     @Html.ActionLink("Back to Classroom Schedule View", "IndexByClassroom", "Schedule")<br>
@@ -239,8 +240,7 @@
 
     }
 
-    function checkOnline()
-    {
+    function checkOnline() {
         document.getElementById('cbMonday').checked = false;
         document.getElementById('cbTuesday').checked = false;
         document.getElementById('cbWednesday').checked = false;
@@ -262,8 +262,7 @@
         }
     }
 
-    function checkDay()
-    {
+    function checkDay() {
         if (document.getElementById('cbOnline').checked) {
             document.getElementById('lClassrooms').value = "";
         }
