@@ -581,8 +581,7 @@ namespace Scheddy.Controllers
             return View(viewModel);
         }
 
-
-        //this should probably be a Javascript function on the view when it's made.
+        
         /// <summary>
         /// checks for conflicts in the existing schedule
         /// </summary>
@@ -651,6 +650,14 @@ namespace Scheddy.Controllers
                 }
             }
 
+            // class not starting on half hour conflict
+            if (newSection.StartTime.Value.TimeOfDay.Minutes != 30 && newSection.DaysTaught != "ONL")
+            {
+                conflictMessage += " STARTTIME CONFLICT: StartTime must begin on the half hour";
+            }
+
+
+            /*
             // intructor overworking conflict
             int hoursWorking = 0;
             foreach (Section section in newSection.Instructor.sections)
@@ -663,6 +670,7 @@ namespace Scheddy.Controllers
                                 + newSection.Instructor.FirstName + " " + newSection.Instructor.LastName + ", "
                                 + hoursWorking + " credit hours)";
             }
+            */
 
             return conflictMessage;
         }

@@ -3,6 +3,8 @@
 @{
     ViewBag.Title = "Classroom By Time";
     DateTime firstClassTime = DateTime.Parse("12/12/2016 07:30:00 AM");
+
+    string filteredInstructor = "";
 }
 
 <h2>Classrooms by Time</h2>
@@ -72,6 +74,8 @@
                 }
             }
 
+            uniqueDaysTaught.Sort();
+
             // make a row for each day
             foreach (var days in uniqueDaysTaught)
             {
@@ -101,7 +105,7 @@
                                 @Html.ActionLink("Edit", "Edit", "Section", new { id = stuff.SectionId, scheduleType = 1 }, null)
                                 @Html.Raw(" | ")
                                 @Html.ActionLink("Delete", "Delete", "Section", new { id = stuff.SectionId, scheduleType = 1 }, null)
-                                
+
                             }
                         }
 
@@ -116,61 +120,93 @@
                     {
 
                         DateTime lastEndTime = firstClassTime;
-
+                        int numOfHourOverlap = -1;
 
                         for (int i = 0; i < 13; i++)
                         {
                             DateTime newTime = firstClassTime.AddHours(i);
                             bool spotTaken = false;
 
-                                <td>
+                            if (numOfHourOverlap > 1)
+                            {
+                                numOfHourOverlap--;
+                                spotTaken = true;
+                            }
+
+                            foreach (var stuff in Model.indexByClassroom) {
+
+                                string name = stuff.FirstName + " " + stuff.LastName;
+
+                                if (name == filteredInstructor && stuff.StartTime.Value.TimeOfDay == newTime.TimeOfDay
+                                    && days == stuff.DaysTaught)
+                                {
+
+                                    DateTime theTime = (DateTime)stuff.StartTime;
+                                    int numHours = 0;
+
+                                    while (theTime.TimeOfDay < stuff.EndTime.Value.TimeOfDay)
+                                    {
+                                        numHours++;
+                                        theTime = theTime.AddHours(1);
+                                    }
 
 
-                                    @if (lastEndTime.TimeOfDay > newTime.TimeOfDay)
+
+                                    spotTaken = true;
+                                    numOfHourOverlap = numHours;
+                                }
+                            }
+
+                            <td>
+
+
+                                @if (lastEndTime.TimeOfDay > newTime.TimeOfDay)
+                                {
+                                    spotTaken = true;
+                                    DateTime oneHourAhead = newTime.AddHours(1);
+                                    if (oneHourAhead.TimeOfDay > lastEndTime.TimeOfDay)
+                                    {
+                                        @Html.Raw("----->|")
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-------")
+                                    }
+
+                                }
+
+                                @foreach (var stuff in Model.indexByClassroom)
+                                {
+                                    if (item.Campus == stuff.Campus && item.BldgCode == stuff.BldgCode && item.RoomNumber == stuff.RoomNumber
+                                        && newTime.TimeOfDay == stuff.StartTime.Value.TimeOfDay && stuff.DaysTaught == days)
                                     {
                                         spotTaken = true;
-                                        DateTime oneHourAhead = newTime.AddHours(1);
-                                        if (oneHourAhead.TimeOfDay > lastEndTime.TimeOfDay)
-                                        {
-                                            @Html.Raw("----->|")
-                                        }
-                                        else
-                                        {
-                                            @Html.Raw("-------")
-                                        }
+                                        lastEndTime = (DateTime)stuff.EndTime;
+                                        @Html.Raw(stuff.Prefix.ToString() + " " + stuff.CourseNumber.ToString())
+                                        @Html.Raw("</br>")
+                                        @Html.Raw(stuff.FirstName.ToString() + " " + stuff.LastName.ToString())
+                                        //@Html.Raw("</br>")
+                                        //@stuff.StartTime.Value.ToString("HH:mm - ")
+                                        //@stuff.EndTime.Value.ToString("HH:mm\n")
 
+                                        @Html.Raw("</br>")
+                                        @Html.ActionLink("Edit", "Edit", "Section", new { id = stuff.SectionId, scheduleType = 1 }, null)
+                                        @Html.Raw(" | ")
+                                        @Html.ActionLink("Delete", "Delete", "Section", new { id = stuff.SectionId, scheduleType = 1 }, null)
+
+                                        break;
                                     }
+                                }
 
-                                    @foreach (var stuff in Model.indexByClassroom)
-                                    {
-                                        if (item.Campus == stuff.Campus && item.BldgCode == stuff.BldgCode && item.RoomNumber == stuff.RoomNumber
-                                            && newTime.TimeOfDay == stuff.StartTime.Value.TimeOfDay && stuff.DaysTaught == days)
-                                        {
-                                            spotTaken = true;
-                                            lastEndTime = (DateTime)stuff.EndTime;
-                                            @Html.Raw(stuff.Prefix.ToString() + " " + stuff.CourseNumber.ToString())
-                                            @Html.Raw("</br>")
-                                            @Html.Raw(stuff.FirstName.ToString() + " " + stuff.LastName.ToString())
-                                            //@Html.Raw("</br>")
-                                            //@stuff.StartTime.Value.ToString("HH:mm - ")
-                                            //@stuff.EndTime.Value.ToString("HH:mm\n")
 
-                                            @Html.Raw("</br>")
-                                            @Html.ActionLink("Edit", "Edit", "Section", new { id = stuff.SectionId, scheduleType = 1 }, null)
-                                            @Html.Raw(" | ")
-                                            @Html.ActionLink("Delete", "Delete", "Section", new { id = stuff.SectionId, scheduleType = 1 }, null)
+                                @if (!spotTaken)
+                                {
+                                    DateTime potentialEndTime = newTime.AddMinutes(50);
+                                    @Html.ActionLink("Create Section", "Create", "Section", new { scheduleType = 1, scheduleId = @Model.scheduleId, startTime = newTime, endTime = potentialEndTime, classroom = item.Campus + " " + item.BldgCode + " " + item.RoomNumber, instructor = "", daysTaught = days }, null)
+                                }
 
-                                            break;
-                                        }
-                                    }
+                            </td>
 
-                                    @if (!spotTaken)
-                                    {
-                                        DateTime potentialEndTime = newTime.AddMinutes(50);
-                                        @Html.ActionLink("Create Section", "Create", "Section", new { scheduleType = 1, scheduleId = @Model.scheduleId, startTime = newTime, endTime = potentialEndTime, classroom = item.Campus + " " + item.BldgCode + " " + item.RoomNumber, instructor = "", daysTaught = days }, null)
-                                    }
-
-                                </td>
                             }
 
                         } 

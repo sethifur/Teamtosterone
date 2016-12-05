@@ -97,7 +97,7 @@ namespace Scheddy.Controllers
                         s.ClassroomId equals c.ClassroomId
                         join co in db.Courses on
                         s.CourseId equals co.CourseId
-                        orderby s.StartTime ascending
+                        orderby c.Campus, c.BldgCode, s.StartTime ascending
                         select new
                         { ii, s, c, co };
             /*   FirstName = ii.FirstName,
