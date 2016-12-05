@@ -13,21 +13,15 @@ using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Runtime.InteropServices;
+using System.Data;
+using System.Reflection;
 
 namespace Scheddy.Controllers
 {
     public class ScheduleController : Controller
     {
-        /// <summary>
-        /// database connection
-        /// </summary>
         ScheddyDb db = new ScheddyDb();
-
-
-        /// <summary>
-        /// default view of all schedules in the system
-        /// </summary>
-        /// <returns></returns>
+        object missing = Type.Missing;
         public ActionResult Index()
         { 
             var schedules = new List<Schedule>();
@@ -41,17 +35,11 @@ namespace Scheddy.Controllers
             return View(schedules);
         }
 
-
-        /// <summary>
-        /// view for Index By Classroom
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public ActionResult IndexByClassroom(int? id)
         {
 
             ScheduleClassroomSection model = new ScheduleClassroomSection();
-            
+
             var query = from ii in db.Instructors
                         join s in db.Sections on
                         ii.InstructorId equals s.InstructorId
@@ -89,13 +77,7 @@ namespace Scheddy.Controllers
 
             return View(model);
         }
-
-
-        /// <summary>
-        /// view for Index by Professor.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        
         public ActionResult IndexByProfessor(int? id)
         {
             ScheduleInstructorSection model = new ScheduleInstructorSection();
@@ -105,56 +87,49 @@ namespace Scheddy.Controllers
                 model.scheduleId = id;
             }
 
-                var query = from ii in db.Instructors
-                            join s in db.Sections on
-                            ii.InstructorId equals s.InstructorId
-                            join c in db.Classrooms on
-                            s.ClassroomId equals c.ClassroomId
-                            join co in db.Courses on
-                            s.CourseId equals co.CourseId
-                            orderby s.StartTime ascending
-                            select new
-                            { ii, s, c, co};
-                foreach (var item in query)
+            var query = from ii in db.Instructors
+                        join s in db.Sections on
+                        ii.InstructorId equals s.InstructorId
+                        join c in db.Classrooms on
+                        s.ClassroomId equals c.ClassroomId
+                        join co in db.Courses on
+                        s.CourseId equals co.CourseId
+                        orderby s.StartTime ascending
+                        select new
+                        { ii, s, c, co };
+            foreach (var item in query)
+            {
+                model.indexByProfessor.Add(new indexByProfessor()
                 {
-                    model.indexByProfessor.Add(new indexByProfessor()
-                    {
-                        FirstName = item.ii.FirstName,
-                        LastName = item.ii.LastName,
-                        BldgCode = item.c.BldgCode,
-                        RoomNumber = item.c.RoomNumber,
-                        DaysTaught = item.s.DaysTaught,
-                        StartTime = item.s.StartTime,
-                        EndTime = item.s.EndTime,
-                        Campus = item.c.Campus,
-                        Prefix = item.co.Prefix,
-                        CourseNumber = item.co.CourseNumber,
-                        SectionId = item.s.SectionId
+                    FirstName = item.ii.FirstName,
+                    LastName = item.ii.LastName,
+                    BldgCode = item.c.BldgCode,
+                    RoomNumber = item.c.RoomNumber,
+                    DaysTaught = item.s.DaysTaught,
+                    StartTime = item.s.StartTime,
+                    EndTime = item.s.EndTime,
+                    Campus = item.c.Campus,
+                    Prefix = item.co.Prefix,
+                    CourseNumber = item.co.CourseNumber,
+                    SectionId = item.s.SectionId
 
-                    });
+                });
             }
 
-            model.instructor = db.Instructors;                       
+            model.instructor = db.Instructors;
             return View(model);
         }
 
-
-        /// <summary>
-        /// returns the create view.
-        /// </summary>
-        /// <returns></returns>
         public ActionResult Create()
         {
             return View();
         }
 
+        public ActionResult CannotDelete()
+        {
+            return View();
+        }
 
-        //HTTP POST - Create new schedule
-        /// <summary>
-        /// Create method. This recieves the POST information and creates the new schedule
-        /// </summary>
-        /// <param name="schedule"></param>
-        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Semester,AcademicYear,ScheduleName,DateCreated,DateModified,CreatedBy,UpdatedBy")] Schedule schedule)
@@ -171,75 +146,11 @@ namespace Scheddy.Controllers
             return RedirectToAction("Index");
         }
 
-
-        /// <summary>
-        /// Returns and view when unable to delete schedule
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult CannotDelete()
-        {
-            return View();
-        }
-
-
-        //TODO: is this even needed anywhere?
-        /// <summary>
-        /// Get Scdedule.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult GetSchedule(int? id)
-        {
-            //was an id passed in?
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            //grab schedule to return
-            Schedule schedule = db.Schedules.Find(id);
-
-            //does it exist?
-            if (schedule == null)
-            {
-                return HttpNotFound();
-            }
-
-            //return it
-            return View(schedule);
-        }
-
-
-        //TODO: This needs to matter someday or be dead
-        /// <summary>
-        /// Will return details of the schedule information. Useless currently
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult Details(int? id)
-        {
-            Schedule schedule = db.Schedules.Find(id);
-            return View(schedule);
-        }
-
-
-        //TODO: This needs to most likely die. 
-        /// <summary>
-        /// returns a view for updating scedule information. Useless currently
-        /// </summary>
-        /// <param name="sections"></param>
-        /// <returns></returns>
-        public ActionResult Edit(List<Section> sections)
+        public ActionResult UpdateSchedule(List<Section> sections)
         {    
             return View();
         }
 
-
-        /// <summary>
-        /// returns view for deleting
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public ActionResult Delete(int? id)
         {
             //was there an id passed?
@@ -263,12 +174,6 @@ namespace Scheddy.Controllers
             return View(schedule);
         }
 
-
-        /// <summary>
-        /// POST method for deleting the schedule
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -286,12 +191,28 @@ namespace Scheddy.Controllers
             }
             return RedirectToAction("Index");
         }
-        
 
-        /// <summary>
-        /// disposes the database connection when the class dies. proper cleanup
-        /// </summary>
-        /// <param name="disposing"></param>
+        public ActionResult GetSchedule(int? id)
+        {
+            //was an id passed in?
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            //grab schedule to return
+            Schedule schedule = db.Schedules.Find(id);
+
+            //does it exist?
+            if (schedule == null)
+            {
+                return HttpNotFound();
+            }
+
+            //return it
+            return View(schedule);
+        }
+        
         protected override void Dispose(bool disposing)
         {
             if (db != null)
@@ -301,17 +222,97 @@ namespace Scheddy.Controllers
             base.Dispose(disposing);
         }
 
-
-        /// <summary>
-        /// Exports schedule to Excel file
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /*
         public ActionResult ExportToExcel(int? id)
         {
             Schedule schedule = db.Schedules.Find(id);
             var sections = db.Sections.Where(section => section.ScheduleId == id);
-            
+            Microsoft.Office.Interop.Excel.Application excel;
+            Microsoft.Office.Interop.Excel.Workbook worKbooK;
+            Microsoft.Office.Interop.Excel.Worksheet worKsheeT;
+            Microsoft.Office.Interop.Excel.Range celLrangE;
+
+            try
+            {
+                excel = new Microsoft.Office.Interop.Excel.Application();
+                excel.Visible = true;
+                excel.DisplayAlerts = false;
+                worKbooK = excel.Workbooks.Add(Type.Missing);
+
+
+                worKsheeT = (Microsoft.Office.Interop.Excel.Worksheet)worKbooK.ActiveSheet;
+                worKsheeT.Name = "CS FTF_"+schedule.ScheduleName+"_"+schedule.Semester+"_"+schedule.AcademicYear;
+
+                worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[1, 8]].Merge();
+                worKsheeT.Cells[1, 1] = "Courses by Professors";
+                worKsheeT.Cells.Font.Size = 15;
+
+
+                int rowcount = 2;
+
+                foreach (DataRow datarow in Excel(id).Rows)
+                {
+                    rowcount += 1;
+                    for (int i = 1; i <= Excel(id).Columns.Count; i++)
+                    {
+
+                        if (rowcount == 3)
+                        {
+                            worKsheeT.Cells[2, i] = Excel(id).Columns[i - 1].ColumnName;
+                            worKsheeT.Cells.Font.Color = System.Drawing.Color.Black;
+
+                        }
+
+                        worKsheeT.Cells[rowcount, i] = datarow[i - 1].ToString();
+
+                        if (rowcount > 3)
+                        {
+                            if (i == Excel(id).Columns.Count)
+                            {
+                                if (rowcount % 2 == 0)
+                                {
+                                    celLrangE = worKsheeT.Range[worKsheeT.Cells[rowcount, 1], worKsheeT.Cells[rowcount, Excel(id).Columns.Count]];
+                                }
+
+                            }
+                        }
+
+                    }
+
+                }
+
+                celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[rowcount, Excel(id).Columns.Count]];
+                celLrangE.EntireColumn.AutoFit();
+                Microsoft.Office.Interop.Excel.Borders border = celLrangE.Borders;
+                border.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+                border.Weight = 2d;
+
+                celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[2, Excel(id).Columns.Count]];
+
+                worKbooK.SaveAs("~/Downloads/"+schedule.ScheduleName+ "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls"); ;
+                worKbooK.Close();
+                excel.Quit();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+
+            }
+            finally
+            {
+                worKsheeT = null;
+                celLrangE = null;
+                worKbooK = null;
+            }
+            return View();
+        }
+        */
+        public System.Data.DataTable Excel(int? id)
+        {
+            Schedule schedule = db.Schedules.Find(id);
+            var sections = db.Sections.Where(section => section.ScheduleId == id);
+
             System.Data.DataTable table = new System.Data.DataTable();
             table.Columns.Add("Instructor", typeof(string));
             table.Columns.Add("Course", typeof(string));
@@ -327,7 +328,48 @@ namespace Scheddy.Controllers
             table.Columns.Add("Load/OVRL", typeof(string));
             table.Columns.Add("Hrs Reg", typeof(string));
 
+
+
+            //Table that puts info into Regular table
+            Instructor prevProf = null;
+            foreach (var i in schedule.sections)
+            {
+                int hoursWorking = 0;
+                foreach (Section section in schedule.sections)
+                {
+                    hoursWorking += section.Course.CreditHours;
+                }
+                if (i.DaysTaught != "ONL")
+                {
+                    if (prevProf != i.Instructor)
+                    {
+
+                        hoursWorking += i.Instructor.HoursReleased;
+                        table.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "",
+                            "", "", "", "", i.Instructor.HoursRequired);
+                        foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
+                        {
+                            table.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, "", row.StartTime.Value.TimeOfDay.ToString(),
+                                row.EndTime.Value.TimeOfDay.ToString(), row.DaysTaught, row.Classroom.BldgCode + " " + row.Classroom.RoomNumber,
+                                row.numSeats, row.Course.CreditHours, row.Classroom.Campus, "", "", "");
+                        }
+                    }
+                    prevProf = i.Instructor;
+                }
+            }
+
+            return table;
+
+            //return View("MyView");
+        }
+
+        public System.Data.DataTable getOnlineExcel(int? id)
+        {
+            Schedule schedule = db.Schedules.Find(id);
+            var sections = db.Sections.Where(section => section.ScheduleId == id);
+
             System.Data.DataTable onlineTable = new System.Data.DataTable();
+
             onlineTable.Columns.Add("Instructor", typeof(string));
             onlineTable.Columns.Add("Course", typeof(string));
             onlineTable.Columns.Add("CRN", typeof(string));
@@ -338,17 +380,15 @@ namespace Scheddy.Controllers
             onlineTable.Columns.Add("Load/OVRL", typeof(string));
             onlineTable.Columns.Add("", typeof(string));
 
-            //Table that puts info into Regular table
             Instructor prevProf = null;
+
             foreach (var i in schedule.sections)
             {
                 int hoursWorking = 0;
-
                 foreach (Section section in schedule.sections)
                 {
                     hoursWorking += section.Course.CreditHours;
                 }
-
                 if (i.DaysTaught == "ONL")
                 {
                     prevProf = null;
@@ -357,63 +397,19 @@ namespace Scheddy.Controllers
                         if (prevProf != j.Instructor)
                         {
                             hoursWorking += j.Instructor.HoursReleased;
-                            onlineTable.Rows.Add(i.Instructor.LastName + ", " + j.Instructor.FirstName, "", "", "", "", "", "", "",
-                                "", "", "", "", "");
+                            onlineTable.Rows.Add(i.Instructor.LastName + ", " + j.Instructor.FirstName, "", "", "", "", "", "", "", "");
                             foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == j.Instructor.InstructorId))
                             {
-                                onlineTable.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, row.CRN,
-                                    "", row.Classroom.Capacity, "", "", "", "");
+                                onlineTable.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, row.CRN, "",
+                                    row.Classroom.Capacity, "", "", "", "");
                             }
                         }
                         prevProf = j.Instructor;
                     }
                 }
-                else
-                {
-                    if (prevProf != i.Instructor)
-                    {
-
-                        hoursWorking += i.Instructor.HoursReleased;
-                        table.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "",
-                            "", "", "", "", i.Instructor.HoursRequired);
-                        foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
-                        {
-                            table.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, "",
-                                row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString(), row.DaysTaught,
-                                row.Classroom.BldgCode + " " + row.Classroom.RoomNumber, row.numSeats, row.Course.CreditHours,
-                                row.Classroom.Campus, "", "", "");
-                        }
-                    }
-                    prevProf = i.Instructor;
-                }
             }
-
-            var grid1 = new GridView();
-            grid1.DataSource = table;
-            grid1.DataBind();
-
-            var grid2 = new GridView();
-            grid2.DataSource = onlineTable;
-            grid2.DataBind();
-
-            Response.ClearContent();
-            Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=" + schedule.ScheduleName +
-                "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls");
-            Response.ContentType = "application/ms-excel";
-
-            Response.Charset = "";
-            StringWriter sw = new StringWriter();
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
-
-            grid1.RenderControl(htw);
-            grid2.RenderControl(htw);
-
-            Response.Output.Write(sw.ToString());
-            Response.Flush();
-            Response.End();
-
-            return View("MyView");
+            return onlineTable;
         }
     }
 }
+
