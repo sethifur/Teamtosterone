@@ -13,12 +13,15 @@ using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Runtime.InteropServices;
+using System.Data;
+using System.Reflection;
 
 namespace Scheddy.Controllers
 {
     public class ScheduleController : Controller
     {
         ScheddyDb db = new ScheddyDb();
+        object missing = Type.Missing;
         public ActionResult Index()
         { 
             var schedules = new List<Schedule>();
@@ -207,7 +210,92 @@ namespace Scheddy.Controllers
         {
             Schedule schedule = db.Schedules.Find(id);
             var sections = db.Sections.Where(section => section.ScheduleId == id);
-            
+            Microsoft.Office.Interop.Excel.Application excel;
+            Microsoft.Office.Interop.Excel.Workbook worKbooK;
+            Microsoft.Office.Interop.Excel.Worksheet worKsheeT;
+            Microsoft.Office.Interop.Excel.Range celLrangE;
+
+            try
+            {
+                excel = new Microsoft.Office.Interop.Excel.Application();
+                excel.Visible = true;
+                excel.DisplayAlerts = false;
+                worKbooK = excel.Workbooks.Add(Type.Missing);
+
+
+                worKsheeT = (Microsoft.Office.Interop.Excel.Worksheet)worKbooK.ActiveSheet;
+                worKsheeT.Name = "CS FTF_"+schedule.ScheduleName+"_"+schedule.Semester+"_"+schedule.AcademicYear;
+
+                worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[1, 8]].Merge();
+                worKsheeT.Cells[1, 1] = "Courses by Professors";
+                worKsheeT.Cells.Font.Size = 15;
+
+
+                int rowcount = 2;
+
+                foreach (DataRow datarow in Excel(id).Rows)
+                {
+                    rowcount += 1;
+                    for (int i = 1; i <= Excel(id).Columns.Count; i++)
+                    {
+
+                        if (rowcount == 3)
+                        {
+                            worKsheeT.Cells[2, i] = Excel(id).Columns[i - 1].ColumnName;
+                            worKsheeT.Cells.Font.Color = System.Drawing.Color.Black;
+
+                        }
+
+                        worKsheeT.Cells[rowcount, i] = datarow[i - 1].ToString();
+
+                        if (rowcount > 3)
+                        {
+                            if (i == Excel(id).Columns.Count)
+                            {
+                                if (rowcount % 2 == 0)
+                                {
+                                    celLrangE = worKsheeT.Range[worKsheeT.Cells[rowcount, 1], worKsheeT.Cells[rowcount, Excel(id).Columns.Count]];
+                                }
+
+                            }
+                        }
+
+                    }
+
+                }
+
+                celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[rowcount, Excel(id).Columns.Count]];
+                celLrangE.EntireColumn.AutoFit();
+                Microsoft.Office.Interop.Excel.Borders border = celLrangE.Borders;
+                border.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+                border.Weight = 2d;
+
+                celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[2, Excel(id).Columns.Count]];
+
+                worKbooK.SaveAs("~/Downloads/"+schedule.ScheduleName+ "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls"); ;
+                worKbooK.Close();
+                excel.Quit();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+
+            }
+            finally
+            {
+                worKsheeT = null;
+                celLrangE = null;
+                worKbooK = null;
+            }
+            return View();
+        }
+
+        public System.Data.DataTable Excel(int? id)
+        {
+            Schedule schedule = db.Schedules.Find(id);
+            var sections = db.Sections.Where(section => section.ScheduleId == id);
+
             System.Data.DataTable table = new System.Data.DataTable();
             table.Columns.Add("Instructor", typeof(string));
             table.Columns.Add("Course", typeof(string));
@@ -223,7 +311,7 @@ namespace Scheddy.Controllers
             table.Columns.Add("Load/OVRL", typeof(string));
             table.Columns.Add("Hrs Reg", typeof(string));
 
-           
+
 
             //Table that puts info into Regular table
             Instructor prevProf = null;
@@ -253,32 +341,12 @@ namespace Scheddy.Controllers
                 }
             }
 
-            var grid1 = new GridView();
-            grid1.DataSource = table;
-            grid1.DataBind();
-
-            Response.ClearContent();
-            Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=" + schedule.ScheduleName +
-                "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls");
-            Response.ContentType = "application/ms-excel";
-
-            Response.Charset = "";
-            StringWriter sw = new StringWriter();
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
-
-            grid1.RenderControl(htw);
-
-            Response.Output.Write(sw.ToString());
-            Response.Flush();
-            Response.End();
-
-            return getOnlineExcel(id);
+            return table;
 
             //return View("MyView");
         }
 
-        public ActionResult getOnlineExcel(int? id)
+        public System.Data.DataTable getOnlineExcel(int? id)
         {
             Schedule schedule = db.Schedules.Find(id);
             var sections = db.Sections.Where(section => section.ScheduleId == id);
@@ -323,27 +391,8 @@ namespace Scheddy.Controllers
                     }
                 }
             }
-            var grid1 = new GridView();
-            grid1.DataSource = onlineTable;
-            grid1.DataBind();
-
-            Response.ClearContent();
-            Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=" + schedule.ScheduleName +
-                "_" + schedule.Semester + "_" + schedule.AcademicYear + "_online.xls");
-            Response.ContentType = "application/ms-excel";
-
-            Response.Charset = "";
-            StringWriter sw = new StringWriter();
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
-
-            grid1.RenderControl(htw);
-
-            Response.Output.Write(sw.ToString());
-            Response.Flush();
-            Response.End();
-
-            return View("MyView");
+            return onlineTable;
         }
     }
 }
+

@@ -41,7 +41,7 @@
                
                 @Html.ActionLink("Index By Professor", "IndexByProfessor", new { id = item.ScheduleId }) |
                 @Html.ActionLink("Time by Classroom", "IndexByClassroom", new { id = item.ScheduleId }) |
-                @Html.ActionLink("Export To Excel", "ExportToExcel", new { id = item.ScheduleId }) |
+                @Html.ActionLink("Export To Excel", "ExportToExcel",  new { id = item.ScheduleId }) |
                 @*@Html.ActionLink("Edit", "Edit", new { id = item.ScheduleId }) |*@
                 @Html.ActionLink("Delete", "Delete", new { id = item.ScheduleId })
             </td>
@@ -49,3 +49,5 @@
     }
 
 </table>
+
+
