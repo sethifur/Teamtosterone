@@ -1,4 +1,4 @@
-﻿@model Scheddy.Models.Section
+﻿@model Scheddy.ViewModels.SectionScheduleType
 
 @{
     ViewBag.Title = "Delete";
@@ -13,59 +13,59 @@
     <dl class="dl-horizontal">
 
         <dt>
-            @Html.DisplayNameFor(model => model.Course.Prefix)
+            @Html.DisplayNameFor(model => model.section.Course.Prefix)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Course.Prefix)
+            @Html.DisplayFor(model => model.section.Course.Prefix)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Course.CourseNumber)
+            @Html.DisplayNameFor(model => model.section.Course.CourseNumber)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Course.CourseNumber)
+            @Html.DisplayFor(model => model.section.Course.CourseNumber)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Classroom.BldgCode)
+            @Html.DisplayNameFor(model => model.section.Classroom.BldgCode)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Classroom.BldgCode)
+            @Html.DisplayFor(model => model.section.Classroom.BldgCode)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Classroom.RoomNumber)
+            @Html.DisplayNameFor(model => model.section.Classroom.RoomNumber)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Classroom.RoomNumber)
+            @Html.DisplayFor(model => model.section.Classroom.RoomNumber)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Instructor.FirstName)
+            @Html.DisplayNameFor(model => model.section.Instructor.FirstName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Instructor.FirstName)
+            @Html.DisplayFor(model => model.section.Instructor.FirstName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Instructor.LastName)
+            @Html.DisplayNameFor(model => model.section.Instructor.LastName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Instructor.LastName)
+            @Html.DisplayFor(model => model.section.Instructor.LastName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.ScheduleId)
+            @Html.DisplayNameFor(model => model.section.ScheduleId)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ScheduleId)
+            @Html.DisplayFor(model => model.section.ScheduleId)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CRN)
+            @Html.DisplayNameFor(model => model.section.CRN)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.CRN)
+            @Html.DisplayFor(model => model.section.CRN)
         </dd>
 
     </dl>
@@ -74,7 +74,9 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <input type="submit" value="Delete" class="btn btn-default" /><br>
+            @Html.ActionLink("Back to Classroom Schedule View", "IndexByClassroom", "Schedule")<br>
+            @Html.ActionLink("Back to Instructor Schedule View", "IndexByProfessor", "Schedule")<br>
             @Html.ActionLink("Back to List", "Index")
         </div>
     }

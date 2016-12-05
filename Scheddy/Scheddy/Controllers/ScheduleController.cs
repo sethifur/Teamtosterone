@@ -270,8 +270,8 @@ namespace Scheddy.Controllers
             grid1.RenderControl(htw);
 
             Response.Output.Write(sw.ToString());
-            //Response.Flush();
-            //Response.End();
+            Response.Flush();
+            Response.End();
 
             return getOnlineExcel(id);
 

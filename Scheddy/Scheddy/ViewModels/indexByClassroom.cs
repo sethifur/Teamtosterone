@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Scheddy.ViewModels
 {
-    public class indexByProfessor
+    public class indexByClassroom
     {
 
         public string BldgCode { get; set; }
@@ -26,6 +26,5 @@ namespace Scheddy.ViewModels
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
         public DateTime? EndTime { get; set; }
 
-        
     }
 }

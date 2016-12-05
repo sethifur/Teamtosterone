@@ -17,6 +17,8 @@ namespace Scheddy.ViewModels
 
         public indexByProfessor index { get; set; }
 
+        public int? scheduleId { get; set; }
+
         public ScheduleInstructorSection ()
         {
             instructor = new List<Instructor>();

@@ -20,12 +20,19 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        @{ 
+        @{
             List<string> classroomNames = new List<string>();
 
             foreach (Scheddy.Models.Classroom c in Model.classrooms)
             {
-                classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
+                if (c.RoomNumber == "ONLINE")
+                {
+                    classroomNames.Add("ONLINE");
+                }
+                else
+                {
+                    classroomNames.Add(c.Campus + " " + c.BldgCode + " " + c.RoomNumber);
+                }
             }
 
             List<string> instructorNames = new List<string>();
@@ -42,59 +49,115 @@
                 courseNames.Add(c.Prefix + " " + c.CourseNumber);
             }
 
-            Model.selectedInstructor = "selectedInstructor";
-            Model.selectedCourse = "selectedCourse";
-            Model.selectedClassroom = "selectedClassroom";
+            if (Model.section.DaysTaught != null)
+            {
+                if (Model.section.DaysTaught.Contains("ONL"))
+                {
+                    Model.checkedOnline = true;
+                }
+                if (Model.section.DaysTaught.Contains("M"))
+                {
+                    Model.checkedMonday = true;
+                }
+                if (Model.section.DaysTaught.Contains("T"))
+                {
+                    Model.checkedTuesday = true;
+                }
+                if (Model.section.DaysTaught.Contains("W"))
+                {
+                    Model.checkedWednesday = true;
+                }
+                if (Model.section.DaysTaught.Contains("T"))
+                {
+                    Model.checkedThursday = true;
+                }
+                if (Model.section.DaysTaught.Contains("F"))
+                {
+                    Model.checkedFriday = true;
+                }
+                if (Model.section.DaysTaught.Contains("S"))
+                {
+                    Model.checkedSaturday = true;
+                }
+            }
         }
+
+        <div class="form-group">
+            <input type="hidden" id="scheduleId " value="@Request.QueryString["scheduleId"]" />
+        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.section.Instructor, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList(Model.selectedInstructor,
+                @Html.DropDownListFor(Model => Model.selectedInstructor,
                 new SelectList(instructorNames),
-                "Select Instructor", new { required = "required" })
+                "Select Instructor",
+                new { @class = "form-control", required = "required", @id = "lInstructors" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.section.Course, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList(Model.selectedCourse,
+                @Html.DropDownListFor(Model => Model.selectedCourse,
                 new SelectList(courseNames),
-                "Select Course", new { required = "required" })
+                "Select Course",
+                new { @class = "form-control", required = "required", @id = "lCourses" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.section.Classroom, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList(Model.selectedClassroom,
+                @Html.DropDownListFor(Model => Model.selectedClassroom,
                 new SelectList(classroomNames),
-                "Select Classroom", new {required = "required"})
+                "Select Classroom",
+                new { @class = "form-control", required = "required", @id = "lClassrooms", @onchange = "classrooomSelected.call(this)" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.section.CRN, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.section.CRN, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.EditorFor(model => model.section.CRN, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.section.CRN, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.section.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control", required = "required" } })
-                @Html.ValidationMessageFor(model => model.section.StartTime, "", new { @class = "text-danger" })
+        @if (Model.checkedOnline)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.section.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eStartTime", disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.section.StartTime, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.section.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control", required = "required" } })
-                @Html.ValidationMessageFor(model => model.section.EndTime, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.section.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eEndTime", disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.section.EndTime, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.section.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.section.StartTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eStartTime" } })
+                    @Html.ValidationMessageFor(model => model.section.StartTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.section.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.section.EndTime, new { htmlAttributes = new { @class = "form-control", required = "required", @id = "eEndTime" } })
+                    @Html.ValidationMessageFor(model => model.section.EndTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
 
         <div class="form-group">
             @Html.LabelFor(model => model.section.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -115,19 +178,19 @@
         <div class="form-group">
             @Html.LabelFor(model => model.section.DaysTaught, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.checkedMonday, new Dictionary<string, object> { { "id", "cbMonday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedMonday, new { @id = "cbMonday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Monday")<br>
-                @Html.CheckBoxFor(model => model.checkedTuesday, new Dictionary<string, object> { { "id", "cbTuesday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedTuesday, new { @id = "cbTuesday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Tuesday")<br>
-                @Html.CheckBoxFor(model => model.checkedWednesday, new Dictionary<string, object> { { "id", "cbWednesday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedWednesday, new { @id = "cbWednesday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Wednesday")<br>
-                @Html.CheckBoxFor(model => model.checkedThursday, new Dictionary<string, object> { { "id", "cbThursday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedThursday, new { @id = "cbThursday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Thursday")<br>
-                @Html.CheckBoxFor(model => model.checkedFriday, new Dictionary<string, object> { { "id", "cbFriday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedFriday, new { @id = "cbFriday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Friday")<br>
-                @Html.CheckBoxFor(model => model.checkedSaturday, new Dictionary<string, object> { { "id", "cbSaturday" }, { "onclick", "checkDay.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedSaturday, new { @id = "cbSaturday", @onclick = "checkDay.call(this)" })
                 @Html.Label("Saturday")<br>
-                @Html.CheckBoxFor(model => model.checkedOnline, new Dictionary<string, object> { { "id", "cbOnline" }, { "onclick", "checkOnline.call(this)" } })
+                @Html.CheckBoxFor(model => model.checkedOnline, new { @id = "cbOnline", @onclick = "checkOnline.call(this)" })
                 @Html.Label("Online")<br>
             </div>
         </div>
@@ -145,26 +208,65 @@
             </div>
         </div>
     </div>
-}
+            }
 
 <div>
     @Html.ActionLink("Back to Classroom Schedule View", "IndexByClassroom", "Schedule")<br>
-    @Html.ActionLink("Back to Instructor Schedule View", "IndexByProfessor", "Schedule")
-</div> 
+    @Html.ActionLink("Back to Instructor Schedule View", "IndexByProfessor", "Schedule")<br>
+    @Html.ActionLink("Back to List", "Index")
+</div>
 
 <script>
-    function checkOnline()
-    {
+
+    function classrooomSelected() {
+
+        if (document.getElementById('lClassrooms').value == "ONLINE") {
+            document.getElementById('eStartTime').disabled = true;
+            document.getElementById('eEndTime').disabled = true;
+            document.getElementById('eStartTime').value = "";
+            document.getElementById('eEndTime').value = "";
+            document.getElementById('cbMonday').checked = false;
+            document.getElementById('cbTuesday').checked = false;
+            document.getElementById('cbWednesday').checked = false;
+            document.getElementById('cbThursday').checked = false;
+            document.getElementById('cbFriday').checked = false;
+            document.getElementById('cbSaturday').checked = false;
+            document.getElementById('cbOnline').checked = true;
+        } else {
+            document.getElementById('eStartTime').disabled = false;
+            document.getElementById('eEndTime').disabled = false;
+            document.getElementById('cbOnline').checked = false;
+        }
+
+    }
+
+    function checkOnline() {
         document.getElementById('cbMonday').checked = false;
         document.getElementById('cbTuesday').checked = false;
         document.getElementById('cbWednesday').checked = false;
         document.getElementById('cbThursday').checked = false;
         document.getElementById('cbFriday').checked = false;
         document.getElementById('cbSaturday').checked = false;
+
+        if (document.getElementById('cbOnline').checked) {
+            document.getElementById('eStartTime').disabled = true;
+            document.getElementById('eEndTime').disabled = true;
+            document.getElementById('lClassrooms').value = "ONLINE";
+            document.getElementById('eStartTime').value = "";
+            document.getElementById('eEndTime').value = "";
+        } else {
+            document.getElementById('eStartTime').disabled = false;
+            document.getElementById('eEndTime').disabled = false;
+            document.getElementById('lClassrooms').value = "";
+            document.getElementById('lClassrooms').disabled = false;
+        }
     }
 
-    function checkDay()
-    {
+    function checkDay() {
+        if (document.getElementById('cbOnline').checked) {
+            document.getElementById('lClassrooms').value = "";
+        }
+
         if (document.getElementById('cbMonday').checked) {
             document.getElementById('cbOnline').checked = false;
         }
@@ -188,5 +290,10 @@
         if (document.getElementById('cbSaturday').checked) {
             document.getElementById('cbOnline').checked = false;
         }
+
+        document.getElementById('eStartTime').disabled = false;
+        document.getElementById('eEndTime').disabled = false;
+
     }
+
 </script>

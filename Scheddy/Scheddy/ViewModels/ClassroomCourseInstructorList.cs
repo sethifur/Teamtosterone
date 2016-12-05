@@ -25,7 +25,10 @@ namespace Scheddy.ViewModels
         public bool checkedFriday { get; set; }
         public bool checkedSaturday { get; set; }
         public bool checkedOnline { get; set; }
-        
+
+        public int scheduleType { get; set; }
+        public int scheduleId { get; set; }
+
         public ClassroomCourseInstructorList()
         {
             section = new Section();
