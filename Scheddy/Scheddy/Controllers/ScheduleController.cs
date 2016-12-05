@@ -212,7 +212,9 @@ namespace Scheddy.Controllers
             var sections = db.Sections.Where(section => section.ScheduleId == id);
             Microsoft.Office.Interop.Excel.Application excel;
             Microsoft.Office.Interop.Excel.Workbook worKbooK;
+            Microsoft.Office.Interop.Excel.Workbook WorkBook;
             Microsoft.Office.Interop.Excel.Worksheet worKsheeT;
+            Microsoft.Office.Interop.Excel.Worksheet WorkSheet;
             Microsoft.Office.Interop.Excel.Range celLrangE;
 
             try
@@ -221,17 +223,14 @@ namespace Scheddy.Controllers
                 excel.Visible = true;
                 excel.DisplayAlerts = false;
                 worKbooK = excel.Workbooks.Add(Type.Missing);
-
+                WorkBook = excel.Workbooks.Add(Type.Missing);
 
                 worKsheeT = (Microsoft.Office.Interop.Excel.Worksheet)worKbooK.ActiveSheet;
-                worKsheeT.Name = "CS FTF_"+schedule.ScheduleName+"_"+schedule.Semester+"_"+schedule.AcademicYear;
+                worKsheeT.Name = "CS FTF_"+schedule.Semester+"_"+schedule.AcademicYear;
 
-                worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[1, 8]].Merge();
-                worKsheeT.Cells[1, 1] = "Courses by Professors";
-                worKsheeT.Cells.Font.Size = 15;
+                worKsheeT.Cells.Font.Size = 12;
 
-
-                int rowcount = 2;
+                int rowcount = 1;
 
                 foreach (DataRow datarow in Excel(id).Rows)
                 {
@@ -263,6 +262,44 @@ namespace Scheddy.Controllers
                     }
 
                 }
+                
+
+                WorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)WorkBook.ActiveSheet;
+                WorkSheet.Name = "CS Onl_" + schedule.Semester + "_" + schedule.AcademicYear;
+
+                WorkSheet.Cells.Font.Size = 12;
+
+                rowcount = 1;
+                foreach (DataRow datarow in getOnlineExcel(id).Rows)
+                {
+                    rowcount += 1;
+                    for (int i = 1; i <= getOnlineExcel(id).Columns.Count; i++)
+                    {
+
+                        if (rowcount == 3)
+                        {
+                            WorkSheet.Cells[2, i] = getOnlineExcel(id).Columns[i - 1].ColumnName;
+                            WorkSheet.Cells.Font.Color = System.Drawing.Color.Black;
+
+                        }
+
+                        WorkSheet.Cells[rowcount, i] = datarow[i - 1].ToString();
+
+                        if (rowcount > 3)
+                        {
+                            if (i == getOnlineExcel(id).Columns.Count)
+                            {
+                                if (rowcount % 2 == 0)
+                                {
+                                    celLrangE = worKsheeT.Range[WorkSheet.Cells[rowcount, 1], WorkSheet.Cells[rowcount, getOnlineExcel(id).Columns.Count]];
+                                }
+
+                            }
+                        }
+
+                    }
+
+                }
 
                 celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[rowcount, Excel(id).Columns.Count]];
                 celLrangE.EntireColumn.AutoFit();
@@ -271,8 +308,9 @@ namespace Scheddy.Controllers
                 border.Weight = 2d;
 
                 celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[2, Excel(id).Columns.Count]];
-
-                worKbooK.SaveAs("~/Downloads/"+schedule.ScheduleName+ "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls"); ;
+                //WorkBook.SaveAs("~/Downloads/" + schedule.ScheduleName + "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls");
+                worKbooK.SaveAs("~/Downloads/"+schedule.ScheduleName+ "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls");
+                WorkBook.Close();
                 worKbooK.Close();
                 excel.Quit();
 
@@ -285,8 +323,10 @@ namespace Scheddy.Controllers
             finally
             {
                 worKsheeT = null;
+                WorkSheet = null;
                 celLrangE = null;
                 worKbooK = null;
+                WorkBook = null;
             }
             return View();
         }
@@ -322,23 +362,27 @@ namespace Scheddy.Controllers
                 {
                     hoursWorking += section.Course.CreditHours;
                 }
-                if (i.DaysTaught != "ONL")
-                {
-                    if (prevProf != i.Instructor)
-                    {
 
-                        hoursWorking += i.Instructor.HoursReleased;
-                        table.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "",
-                            "", "", "", "", i.Instructor.HoursRequired);
-                        foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
+                if (prevProf != i.Instructor)
+                {
+
+                    hoursWorking += i.Instructor.HoursReleased;
+                    table.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "",
+                        "", "", "", "", i.Instructor.HoursRequired);
+
+                    foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
+                    {
+                        if (row.DaysTaught != "ONL")
                         {
                             table.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, "", row.StartTime.Value.TimeOfDay.ToString(),
                                 row.EndTime.Value.TimeOfDay.ToString(), row.DaysTaught, row.Classroom.BldgCode + " " + row.Classroom.RoomNumber,
                                 row.numSeats, row.Course.CreditHours, row.Classroom.Campus, "", "", "");
                         }
                     }
-                    prevProf = i.Instructor;
+                    
                 }
+                    prevProf = i.Instructor;
+               
             }
 
             return table;
@@ -361,10 +405,9 @@ namespace Scheddy.Controllers
             onlineTable.Columns.Add("WLIST", typeof(string));
             onlineTable.Columns.Add("Pay", typeof(string));
             onlineTable.Columns.Add("Load/OVRL", typeof(string));
-            onlineTable.Columns.Add("", typeof(string));
+            onlineTable.Columns.Add(" ", typeof(string));
 
             Instructor prevProf = null;
-
             foreach (var i in schedule.sections)
             {
                 int hoursWorking = 0;
@@ -372,25 +415,26 @@ namespace Scheddy.Controllers
                 {
                     hoursWorking += section.Course.CreditHours;
                 }
-                if (i.DaysTaught == "ONL")
+
+                if (prevProf != i.Instructor)
                 {
-                    prevProf = null;
-                    foreach (var j in schedule.sections)
+                    hoursWorking += i.Instructor.HoursReleased;
+                    onlineTable.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "", "");
+
+                    foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
                     {
-                        if (prevProf != j.Instructor)
+                        if (row.DaysTaught == "ONL")
                         {
-                            hoursWorking += j.Instructor.HoursReleased;
-                            onlineTable.Rows.Add(i.Instructor.LastName + ", " + j.Instructor.FirstName, "", "", "", "", "", "", "", "");
-                            foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == j.Instructor.InstructorId))
-                            {
-                                onlineTable.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, row.CRN, "",
-                                    row.Classroom.Capacity, "", "", "", "");
-                            }
+                            onlineTable.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, row.CRN, "",
+                                row.Classroom.Capacity, "", "", "", "");
                         }
-                        prevProf = j.Instructor;
+
                     }
+                    
                 }
+                    prevProf = i.Instructor;     
             }
+            
             return onlineTable;
         }
     }
