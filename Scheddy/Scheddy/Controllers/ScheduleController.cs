@@ -49,47 +49,9 @@ namespace Scheddy.Controllers
         /// <returns></returns>
         public ActionResult IndexByClassroom(int? id)
         {
-            /*
-            var model =
-                from c in db.Classrooms
-                join s in db.Sections on
-                c.ClassroomId equals s.ClassroomId
-                orderby c.ClassroomId, s.DaysTaught, s.StartTime
-                select new ViewModels.ClassroomByTime
-                {
-                    BldgCode = c.BldgCode,
-                    RoomNumber = c.RoomNumber,
-                    DaysTaught = s.DaysTaught,
-                    StartTime = s.StartTime,
-                    EndTime = s.EndTime,
-                    Campus = c.Campus,
-                    FirstName = s.Instructor.FirstName,
-                    LastName = s.Instructor.LastName,
-                    Prefix = s.Course.Prefix,
-                    CourseNumber = s.Course.CourseNumber
-                };
-            return View(model);
-            */
-
-
-            /*
-            var query = from ii in db.Instructors
-                        join s in db.Sections on
-                        ii.InstructorId equals s.InstructorId
-                        join c in db.Classrooms on
-                        s.ClassroomId equals c.ClassroomId
-                        join co in db.Courses on
-                        s.CourseId equals co.CourseId
-                        orderby s.StartTime ascending
-                        select new
-                        { ii, s, c, co };
-                        */
-
 
             ScheduleClassroomSection model = new ScheduleClassroomSection();
-
-            //for (int i = 0; i < db.Sections.Count(); i++)
-            //{
+            
             var query = from ii in db.Instructors
                         join s in db.Sections on
                         ii.InstructorId equals s.InstructorId
@@ -100,15 +62,6 @@ namespace Scheddy.Controllers
                         orderby c.Campus, c.BldgCode, s.StartTime ascending
                         select new
                         { ii, s, c, co };
-            /*   FirstName = ii.FirstName,
-               LastName = ii.LastName,
-               BldgCode = c.BldgCode,
-               RoomNumber = c.RoomNumber,
-               DaysTaught = s.DaysTaught,
-               StartTime = s.StartTime,
-               EndTime = s.EndTime
-           };
-           */
             foreach (var item in query)
             {
                 model.indexByClassroom.Add(new indexByClassroom()
@@ -126,9 +79,6 @@ namespace Scheddy.Controllers
                     SectionId = item.s.SectionId
 
                 });
-                //}
-
-                //model.indexByProfessor.Add(item);
             }
             model.classroom = db.Classrooms;
 
@@ -154,9 +104,7 @@ namespace Scheddy.Controllers
             {
                 model.scheduleId = id;
             }
-            
-           //for (int i = 0; i < db.Sections.Count(); i++)
-            //{
+
                 var query = from ii in db.Instructors
                             join s in db.Sections on
                             ii.InstructorId equals s.InstructorId
@@ -167,15 +115,6 @@ namespace Scheddy.Controllers
                             orderby s.StartTime ascending
                             select new
                             { ii, s, c, co};
-                            /*   FirstName = ii.FirstName,
-                               LastName = ii.LastName,
-                               BldgCode = c.BldgCode,
-                               RoomNumber = c.RoomNumber,
-                               DaysTaught = s.DaysTaught,
-                               StartTime = s.StartTime,
-                               EndTime = s.EndTime
-                           };
-                           */
                 foreach (var item in query)
                 {
                     model.indexByProfessor.Add(new indexByProfessor()
@@ -193,9 +132,6 @@ namespace Scheddy.Controllers
                         SectionId = item.s.SectionId
 
                     });
-                //}
-
-                //model.indexByProfessor.Add(item);
             }
 
             model.instructor = db.Instructors;                       
