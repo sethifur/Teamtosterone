@@ -35,72 +35,88 @@ namespace Scheddy.Controllers
             return View(schedules);
         }
 
-        public ActionResult IndexByClassroom()
+        public ActionResult IndexByClassroom(int? id)
         {
-            var model =
-                from c in db.Classrooms
-                join s in db.Sections on
-                c.ClassroomId equals s.ClassroomId
-                orderby c.ClassroomId, s.DaysTaught, s.StartTime
-                select new ViewModels.ClassroomByTime
+
+            ScheduleClassroomSection model = new ScheduleClassroomSection();
+
+            var query = from ii in db.Instructors
+                        join s in db.Sections on
+                        ii.InstructorId equals s.InstructorId
+                        join c in db.Classrooms on
+                        s.ClassroomId equals c.ClassroomId
+                        join co in db.Courses on
+                        s.CourseId equals co.CourseId
+                        orderby c.Campus, c.BldgCode, s.StartTime ascending
+                        select new
+                        { ii, s, c, co };
+            foreach (var item in query)
+            {
+                model.indexByClassroom.Add(new indexByClassroom()
                 {
-                    BldgCode = c.BldgCode,
-                    RoomNumber = c.RoomNumber,
-                    DaysTaught = s.DaysTaught,
-                    StartTime = s.StartTime,
-                    EndTime = s.EndTime
-                };
+                    FirstName = item.ii.FirstName,
+                    LastName = item.ii.LastName,
+                    BldgCode = item.c.BldgCode,
+                    RoomNumber = item.c.RoomNumber,
+                    DaysTaught = item.s.DaysTaught,
+                    StartTime = item.s.StartTime,
+                    EndTime = item.s.EndTime,
+                    Campus = item.c.Campus,
+                    Prefix = item.co.Prefix,
+                    CourseNumber = item.co.CourseNumber,
+                    SectionId = item.s.SectionId
+
+                });
+            }
+            model.classroom = db.Classrooms;
+
+            if (id != null)
+            {
+                model.scheduleId = id;
+            }
+
             return View(model);
         }
-
-        public ActionResult Details(int? id)
-        {
-            Schedule schedule = db.Schedules.Find(id);
-            return View(schedule);
-        }
-
-        public ActionResult IndexByProfessor()
+        
+        public ActionResult IndexByProfessor(int? id)
         {
             ScheduleInstructorSection model = new ScheduleInstructorSection();
 
-           //for (int i = 0; i < db.Sections.Count(); i++)
-            //{
-                var query = from ii in db.Instructors
-                            join s in db.Sections on
-                            ii.InstructorId equals s.InstructorId
-                            join c in db.Classrooms on
-                            s.ClassroomId equals c.ClassroomId
-                            orderby s.StartTime ascending
-                            select new
-                            { ii, s, c };
-                            /*   FirstName = ii.FirstName,
-                               LastName = ii.LastName,
-                               BldgCode = c.BldgCode,
-                               RoomNumber = c.RoomNumber,
-                               DaysTaught = s.DaysTaught,
-                               StartTime = s.StartTime,
-                               EndTime = s.EndTime
-                           };
-                           */
-                foreach (var item in query)
-                {
-                    model.indexByProfessor.Add(new indexByProfessor()
-                    {
-                        FirstName = item.ii.FirstName,
-                        LastName = item.ii.LastName,
-                        BldgCode = item.c.BldgCode,
-                        RoomNumber = item.c.RoomNumber,
-                        DaysTaught = item.s.DaysTaught,
-                        StartTime = item.s.StartTime,
-                        EndTime = item.s.EndTime
-                    });
-                //}
-
-                //model.indexByProfessor.Add(item);
+            if (id != null)
+            {
+                model.scheduleId = id;
             }
-            model.instructor = db.Instructors;                       
 
+            var query = from ii in db.Instructors
+                        join s in db.Sections on
+                        ii.InstructorId equals s.InstructorId
+                        join c in db.Classrooms on
+                        s.ClassroomId equals c.ClassroomId
+                        join co in db.Courses on
+                        s.CourseId equals co.CourseId
+                        orderby s.StartTime ascending
+                        select new
+                        { ii, s, c, co };
+            foreach (var item in query)
+            {
+                model.indexByProfessor.Add(new indexByProfessor()
+                {
+                    FirstName = item.ii.FirstName,
+                    LastName = item.ii.LastName,
+                    BldgCode = item.c.BldgCode,
+                    RoomNumber = item.c.RoomNumber,
+                    DaysTaught = item.s.DaysTaught,
+                    StartTime = item.s.StartTime,
+                    EndTime = item.s.EndTime,
+                    Campus = item.c.Campus,
+                    Prefix = item.co.Prefix,
+                    CourseNumber = item.co.CourseNumber,
+                    SectionId = item.s.SectionId
 
+                });
+            }
+
+            model.instructor = db.Instructors;
             return View(model);
         }
 
@@ -206,6 +222,7 @@ namespace Scheddy.Controllers
             base.Dispose(disposing);
         }
 
+        
         public ActionResult ExportToExcel(int? id)
         {
             Schedule schedule = db.Schedules.Find(id);
@@ -330,7 +347,6 @@ namespace Scheddy.Controllers
             }
             return View();
         }
-
         public System.Data.DataTable Excel(int? id)
         {
             Schedule schedule = db.Schedules.Find(id);
