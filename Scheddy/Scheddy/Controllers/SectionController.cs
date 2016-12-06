@@ -243,7 +243,7 @@ namespace Scheddy.Controllers
             {
                 return new RedirectToRouteResult(new RouteValueDictionary
                 {
-                    {"action", "IndexByClassroom"},
+                    {"action", "IndexByClassroom/"+viewModel.section.ScheduleId},
                     {"controller", "Schedule"}
                 }
                 );
@@ -252,7 +252,7 @@ namespace Scheddy.Controllers
             {
                 return new RedirectToRouteResult(new RouteValueDictionary
                 {
-                    {"action", "IndexByProfessor"},
+                    {"action", "IndexByProfessor/"+viewModel.section.ScheduleId},
                     {"controller", "Schedule"}
                 }
                 );
@@ -455,7 +455,7 @@ namespace Scheddy.Controllers
                             {
                                 return new RedirectToRouteResult(new RouteValueDictionary
                                 {
-                                    {"action", "IndexByClassroom"},
+                                    {"action", "IndexByClassroom/"+viewModel.section.ScheduleId},
                                     {"controller", "Schedule"}
                                 });
                             }
@@ -463,7 +463,7 @@ namespace Scheddy.Controllers
                             {
                                 return new RedirectToRouteResult(new RouteValueDictionary
                                 {
-                                    {"action", "IndexByProfessor"},
+                                    {"action", "IndexByProfessor/"+viewModel.section.ScheduleId},
                                     {"controller", "Schedule"}
                                 });
                             }
@@ -536,7 +536,8 @@ namespace Scheddy.Controllers
         public ActionResult DeleteConfirmed(int id, SectionScheduleType viewModel)
         {
             Section section = db.Sections.Find(id);
-            
+            int scheduleId = (int) section.ScheduleId;
+
             try
             {
                 db.Sections.Remove(section);
@@ -544,7 +545,6 @@ namespace Scheddy.Controllers
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : ");
                 System.Diagnostics.Debug.WriteLine(" HERE HRE HEKH ERKH ERKHER : " + e.Message);
                 return RedirectToAction("CannotDelete", viewModel);
             }
@@ -553,7 +553,7 @@ namespace Scheddy.Controllers
             {
                 return new RedirectToRouteResult(new RouteValueDictionary
                 {
-                    {"action", "IndexByClassroom"},
+                    {"action", "IndexByClassroom/"+scheduleId},
                     {"controller", "Schedule"}
                 });
             }
@@ -561,7 +561,7 @@ namespace Scheddy.Controllers
             {
                 return new RedirectToRouteResult(new RouteValueDictionary
                 {
-                    {"action", "IndexByProfessor"},
+                    {"action", "IndexByProfessor/"+scheduleId},
                     {"controller", "Schedule"}
                 });
             }

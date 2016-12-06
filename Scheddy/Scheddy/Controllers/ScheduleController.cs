@@ -390,8 +390,6 @@ namespace Scheddy.Controllers
             }
 
             return table;
-
-            //return View("MyView");
         }
 
         public System.Data.DataTable getOnlineExcel(int? id)
@@ -417,16 +415,11 @@ namespace Scheddy.Controllers
 
             foreach(var i in schedule.sections.Where(section => section.DaysTaught == "ONL"))
             {
-                //if(prevProf != i.Instructor)
-                //{
-                    onlineTable.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "", "");
-                    //foreach(var row in sections.Where(section => section.Instructor == i.Instructor))
-                   //{
-                        onlineTable.Rows.Add("", i.Course.Prefix + i.Course.CourseNumber, i.CRN, "",
-                            i.Classroom.Capacity, "15", "", "", "");
-                    //}
-                //}
-                //prevProf = i.Instructor;
+
+                onlineTable.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "", "");
+
+                onlineTable.Rows.Add("", i.Course.Prefix + i.Course.CourseNumber, i.CRN, "",
+                    i.Classroom.Capacity, "15", "", "", "");
             }
             
             return onlineTable;
