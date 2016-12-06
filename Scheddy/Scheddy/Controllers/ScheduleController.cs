@@ -228,107 +228,99 @@ namespace Scheddy.Controllers
             Schedule schedule = db.Schedules.Find(id);
             var sections = db.Sections.Where(section => section.ScheduleId == id);
             Microsoft.Office.Interop.Excel.Application excel;
-            Microsoft.Office.Interop.Excel.Workbook worKbooK;
-            Microsoft.Office.Interop.Excel.Workbook WorkBook;
-            Microsoft.Office.Interop.Excel.Worksheet worKsheeT;
-            Microsoft.Office.Interop.Excel.Worksheet WorkSheet;
-            Microsoft.Office.Interop.Excel.Range celLrangE;
+            Microsoft.Office.Interop.Excel.Workbook workBook;
+            Microsoft.Office.Interop.Excel.Worksheet workSheet;
+            Microsoft.Office.Interop.Excel.Worksheet workSheet2;
+            Microsoft.Office.Interop.Excel.Range cellRange;
+            Microsoft.Office.Interop.Excel.Range cellRange2;
 
             try
             {
                 excel = new Microsoft.Office.Interop.Excel.Application();
                 excel.Visible = true;
                 excel.DisplayAlerts = false;
-                worKbooK = excel.Workbooks.Add(Type.Missing);
-                WorkBook = excel.Workbooks.Add(Type.Missing);
+                workBook = excel.Workbooks.Add(Type.Missing);
+                
+                workSheet = (Microsoft.Office.Interop.Excel.Worksheet)workBook.ActiveSheet;
+                workSheet.Name = "CS FTF_"+schedule.Semester+"_"+schedule.AcademicYear;
+                workSheet.Cells.Font.Size = 12;
 
-                worKsheeT = (Microsoft.Office.Interop.Excel.Worksheet)worKbooK.ActiveSheet;
-                worKsheeT.Name = "CS FTF_"+schedule.Semester+"_"+schedule.AcademicYear;
-
-                worKsheeT.Cells.Font.Size = 12;
-
-                int rowcount = 1;
+                int rowcount = 2;
 
                 foreach (DataRow datarow in Excel(id).Rows)
                 {
                     rowcount += 1;
                     for (int i = 1; i <= Excel(id).Columns.Count; i++)
                     {
-
                         if (rowcount == 3)
                         {
-                            worKsheeT.Cells[2, i] = Excel(id).Columns[i - 1].ColumnName;
-                            worKsheeT.Cells.Font.Color = System.Drawing.Color.Black;
-
+                            workSheet.Cells[1, i] = Excel(id).Columns[i - 1].ColumnName;
+                            workSheet.Cells.Font.Color = System.Drawing.Color.Black;
                         }
 
-                        worKsheeT.Cells[rowcount, i] = datarow[i - 1].ToString();
+                        workSheet.Cells[rowcount, i] = datarow[i - 1].ToString();
 
                         if (rowcount > 3)
                         {
                             if (i == Excel(id).Columns.Count)
                             {
-                                if (rowcount % 2 == 0)
-                                {
-                                    celLrangE = worKsheeT.Range[worKsheeT.Cells[rowcount, 1], worKsheeT.Cells[rowcount, Excel(id).Columns.Count]];
-                                }
-
+                                //if (rowcount % 2 == 0)
+                                //{
+                                    cellRange = workSheet.Range[workSheet.Cells[rowcount, 1]
+                                        , workSheet.Cells[rowcount, Excel(id).Columns.Count]];
+                                //}
                             }
                         }
-
                     }
-
                 }
-                
+                cellRange = workSheet.Range[workSheet.Cells[1, 1],
+                    workSheet.Cells[rowcount, Excel(id).Columns.Count]];
+                cellRange.EntireColumn.AutoFit();
+                Microsoft.Office.Interop.Excel.Borders border = cellRange.Borders;
+                border.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+                border.Weight = 2d;
+                cellRange = workSheet.Range[workSheet.Cells[1, 1], workSheet.Cells[2, Excel(id).Columns.Count]];
 
-                WorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)WorkBook.ActiveSheet;
-                WorkSheet.Name = "CS Onl_" + schedule.Semester + "_" + schedule.AcademicYear;
 
-                WorkSheet.Cells.Font.Size = 12;
+                workSheet2 = workBook.Sheets.Add(Type.Missing, Type.Missing, 1, Type.Missing);
+                workSheet2.Name = "CS Onl_" + schedule.Semester + "_" + schedule.AcademicYear;
+                workSheet2.Cells.Font.Size = 12;
 
-                rowcount = 1;
+                int rowcount2 = 2;
+
                 foreach (DataRow datarow in getOnlineExcel(id).Rows)
                 {
-                    rowcount += 1;
+                    rowcount2 += 1;
                     for (int i = 1; i <= getOnlineExcel(id).Columns.Count; i++)
                     {
-
-                        if (rowcount == 3)
+                        if (rowcount2 == 3)
                         {
-                            WorkSheet.Cells[2, i] = getOnlineExcel(id).Columns[i - 1].ColumnName;
-                            WorkSheet.Cells.Font.Color = System.Drawing.Color.Black;
-
+                            workSheet2.Cells[1, i] = getOnlineExcel(id).Columns[i - 1].ColumnName;
+                            workSheet2.Cells.Font.Color = System.Drawing.Color.Black;
                         }
-
-                        WorkSheet.Cells[rowcount, i] = datarow[i - 1].ToString();
-
-                        if (rowcount > 3)
+                        workSheet2.Cells[rowcount2, i] = datarow[i - 1].ToString();
+                        if (rowcount2 > 3)
                         {
                             if (i == getOnlineExcel(id).Columns.Count)
                             {
-                                if (rowcount % 2 == 0)
-                                {
-                                    celLrangE = worKsheeT.Range[WorkSheet.Cells[rowcount, 1], WorkSheet.Cells[rowcount, getOnlineExcel(id).Columns.Count]];
-                                }
-
+                                cellRange2 = workSheet2.Range[workSheet2.Cells[rowcount2, 1], 
+                                    workSheet2.Cells[rowcount2, getOnlineExcel(id).Columns.Count]];
                             }
                         }
-
                     }
-
                 }
 
-                celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[rowcount, Excel(id).Columns.Count]];
-                celLrangE.EntireColumn.AutoFit();
-                Microsoft.Office.Interop.Excel.Borders border = celLrangE.Borders;
-                border.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
-                border.Weight = 2d;
+                cellRange2 = workSheet2.Range[workSheet2.Cells[1, 1], 
+                    workSheet2.Cells[rowcount2, getOnlineExcel(id).Columns.Count]];
+                cellRange2.EntireColumn.AutoFit();
+                Microsoft.Office.Interop.Excel.Borders border2 = cellRange2.Borders;
+                border2.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+                border2.Weight = 2d;
+                cellRange2 = workSheet2.Range[workSheet2.Cells[1, 1], workSheet2.Cells[2, getOnlineExcel(id).Columns.Count]];
 
-                celLrangE = worKsheeT.Range[worKsheeT.Cells[1, 1], worKsheeT.Cells[2, Excel(id).Columns.Count]];
-                //WorkBook.SaveAs("~/Downloads/" + schedule.ScheduleName + "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls");
-                worKbooK.SaveAs("~/Downloads/"+schedule.ScheduleName+ "_" + schedule.Semester + "_" + schedule.AcademicYear + ".xls");
-                WorkBook.Close();
-                worKbooK.Close();
+                workBook.SaveAs("~/Downloads/"+schedule.ScheduleName+ "_" +
+                    schedule.Semester + "_" + schedule.AcademicYear + ".xls");
+                workBook.Close();
                 excel.Quit();
 
             }
@@ -339,14 +331,16 @@ namespace Scheddy.Controllers
             }
             finally
             {
-                worKsheeT = null;
-                WorkSheet = null;
-                celLrangE = null;
-                worKbooK = null;
-                WorkBook = null;
+                workSheet = null;
+                workSheet2 = null;
+                cellRange = null;
+                cellRange2 = null;
+                workBook = null;
             }
+            
             return View();
         }
+
         public System.Data.DataTable Excel(int? id)
         {
             Schedule schedule = db.Schedules.Find(id);
@@ -373,26 +367,20 @@ namespace Scheddy.Controllers
             Instructor prevProf = null;
             foreach (var i in schedule.sections)
             {
-                int hoursWorking = 0;
-                foreach (Section section in schedule.sections)
-                {
-                    hoursWorking += section.Course.CreditHours;
-                }
-
                 if (prevProf != i.Instructor)
                 {
-
-                    hoursWorking += i.Instructor.HoursReleased;
                     table.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "",
                         "", "", "", "", i.Instructor.HoursRequired);
 
-                    foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
+                    foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId 
+                        == i.Instructor.InstructorId))
                     {
                         if (row.DaysTaught != "ONL")
-                        {
-                            table.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, "", row.StartTime.Value.TimeOfDay.ToString(),
-                                row.EndTime.Value.TimeOfDay.ToString(), row.DaysTaught, row.Classroom.BldgCode + " " + row.Classroom.RoomNumber,
-                                row.numSeats, row.Course.CreditHours, row.Classroom.Campus, "", "", "");
+                        { 
+                            table.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, "", 
+                                row.StartTime.Value.TimeOfDay.ToString(), row.EndTime.Value.TimeOfDay.ToString(),
+                                row.DaysTaught, row.Classroom.BldgCode + " " + row.Classroom.RoomNumber, row.numSeats,
+                                row.Course.CreditHours, row.Classroom.Campus, "", "", "");
                         }
                     }
                     
@@ -409,10 +397,11 @@ namespace Scheddy.Controllers
         public System.Data.DataTable getOnlineExcel(int? id)
         {
             Schedule schedule = db.Schedules.Find(id);
-            var sections = db.Sections.Where(section => section.ScheduleId == id);
-
+            var sections = db.Sections.Where(section => section.ScheduleId == id)
+                .Where( section => section.DaysTaught == "ONL");
+            
             System.Data.DataTable onlineTable = new System.Data.DataTable();
-
+           
             onlineTable.Columns.Add("Instructor", typeof(string));
             onlineTable.Columns.Add("Course", typeof(string));
             onlineTable.Columns.Add("CRN", typeof(string));
@@ -424,31 +413,20 @@ namespace Scheddy.Controllers
             onlineTable.Columns.Add(" ", typeof(string));
 
             Instructor prevProf = null;
-            foreach (var i in schedule.sections)
+            
+
+            foreach(var i in schedule.sections.Where(section => section.DaysTaught == "ONL"))
             {
-                int hoursWorking = 0;
-                foreach (Section section in schedule.sections)
-                {
-                    hoursWorking += section.Course.CreditHours;
-                }
-
-                if (prevProf != i.Instructor)
-                {
-                    hoursWorking += i.Instructor.HoursReleased;
+                //if(prevProf != i.Instructor)
+                //{
                     onlineTable.Rows.Add(i.Instructor.LastName + ", " + i.Instructor.FirstName, "", "", "", "", "", "", "", "");
-
-                    foreach (var row in schedule.sections.Where(section => section.Instructor.InstructorId == i.Instructor.InstructorId))
-                    {
-                        if (row.DaysTaught == "ONL")
-                        {
-                            onlineTable.Rows.Add("", row.Course.Prefix + row.Course.CourseNumber, row.CRN, "",
-                                row.Classroom.Capacity, "", "", "", "");
-                        }
-
-                    }
-                    
-                }
-                    prevProf = i.Instructor;     
+                    //foreach(var row in sections.Where(section => section.Instructor == i.Instructor))
+                   //{
+                        onlineTable.Rows.Add("", i.Course.Prefix + i.Course.CourseNumber, i.CRN, "",
+                            i.Classroom.Capacity, "15", "", "", "");
+                    //}
+                //}
+                //prevProf = i.Instructor;
             }
             
             return onlineTable;
