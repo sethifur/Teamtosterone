@@ -606,7 +606,10 @@ namespace Scheddy.Controllers
             {
                 if (section.SectionId != newSection.SectionId)
                 {
-
+                    if (section.CRN == newSection.CRN)
+                    {
+                        return "Course with that CRN already exists.";
+                    }
                     var justStartTime = section.StartTime.Value.TimeOfDay;
                     var justEndTime = section.EndTime.Value.TimeOfDay;
 
