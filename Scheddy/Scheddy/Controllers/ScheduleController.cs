@@ -222,7 +222,7 @@ namespace Scheddy.Controllers
             base.Dispose(disposing);
         }
 
-        /*
+        
         public ActionResult ExportToExcel(int? id)
         {
             Schedule schedule = db.Schedules.Find(id);
@@ -340,7 +340,7 @@ namespace Scheddy.Controllers
             
             return View();
         }
-        */
+        
         public System.Data.DataTable Excel(int? id)
         {
             Schedule schedule = db.Schedules.Find(id);
