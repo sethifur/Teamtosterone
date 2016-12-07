@@ -41,7 +41,7 @@
                 @Html.DropDownListFor(Model => Model.Campus,
                 new SelectList(campusNames),
                 "Select Campus",
-                new { required = "required" })
+                new { @class = "form-control", required = "required" })
             </div>
         </div>
 
