@@ -222,6 +222,20 @@ namespace Scheddy.Controllers
                     {   // we're golden. Attempt to add.
                         try
                         {
+                            // show alert if overtime hours
+                            int hoursWorking = 0;
+                            foreach (Section section in viewModel.section.Instructor.sections) // add courses already being taught
+                            {
+                                hoursWorking += section.Course.CreditHours;
+                            }
+                            hoursWorking += viewModel.section.Course.CreditHours; // add course about to be added
+                            System.Diagnostics.Debug.WriteLine("hoursWorking:" + hoursWorking);
+                            if (hoursWorking > viewModel.section.Instructor.HoursRequired)
+                            {
+                                string msg = "Instructor " + viewModel.section.Instructor.FirstName + " " + viewModel.section.Instructor.LastName + " now working overtime with " + hoursWorking + " hours.";
+                                PrintAlert(msg);
+                            }
+                            
                             db.Sections.Add(viewModel.section);
                             db.SaveChanges();
                         }
@@ -262,6 +276,8 @@ namespace Scheddy.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+        protected void PrintAlert(string msg) { Response.Write("<script>alert('" + msg + "')</script>"); }
 
 
         /// <summary>
@@ -658,22 +674,6 @@ namespace Scheddy.Controllers
             {
                 conflictMessage += " STARTTIME CONFLICT: StartTime must begin on the half hour";
             }
-
-
-            /*
-            // intructor overworking conflict
-            int hoursWorking = 0;
-            foreach (Section section in newSection.Instructor.sections)
-            {
-                hoursWorking += section.Course.CreditHours;
-            }
-            if (hoursWorking > newSection.Instructor.HoursRequired)
-            {
-                conflictMessage += " HOURS CONFLICT: Instructor at max hours ("
-                                + newSection.Instructor.FirstName + " " + newSection.Instructor.LastName + ", "
-                                + hoursWorking + " credit hours)";
-            }
-            */
 
             return conflictMessage;
         }

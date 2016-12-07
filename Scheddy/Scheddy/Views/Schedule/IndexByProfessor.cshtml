@@ -8,7 +8,8 @@
 <h2>Instructors by Time</h2>
 
 <p>
-    @Html.ActionLink("Create New Section", "Create", "Section", new { scheduleType = 2, scheduleId = @Model.scheduleId, startTime = (DateTime?) null, endTime = (DateTime?)null, classroom = "", instructor = "", daysTaught = "" }, null)
+    @Html.ActionLink("Create New Section", "Create", "Section", new { scheduleType = 2, scheduleId = @Model.scheduleId, startTime = (DateTime?) null, endTime = (DateTime?)null, classroom = "", instructor = "", daysTaught = "" }, null) |
+    @Html.ActionLink("Classroom Schedule View", "IndexByClassroom", new { id = Model.scheduleId })
 </p>
 
 <table class="table">
